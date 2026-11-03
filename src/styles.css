@@ -7,6 +7,17 @@
   --color-muted: #64748b;
   --color-brand: #0ea546;
   --color-input-border: #dce4ee;
+  --color-text-input-border: #8592a3;
+  --color-text-input-focus: #e1f3e8;
+  --color-text-input-error: #b91c1c;
+  --color-text-input-error-soft: #fee2e2;
+  --radius-text-input: 14px;
+  --color-resident-action: #087e34;
+  --color-resident-soft: #f1f5f9;
+  --radius-resident-card: 20px;
+  --radius-resident-dialog: 22px;
+  --spacing-resident-page: 1.5rem;
+  --spacing-resident-field: 16px;
 }
 
 :root { --sidebar-width: 16.5rem; font-family: var(--font-sans); color: var(--color-ink); background: var(--color-page); font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
@@ -29,15 +40,7 @@ h1 { font-size: 32px; font-weight: 800; line-height: 40px; }
 .login-fields { display: flex; flex-direction: column; gap: 16px; }
 .field { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .field label { font-size: 14px; font-weight: 700; line-height: 20px; color: #334155; }
-.login-fields .field { gap: 8px; }
-.input-wrap { position: relative; }
-.field input { display: block; width: 100%; height: 52px; border: 1px solid var(--color-input-border); border-radius: 14px; padding: 0 16px; color: var(--color-ink); background: white; font-size: 14px; line-height: 24px; }
-.field input::placeholder { color: #94a3b8; opacity: 1; }
-.field input[aria-invalid=true] { border-color: #b91c1c; }
-.field input:focus { border-color: var(--color-brand); }
-.field input.has-trailing-icon { padding-right: 52px; }
-.login-fields input { height: 60px; }
-.eye-button { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 40px; height: 40px; color: var(--color-muted); background: transparent; border: 0; border-radius: 8px; }
+.login-fields { --text-input-min-height: 60px; --text-input-gap: 8px; }
 .login-actions { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
 .form-options { min-height: 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 14px; line-height: 20px; }
 .checkbox-label { display: flex; gap: 8px; align-items: center; cursor: pointer; color: #475569; }
@@ -96,6 +99,7 @@ h1 { font-size: 32px; font-weight: 800; line-height: 40px; }
 .profile-details dt { font-size: 13px; color: var(--color-muted); margin-bottom: 6px; }
 .profile-details dd { margin: 0; font-size: 15px; line-height: 24px; font-weight: 600; overflow-wrap: anywhere; }
 .profile-note { background: var(--color-page); padding: 16px; border-radius: 12px; color: #475569; font-size: 14px; line-height: 22px; }
+.profile-edit-action { margin-block: 20px; }
 .secondary-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #dce4ee; border-radius: 10px; padding: 10px 16px; color: #334155; background: white; font-size: 14px; font-weight: 600; min-height: 44px; }
 .secondary-button:hover { background: var(--color-page); }
 .signout-area { display: flex; flex-direction: column; gap: 12px; }

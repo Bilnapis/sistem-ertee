@@ -1,6 +1,6 @@
 # Sistem ErTee
 
-Fondasi aplikasi layanan RT menggunakan React, Vite, TypeScript, React Router v7, Tailwind CSS, dan Supabase. Tahap pertama mencakup **register, login, logout, dan pembacaan profil warga sendiri**.
+Aplikasi layanan RT menggunakan React, Vite, TypeScript, React Router v7, TanStack Query, Tailwind CSS, dan Supabase. Fitur tersedia mencakup **autentikasi, manajemen warga dan akun, verifikasi, arsip, serta pembaruan profil sendiri**.
 
 ## Menjalankan aplikasi
 
@@ -53,21 +53,25 @@ Migrasi diterapkan saat stack lokal diinisialisasi. Salin API URL dan anon/publi
 | `/auth/callback` | Menangani konfirmasi email Supabase menggunakan PKCE. |
 | `/warga` | Dashboard terlindungi dengan sidebar, profil milik sesi aktif, dan tombol Keluar. |
 | `/warga/profil` | Profil warga sendiri, dibuka dari menu Warga. |
+| `/admin/warga` | Daftar, pencarian, filter role/status/verifikasi, dan pagination bagi Ketua RT/Pengurus RT. |
+| `/admin/warga/tambah` | Menambah data warga sekaligus akun login. |
+| `/admin/warga/:id`, `/admin/warga/:id/edit` | Detail, edit, role/status akun, verifikasi, arsip/pemulihan, dan riwayat. |
 | `/warga/pengajuan-surat`, `/warga/iuran-warga`, `/warga/pengaduan` | Halaman terlindungi dengan keterangan layanan yang sedang disiapkan. |
 
 Registrasi membuat Auth user dan profil secara atomik melalui trigger. Profil baru selalu berperan `warga`, aktif, dan berstatus `menunggu_verifikasi`, termasuk jika request memalsukan metadata peran. Dengan konfirmasi email aktif, buka tautan pada browser yang dipakai mendaftar; tab baru didukung. Dengan konfirmasi email nonaktif, register dapat langsung menghasilkan sesi.
 
 “Ingat saya” menyimpan sesi pada `localStorage`; tanpa centang, sesi disimpan pada `sessionStorage` tab. Verifier PKCE disimpan lintas tab agar konfirmasi email dapat dibuka dari email. Logout menghapus sesi browser dan mencabut sesi Supabase saat ini. RLS juga memeriksa keberadaan sesi Auth agar token dari sesi yang sudah dicabut tidak dapat membaca profil.
 
-## Batas tahap pertama
+## Manajemen warga dan batas fitur
 
-- Profil dapat dibaca pemiliknya; warga belum dapat mengedit profil. Nomor KK, tanggal lahir, pendataan lengkap, dan alur verifikasi pengurus merupakan tahap berikutnya.
-- Tiga nilai peran sudah disiapkan, tetapi halaman pengelola, pembuatan akun oleh pengelola, perubahan peran/status melalui aplikasi, dan RBAC modul lain belum diimplementasikan. Jangan menafsirkan fondasi ini sebagai seluruh AUTH-02 atau modul warga pada PRD sudah selesai.
+- Ketua RT dan Pengurus RT memiliki kewenangan sama untuk mengelola data/akun, role, status aktif, verifikasi/perbaikan, serta arsip/pemulihan. Pengelola aktif terakhir tidak dapat dinonaktifkan, diarsipkan, atau diturunkan menjadi Warga.
+- Warga dapat mengedit identitas sendiri, termasuk nomor KK, jenis kelamin, dan status pernikahan. Perubahan identitas memerlukan verifikasi ulang. Tanggal lahir dan RBAC modul surat/keuangan/pengaduan belum termasuk fitur ini.
+- Setelah migrasi autentikasi, terapkan migrasi manajemen warga dan deploy Edge Function `create-resident`. Panduan lengkap, bootstrap Ketua RT pertama, kontrak API, serta batas pengujian ada di [`docs/resident-management.md`](docs/resident-management.md).
 - Pendaftaran mandiri menyesuaikan permintaan terbaru pengguna. Login menggunakan **email** sesuai PRD; desain memakai HP/NIK. HP/NIK tetap dikumpulkan sebagai data profil dan bukan identitas login pada tahap ini.
 - Tombol “Lupa password?” membuka petunjuk menghubungi pengurus. Pemulihan mandiri belum tersedia.
-- Belum ada project Supabase cloud yang dihubungkan atau deployment yang dibuat.
+- Pekerjaan fitur ini tidak menerapkan migrasi ke Supabase cloud atau membuat deployment hosting.
 
-Pembuatan user langsung melalui Admin API/Dashboard harus menyertakan seluruh metadata profil yang diwajibkan trigger. Gunakan formulir register untuk pengujian tahap ini.
+Pembuatan user langsung melalui Admin API/Dashboard harus menyertakan seluruh metadata profil yang diwajibkan trigger. Gunakan formulir register untuk pendaftaran mandiri, atau **Tambah warga** melalui akun pengelola.
 
 ## Pengujian
 
@@ -77,7 +81,7 @@ npm test
 npm run test:e2e
 ```
 
-`npm test` menjalankan migrasi asli pada PostgreSQL/WASM (PGlite), dengan kontrak Auth minimal untuk menguji constraint, trigger, privilege, RLS lintas warga, akun nonaktif, dan sesi yang dicabut. Pengujian browser memakai Playwright dengan Google Chrome terpasang serta **respons API Supabase tiruan**. Tidak ada permintaan ke project cloud dalam pengujian tersebut.
+`npm test` menjalankan migrasi asli pada PostgreSQL/WASM (PGlite) dan handler provisioning dengan gateway Auth tiruan. Cakupan meliputi constraint, trigger, privilege, RLS lintas warga, role, verifikasi, arsip, konflik versi, pengiriman ulang, akun nonaktif, dan sesi yang dicabut. Pengujian browser memakai Playwright dengan Google Chrome terpasang serta **respons API Supabase tiruan**. Tidak ada permintaan ke project cloud dalam pengujian tersebut.
 
 Jika Chrome belum tersedia, instal Chrome atau ubah `channel` pada [`playwright.config.ts`](playwright.config.ts) sesuai browser pengujian yang tersedia. Screenshot responsif dibuat di `test-results/` dan diabaikan Git. Pengujian nyata terhadap Supabase Auth, pengiriman email, dan deployment tetap perlu dilakukan setelah project dikonfigurasi. Lihat [`docs/auth-acceptance.md`](docs/auth-acceptance.md).
 

@@ -31,3 +31,8 @@ minimum_password_length = 8
 enable_signup = true
 enable_confirmations = true
 double_confirm_changes = true
+
+[functions.create-resident]
+# Publishable keys are not JWTs; the handler validates the user's bearer token,
+# and the database rechecks the live session and role when creating the profile.
+verify_jwt = false

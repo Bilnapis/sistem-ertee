@@ -1,0 +1,153 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--text-input-gap, .25rem);
+  min-inline-size: 0;
+  inline-size: 100%;
+  text-align: start;
+}
+
+.labelRow {
+  font-size: .875rem;
+  line-height: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+.label {
+  color: #334155;
+  font-size: .875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+.required { color: var(--color-text-input-error); }
+
+.control {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  min-inline-size: 0;
+  min-block-size: var(--text-input-min-height, 3.25rem);
+  padding-inline: 1rem;
+  border: 1px solid var(--color-text-input-border);
+  border-radius: var(--radius-text-input);
+  background: white;
+  color: var(--color-muted);
+  box-shadow: 0 1px 2px oklch(0 0 0 / .03);
+}
+
+.input {
+  display: block;
+  flex: 1;
+  min-inline-size: 0;
+  inline-size: 100%;
+  min-block-size: calc(var(--text-input-min-height, 3.25rem) - 2px);
+  padding-block: .75rem;
+  padding-inline: 0;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  text-align: start;
+}
+
+.input::placeholder { color: var(--color-muted); opacity: 1; }
+.input:focus-visible { outline: none; }
+
+.leadingIcon { display: inline-flex; flex: 0 0 auto; }
+.leadingIcon > svg { inline-size: 1.25rem; block-size: 1.25rem; stroke-width: 1.75; }
+.errorIcon { flex: 0 0 auto; color: var(--color-text-input-error); }
+
+.control:focus-within {
+  border-color: var(--color-resident-action);
+  color: var(--color-resident-action);
+  box-shadow: 0 0 0 3px var(--color-text-input-focus);
+}
+
+.control[data-invalid] { border-color: var(--color-text-input-error); }
+.control[data-invalid]:focus-within { box-shadow: 0 0 0 3px var(--color-text-input-error-soft); }
+.control:has(:focus-visible) { outline: 2px solid var(--color-resident-action); outline-offset: 2px; }
+.control[data-invalid]:has(:focus-visible) { outline-color: var(--color-text-input-error); }
+
+.visibilityButton {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  inline-size: 2.75rem;
+  min-block-size: 2.75rem;
+  margin-inline-end: -.75rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: calc(var(--radius-text-input) - 4px);
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.visibilityButton:focus-visible { outline-offset: -4px; }
+.visibilityButton:not(:disabled):active { background: var(--color-text-input-focus); }
+.visibilityIcons { display: grid; }
+.visibilityIcon { grid-area: 1 / 1; opacity: 0; transition: opacity 300ms cubic-bezier(.2, 0, 0, 1); }
+.visibilityIcon[data-shown] { opacity: 1; }
+
+.helper, .error {
+  margin: 0;
+  font-size: .75rem;
+  line-height: 1.125rem;
+  overflow-wrap: anywhere;
+}
+
+.helper { color: var(--color-muted); }
+.error { color: var(--color-text-input-error); }
+.error:empty { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+
+/* :disabled also matches controls disabled by an ancestor fieldset. */
+.field:has(.input:disabled) .control {
+  border-color: var(--color-input-border);
+  background: var(--color-resident-soft);
+  box-shadow: none;
+  outline: none;
+  color: var(--color-muted);
+  cursor: not-allowed;
+}
+
+.input:disabled, .visibilityButton:disabled {
+  color: var(--color-muted);
+  cursor: not-allowed;
+  opacity: 1;
+  -webkit-text-fill-color: currentColor;
+}
+
+.field:has(.input:disabled) .label { color: var(--color-muted); }
+.field:has(.input:disabled) :is(.required, .errorIcon) { color: var(--color-muted); }
+.control:has(.input[readonly]):not(:has(.input:disabled)) { background: var(--color-page); }
+
+@media (hover: hover) {
+  .control:not(:focus-within):not([data-invalid]):not(:has(.input:disabled)):hover { border-color: #475569; }
+  .visibilityButton:not(:disabled):hover { background: var(--color-resident-soft); color: var(--color-ink); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .control { transition: border-color 150ms ease-out, box-shadow 150ms ease-out, background-color 150ms ease-out; }
+  .visibilityButton { transition: background-color 150ms ease-out, scale 150ms ease-out; }
+  .visibilityButton:not(:disabled):not([data-static]):active { scale: .96; }
+  .visibilityIcon { scale: .25; filter: blur(4px); transition: opacity 300ms cubic-bezier(.2, 0, 0, 1), scale 300ms cubic-bezier(.2, 0, 0, 1), filter 300ms cubic-bezier(.2, 0, 0, 1); }
+  .visibilityIcon[data-shown] { scale: 1; filter: blur(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Preserve an opacity cross-fade despite the global reduced-motion reset. */
+  .visibilityButton .visibilityIcon { transition: opacity 150ms cubic-bezier(.2, 0, 0, 1) !important; }
+}
+
+@media (forced-colors: active) {
+  .control { border-color: ButtonText; }
+  .control[data-invalid] { border-style: dashed; }
+  .control:focus-within, .control:has(:focus-visible) { outline: 2px solid Highlight; outline-offset: 2px; }
+  .field:has(.input:disabled) .control { border-color: GrayText; }
+}
