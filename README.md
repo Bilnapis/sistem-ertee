@@ -51,7 +51,9 @@ Migrasi diterapkan saat stack lokal diinisialisasi. Salin API URL dan anon/publi
 | `/login` | Masuk dengan email/password; pilihan menyimpan sesi dan kontrol tampil/sembunyikan password. |
 | `/register` | Nama, email, NIK dummy 16 digit, nomor HP, alamat, blok rumah, password, dan konfirmasi. |
 | `/auth/callback` | Menangani konfirmasi email Supabase menggunakan PKCE. |
-| `/warga` | Halaman terlindungi yang menampilkan profil milik sesi aktif dan tombol Keluar. |
+| `/warga` | Dashboard terlindungi dengan sidebar, profil milik sesi aktif, dan tombol Keluar. |
+| `/warga/profil` | Profil warga sendiri, dibuka dari menu Warga. |
+| `/warga/pengajuan-surat`, `/warga/iuran-warga`, `/warga/pengaduan` | Halaman terlindungi dengan keterangan layanan yang sedang disiapkan. |
 
 Registrasi membuat Auth user dan profil secara atomik melalui trigger. Profil baru selalu berperan `warga`, aktif, dan berstatus `menunggu_verifikasi`, termasuk jika request memalsukan metadata peran. Dengan konfirmasi email aktif, buka tautan pada browser yang dipakai mendaftar; tab baru didukung. Dengan konfirmasi email nonaktif, register dapat langsung menghasilkan sesi.
 

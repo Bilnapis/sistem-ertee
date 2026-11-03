@@ -1,9 +1,15 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Link, Navigate, Outlet, Route, Routes } from 'react-router'
 import { AuthProvider, useAuth } from './features/auth/AuthProvider'
 import { LoginPage } from './features/auth/LoginPage'
 import { RegisterPage } from './features/auth/RegisterPage'
-import { ResidentHome, SignOutButton } from './features/residents/ResidentHome'
+import { ResidentHome } from './features/residents/ResidentHome'
+import { SignOutButton } from './features/auth/SignOutButton'
+import { UpcomingModule } from './features/residents/UpcomingModule'
+import { AuthenticatedLayout } from './components/AuthenticatedLayout'
 import { Feedback, LoadingScreen } from './components/Feedback'
+
+const AdminSidebarPreview = import.meta.env.DEV ? lazy(() => import('./previews/AdminSidebarPreview')) : null
 
 function GuestLayout() {
   const { session, loading } = useAuth()
@@ -16,7 +22,7 @@ function ProtectedLayout() {
   if (loading) return <LoadingScreen />
   if (!session) return <Navigate to="/login" replace />
   if (error) return <main className="center-screen"><section className="auth-card error-card"><h1>Akses belum tersedia</h1><Feedback>{error}</Feedback><div className="error-actions"><button className="primary-button" onClick={retry}>Coba lagi</button><SignOutButton /></div></section></main>
-  return <Outlet />
+  return <AuthenticatedLayout />
 }
 
 function AuthCallback() {
@@ -30,7 +36,14 @@ export function App() {
   return <BrowserRouter><AuthProvider><Routes>
     <Route element={<GuestLayout />}><Route path="/login" element={<LoginPage />} /><Route path="/register" element={<RegisterPage />} /></Route>
     <Route path="/auth/callback" element={<AuthCallback />} />
-    <Route element={<ProtectedLayout />}><Route path="/warga" element={<ResidentHome />} /></Route>
+    {AdminSidebarPreview ? <Route path="/preview/admin-sidebar/*" element={<Suspense fallback={<LoadingScreen />}><AdminSidebarPreview /></Suspense>} /> : null}
+    <Route element={<ProtectedLayout />}>
+      <Route path="/warga" element={<ResidentHome />} />
+      <Route path="/warga/profil" element={<ResidentHome />} />
+      <Route path="/warga/pengajuan-surat/*" element={<UpcomingModule title="Pengajuan Surat" description="Pengajuan dan riwayat surat Anda akan tersedia di sini." />} />
+      <Route path="/warga/iuran-warga/*" element={<UpcomingModule title="Iuran Warga" description="Riwayat pembayaran iuran Anda akan tersedia di sini." />} />
+      <Route path="/warga/pengaduan/*" element={<UpcomingModule title="Pengaduan" description="Pengajuan dan status pengaduan Anda akan tersedia di sini." />} />
+    </Route>
     <Route path="*" element={<Navigate to="/warga" replace />} />
   </Routes></AuthProvider></BrowserRouter>
 }

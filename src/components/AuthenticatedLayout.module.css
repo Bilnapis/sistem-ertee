@@ -1,0 +1,176 @@
+.layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  min-block-size: 100dvh;
+}
+
+.desktopSidebar {
+  position: sticky;
+  inset-block-start: 0;
+  min-inline-size: 0;
+  block-size: 100dvh;
+}
+
+.content {
+  display: flex;
+  min-width: 0;
+  min-block-size: 100dvh;
+  flex-direction: column;
+}
+
+.header {
+  padding: 24px;
+}
+
+.headerBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.menuButton {
+  display: none;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-input-border);
+  border-radius: 10px;
+  background: white;
+  color: var(--color-ink);
+}
+
+.drawer {
+  --drawer-exit-offset: -100%;
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+  inline-size: var(--sidebar-width);
+  max-inline-size: calc(100% - 1.5rem);
+  block-size: 100dvh;
+  max-block-size: 100dvh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  opacity: 0;
+  transition:
+    opacity 150ms ease-out,
+    display 150ms allow-discrete,
+    overlay 150ms allow-discrete;
+}
+
+.drawer:dir(rtl) {
+  --drawer-exit-offset: 100%;
+}
+
+.drawer[open] {
+  opacity: 1;
+}
+
+.drawer::backdrop {
+  background: #0f172a66;
+  opacity: 0;
+  transition:
+    opacity 150ms ease-out,
+    display 150ms allow-discrete,
+    overlay 150ms allow-discrete;
+}
+
+.drawer[open]::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  .drawer[open],
+  .drawer[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+:global(body):has(.drawer[open]) {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .drawer {
+    transform: translateX(var(--drawer-exit-offset));
+    transition:
+      transform 200ms ease-out,
+      opacity 200ms ease-out,
+      display 200ms allow-discrete,
+      overlay 200ms allow-discrete;
+  }
+
+  .drawer[open] {
+    transform: translateX(0);
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .drawer::backdrop {
+    transition-duration: 200ms;
+  }
+
+  .drawer[open]::backdrop {
+    transition-duration: 300ms;
+  }
+
+  @starting-style {
+    .drawer[open] {
+      transform: translateX(var(--drawer-exit-offset));
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer,
+  .drawer::backdrop {
+    /* Preserve the short fade despite the global motion reset. */
+    transition-duration: 150ms !important;
+  }
+}
+
+.drawerSidebar {
+  --sidebar-brand-padding-end: 2.75rem;
+  block-size: 100%;
+  overscroll-behavior-y: contain;
+}
+
+.closeButton {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 1rem;
+  inset-inline-end: 0.75rem;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #cbd5e1;
+}
+
+@media (max-width: 1023px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .desktopSidebar {
+    display: none;
+  }
+
+  .menuButton {
+    display: grid;
+  }
+
+  .header {
+    gap: 12px;
+    padding: 20px;
+  }
+}
