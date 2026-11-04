@@ -27,12 +27,13 @@ npm run format:check  # Periksa format tanpa mengubah file
 
 Dependency, hasil build, laporan pengujian, dan `package-lock.json` diabaikan saat format.
 
-Tailwind v4 menggunakan konfigurasi CSS-first di `src/styles.css`. Komponen bersama
-memakai utility langsung; variasi fitur dibagikan melalui `styles.ts`. Gunakan
-`cn` dari `src/lib/cn.ts` untuk menggabungkan utility dan `buttons`/`formControl`
-dari `src/components/ui.ts` untuk kontrol bersama. Prettier mengurutkan class
-Tailwind pada JSX dan pemanggilan `cn`. Panduan token, pengecualian CSS dan hasil
-validasi tersedia di [`docs/tailwind-migration.md`](docs/tailwind-migration.md).
+Tailwind v4 menggunakan konfigurasi CSS-first di `src/styles.css`. Semua utility
+class ditulis langsung pada atribut `className` di JSX, termasuk varian tombol,
+kontrol formulir dan dialog. Gunakan `cn` dari `src/lib/cn.ts` untuk kondisi atau
+class tambahan dari pemanggil. Jangan menaruh class dalam object, konstanta
+styling atau modul terpisah. Prettier mengurutkan class pada JSX dan pemanggilan
+`cn`. Panduan token, pengecualian CSS dan hasil validasi tersedia di
+[`docs/tailwind-migration.md`](docs/tailwind-migration.md).
 
 ## Menghubungkan Supabase
 

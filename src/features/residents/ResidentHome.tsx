@@ -1,4 +1,3 @@
-import { buttons } from '../../components/ui'
 import { ShieldCheck, UserRound } from 'lucide-react'
 import { useAuth } from '../auth/AuthProvider'
 import { useState } from 'react'
@@ -80,7 +79,7 @@ export function ResidentHome() {
         <div className="my-5">
           <button
             type="button"
-            className={buttons.secondary}
+            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
             onClick={() => setEditing(true)}
           >
             Edit profil sendiri

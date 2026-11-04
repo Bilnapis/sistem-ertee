@@ -1,5 +1,3 @@
-import { cn } from '../../lib/cn'
-import { buttons } from '../../components/ui'
 import { useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link } from 'react-router'
@@ -44,10 +42,7 @@ export function LoginPage() {
   return (
     <main className="relative flex min-h-svh flex-col items-center justify-center px-5 py-8 max-sm:px-4">
       <section
-        className={cn(
-          'w-full rounded-card bg-surface shadow-card',
-          'flex max-w-[560px] flex-col gap-6 px-10 py-5 max-sm:px-6 max-sm:py-7',
-        )}
+        className="flex w-full max-w-[560px] flex-col gap-6 rounded-card bg-surface px-10 py-5 shadow-card max-sm:px-6 max-sm:py-7"
         aria-labelledby="login-title"
       >
         <header className="text-center [&>p]:mt-1 [&>p]:text-base [&>p]:leading-6 [&>p]:text-muted max-sm:[&>p]:text-sm">
@@ -93,7 +88,7 @@ export function LoginPage() {
                 Ingat saya
               </label>
               <button
-                className={buttons.text}
+                className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
                 type="button"
                 onClick={() => helpDialog.current?.showModal()}
               >
@@ -102,7 +97,7 @@ export function LoginPage() {
             </div>
             {error ? <Feedback>{error}</Feedback> : null}
             <button
-              className={cn(buttons.primary, 'w-full')}
+              className="inline-flex min-h-12 w-full max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
               type="submit"
               disabled={pending}
             >
@@ -147,7 +142,7 @@ export function LoginPage() {
         </p>
         <button
           type="button"
-          className={cn(buttons.primary, 'w-full')}
+          className="inline-flex min-h-12 w-full max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
           onClick={() => helpDialog.current?.close()}
         >
           Mengerti

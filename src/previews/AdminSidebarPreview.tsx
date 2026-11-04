@@ -1,4 +1,3 @@
-import { buttons } from '../components/ui'
 import { Link, useLocation } from 'react-router'
 import { AdminSidebar } from '../components/AdminSidebar'
 
@@ -26,7 +25,10 @@ export default function AdminSidebarPreview() {
           Sidebar admin ErTee sesuai desain. Pilih menu untuk melihat penanda
           navigasi aktif.
         </p>
-        <Link to="/login" className={buttons.text}>
+        <Link
+          to="/login"
+          className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
+        >
           Kembali ke halaman masuk
         </Link>
       </main>

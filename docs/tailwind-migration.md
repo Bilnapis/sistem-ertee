@@ -8,13 +8,12 @@ susunan halaman, route, kontrak komponen dan aturan bisnis tetap dipertahankan.
 
 - `src/styles.css`: token `@theme`, dasar dokumen di `@layer base`, serta
   transisi native drawer di `@layer components`. Tidak ada `@apply`.
-- `src/components/ui.ts`: utility tombol primary/secondary/danger/text,
-  kontrol formulir, kartu, badge, heading dan permukaan dialog.
 - `src/lib/cn.ts`: `clsx` untuk kondisi dan `tailwind-merge` untuk override.
   Letakkan class dari pemanggil setelah class default.
-- Komponen bersama dan preview memakai utility di JSX. Fitur memakai
-  kumpulan utility statis di `styles.ts` untuk digunakan bersama oleh daftar,
-  form dan dialog. Nama class ditulis lengkap agar terdeteksi saat build.
+- Semua utility ditulis langsung pada `className` di JSX, termasuk tombol,
+  kontrol formulir, kartu, badge, header dan dialog. Jangan menyimpan class dalam
+  object, konstanta styling atau modul terpisah. Nama class ditulis lengkap agar
+  terdeteksi saat build; varian dinamis memakai kondisi inline.
 - Container `page` mempertahankan ambang fitur dan ringkasan. Container
   `authenticated-content` mengatur header dan menu akun setelah sidebar.
 - Prettier memuat `prettier-plugin-tailwindcss`, menggunakan entry stylesheet
@@ -50,7 +49,7 @@ keyboard, ref, prioritas error, disabled melalui fieldset, RTL, teks panjang,
 teks 200%, reduced motion dan forced colors. Screenshot fitur memakai lebar
 320, 375, 768, 1280 dan 1648 px.
 
-Hasil akhir:
+Hasil migrasi awal:
 
 | Pemeriksaan                              | Hasil                                                                               |
 | ---------------------------------------- | ----------------------------------------------------------------------------------- |
@@ -62,8 +61,8 @@ Hasil akhir:
 | `git diff --check`                       | Lulus                                                                               |
 | Sisa CSS Modules / impor CSS Modules     | 0 / 0                                                                               |
 
-Screenshot sebelum dan sesudah masing-masing berjumlah 83. Gallery mandiri
-`test-results/tailwind-comparison.html` memuat 25 pasangan pada lima lebar layar
+Screenshot sebelum dan sesudah masing-masing berjumlah 83. Pada tahap migrasi awal, gallery mandiri
+`test-results/tailwind-comparison.html` dibuat dengan 25 pasangan pada lima lebar layar
 untuk login, daftar warga, form surat, pembayaran iuran dan preview input. Gallery
 menyertakan gambar sehingga dapat dibuka tanpa server; artefak ini diabaikan Git
 dan direktori `test-results` akan diganti ketika Playwright dijalankan lagi.
@@ -88,3 +87,17 @@ Migrasi memformat berkas yang disentuh. `npm run format:check` masih melaporkan
 `supabase/functions/create-resident/{handler.ts,index.ts}`,
 `tests/{database,provisioning,residents-database}.test.mjs`, dan `vercel.json`. Safari/Firefox, perangkat iOS fisik dan screen reader nyata belum
 diverifikasi.
+
+## Refaktor class inline
+
+Seluruh class yang sebelumnya diambil dari object dipindahkan ke JSX. Tiga modul
+`styles.ts` fitur dan modul utility komponen telah dihapus. Ukuran form, pemilih
+jenis dan detail surat memakai kondisi langsung di `className`. `SignOutButton`
+mempertahankan class default lewat fallback di atribut tombol; class dari
+pemanggil tetap dapat menggantinya, termasuk string kosong. Token dan transisi
+native drawer tetap berada pada entry CSS global.
+
+Validasi refaktor: build, lint, Prettier pada berkas yang diubah dan seluruh
+71 tes Playwright lulus. Pemeriksaan AST pada 441 atribut `className` memastikan
+tidak ada object styling atau impor modul penampung class. Hasil CSS build
+mempertahankan hash, ukuran 73,31 kB dan gzip 13,64 kB yang sama.

@@ -78,7 +78,7 @@ Acuan adalah `design.fig`, frame daftar `0:4505`, detail `0:4584`, edit
 `0:4697`, dan tambah `0:4798`, seluruhnya 1648 × 1056 px. File desain
 dibaca langsung menggunakan CLI OpenPencil tanpa mengubah sumbernya.
 
-Token global berada di `src/styles.css`; gaya fitur memakai utility Tailwind dan kumpulan class statis di `styles.ts` masing-masing fitur.
+Token global berada di `src/styles.css`; seluruh utility Tailwind ditulis langsung pada atribut `className` di JSX.
 Font Inter dan ikon Lucide menggunakan dependensi yang sudah tersedia.
 Batas input dan tabel memakai token `--color-border: #dce4ee`; border kontrol memakai `--color-control-border: #8592a3`.
 
@@ -161,9 +161,10 @@ serta batas pengujian ada di `docs/monthly-dues.md`.
 ## Styling Tailwind
 
 Seluruh komponen dan halaman, termasuk preview, memakai Tailwind v4. Token berada
-di `src/styles.css`; fondasi tombol, field, kartu, badge dan dialog berada di
-`src/components/ui.ts`. Fitur membagikan daftar utility statis lewat `styles.ts`,
-bukan stylesheet. Tidak ada CSS Modules atau `@apply`.
+di `src/styles.css`; utility tombol, field, kartu, badge dan dialog ditulis
+langsung pada `className` masing-masing elemen JSX. Kondisi dan class dari
+pemanggil digabungkan dengan `cn` bila diperlukan. Class tidak disimpan dalam
+object, konstanta styling atau modul terpisah. Tidak ada CSS Modules atau `@apply`.
 
 Tombol utama/sekunder/destruktif minimal 48 px dengan teks 14 px; navigasi ringkas
 dan tombol ikon minimal 44 px. Semua input/select minimal 48 px dengan teks 16 px,

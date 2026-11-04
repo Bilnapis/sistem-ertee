@@ -13,7 +13,6 @@ import {
 } from './data'
 import { LetterModal } from './LetterModal'
 import { LetterStatusBadge } from './LetterStatusBadge'
-import styles from './styles'
 
 export default function LetterDetails({
   manage = false,
@@ -53,15 +52,18 @@ export default function LetterDetails({
       pending={change.isPending}
     >
       {request.isPending ? (
-        <p className={styles.empty} role="status">
+        <p
+          className="flex flex-col items-center gap-3 rounded-card border border-border bg-surface px-5 py-12 text-center leading-normal text-muted [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-ink"
+          role="status"
+        >
           Memuat pengajuan…
         </p>
       ) : request.isError ? (
-        <div className={styles.blocked}>
+        <div className="flex flex-col gap-4 py-3 [&>button]:self-start">
           <Feedback>{letterError(request.error)}</Feedback>
           <button
             type="button"
-            className={styles.secondary}
+            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
             onClick={() => void request.refetch()}
           >
             Coba lagi
@@ -70,14 +72,17 @@ export default function LetterDetails({
       ) : data ? (
         <>
           {location.state?.letterSubmitted ? (
-            <p className={styles.success} role="status">
+            <p
+              className="mb-5 rounded-control bg-success-soft px-4 py-3 text-sm leading-normal text-success"
+              role="status"
+            >
               Pengajuan berhasil dikirim. Anda dapat memantau statusnya di sini.
             </p>
           ) : null}
-          <div className={styles.detailStatus}>
+          <div className="-mt-2 mb-5">
             <LetterStatusBadge status={data.status} />
           </div>
-          <dl className={styles.details}>
+          <dl className="m-0 grid grid-cols-2 gap-x-6 gap-y-4 max-sm:grid-cols-1 [&_dd]:m-0 [&_dd]:text-base [&_dd]:leading-normal [&_dd]:font-bold [&_dd]:wrap-anywhere [&_dd]:whitespace-pre-wrap [&_dt]:mb-1 [&_dt]:text-sm [&_dt]:leading-normal [&_dt]:font-semibold [&_dt]:text-muted">
             {[
               ['Nama Pemohon', data.identity_snapshot.full_name],
               ['Tanggal Pengajuan', formatDate(data.created_at)],
@@ -100,7 +105,7 @@ export default function LetterDetails({
             ))}
           </dl>
           {data.attachment ? (
-            <div className={styles.attachment}>
+            <div className="mt-5 flex items-center justify-between gap-4 rounded-summary border border-border p-4 text-sm leading-normal max-sm:flex-col max-sm:items-start [&_button]:shrink-0 [&_p]:mt-1 [&_p]:text-muted [&>div]:min-w-0 [&>div]:wrap-anywhere">
               <div>
                 <strong>Lampiran Pendukung</strong>
                 <p>
@@ -110,7 +115,7 @@ export default function LetterDetails({
               </div>
               <button
                 type="button"
-                className={styles.secondary}
+                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
                 disabled={download.isPending}
                 onClick={() => download.mutate()}
               >
@@ -122,7 +127,7 @@ export default function LetterDetails({
           {download.isError ? (
             <Feedback>{letterError(download.error)}</Feedback>
           ) : null}
-          <p className={styles.notice}>
+          <p className="mt-5 flex items-start gap-3 rounded-summary border border-blue-200 bg-blue-50 px-4 py-3 text-sm leading-normal text-info [&>svg]:mt-0.5 [&>svg]:shrink-0">
             <Info size={20} aria-hidden="true" />
             <span>
               {data.status === 'selesai'
@@ -132,7 +137,7 @@ export default function LetterDetails({
                   : 'Surat diproses secara manual di luar sistem ErTee.'}
             </span>
           </p>
-          <details className={styles.history}>
+          <details className="mt-5 rounded-summary border border-border px-4 py-3 text-sm leading-normal [&_li]:py-2 [&_li]:ps-1 [&_li_p]:text-muted [&_li_time]:text-muted [&_ol]:mb-0 [&_ol]:list-decimal [&_ol]:ps-5 [&_summary]:cursor-pointer [&_summary]:font-semibold [&>div]:mt-3 [&>p]:mt-3">
             <summary>
               Riwayat status{history.data ? ` (${history.data.length})` : ''}
             </summary>
@@ -143,7 +148,7 @@ export default function LetterDetails({
                 <Feedback>{letterError(history.error)}</Feedback>
                 <button
                   type="button"
-                  className={styles.textLink}
+                  className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
                   onClick={() => void history.refetch()}
                 >
                   Coba lagi riwayat
@@ -166,11 +171,11 @@ export default function LetterDetails({
             )}
           </details>
           {change.isError ? (
-            <div className={styles.feedback}>
+            <div className="my-3 flex flex-col gap-2">
               <Feedback>{letterError(change.error)}</Feedback>
               <button
                 type="button"
-                className={styles.textLink}
+                className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
                 onClick={async () => {
                   await Promise.all([
                     request.refetch(),
@@ -184,10 +189,10 @@ export default function LetterDetails({
               </button>
             </div>
           ) : null}
-          <div className={styles.detailActions}>
+          <div className="mt-5 flex items-stretch justify-end gap-4 max-sm:flex-col [&>button]:flex-1">
             <button
               type="button"
-              className={styles.secondary}
+              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
               disabled={change.isPending}
               onClick={close}
             >
@@ -198,7 +203,7 @@ export default function LetterDetails({
             {manage && data.status !== 'selesai' ? (
               <button
                 type="button"
-                className={styles.primary}
+                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
                 disabled={
                   change.isPending || change.isError || request.isFetching
                 }

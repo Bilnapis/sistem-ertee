@@ -1,5 +1,3 @@
-import { cn } from '../../lib/cn'
-import { buttons } from '../../components/ui'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link } from 'react-router'
@@ -76,10 +74,7 @@ export function RegisterPage() {
     return (
       <main className="relative flex min-h-svh flex-col items-center justify-center px-5 py-8 max-sm:px-4">
         <section
-          className={cn(
-            'w-full rounded-card bg-surface shadow-card',
-            'flex max-w-[560px] flex-col gap-6 p-10 text-center max-sm:px-6 max-sm:py-7 [&>p]:text-sm [&>p]:leading-6 [&>p]:text-muted',
-          )}
+          className="flex w-full max-w-[560px] flex-col gap-6 rounded-card bg-surface p-10 text-center shadow-card max-sm:px-6 max-sm:py-7 [&>p]:text-sm [&>p]:leading-6 [&>p]:text-muted"
           aria-labelledby="confirmation-title"
         >
           <MailCheck
@@ -93,7 +88,10 @@ export function RegisterPage() {
             tautan konfirmasi akan dikirim. Buka tautan tersebut di browser yang
             sama untuk mengaktifkan akun.
           </p>
-          <Link className={cn(buttons.primary, 'w-full')} to="/login">
+          <Link
+            className="inline-flex min-h-12 w-full max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
+            to="/login"
+          >
             Kembali ke halaman masuk
           </Link>
           <p className="text-muted">
@@ -106,10 +104,7 @@ export function RegisterPage() {
   return (
     <main className="relative flex min-h-svh flex-col items-center justify-center px-5 py-8 max-sm:px-4">
       <section
-        className={cn(
-          'w-full rounded-card bg-surface shadow-card',
-          'max-w-[900px] p-8 max-sm:px-5 max-sm:py-7',
-        )}
+        className="w-full max-w-[900px] rounded-card bg-surface p-8 shadow-card max-sm:px-5 max-sm:py-7"
         aria-labelledby="register-title"
       >
         <header className="text-center [&>p]:mt-1 [&>p]:text-base [&>p]:leading-6 [&>p]:text-muted max-sm:[&>p]:text-sm">
@@ -185,12 +180,7 @@ export function RegisterPage() {
               onToggleVisibility={() => setHidden((value) => !value)}
             />
           </div>
-          <div
-            className={cn(
-              'flex min-h-6 flex-wrap items-center justify-between gap-3 text-sm leading-5',
-              'mt-3 max-sm:mt-4 max-sm:flex-col max-sm:items-start max-sm:gap-2 [&>span]:text-muted',
-            )}
-          >
+          <div className="mt-3 flex min-h-6 flex-wrap items-center justify-between gap-3 text-sm leading-5 max-sm:mt-4 max-sm:flex-col max-sm:items-start max-sm:gap-2 [&>span]:text-muted">
             <label className="flex cursor-pointer items-center gap-2 text-slate-600 [&>input]:m-0 [&>input]:size-5 [&>input]:shrink-0 [&>input]:cursor-pointer [&>input]:accent-action">
               <input
                 type="checkbox"
@@ -205,7 +195,7 @@ export function RegisterPage() {
             {error ? <Feedback>{error}</Feedback> : null}
           </div>
           <button
-            className={cn(buttons.primary, 'w-full')}
+            className="inline-flex min-h-12 w-full max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
             type="submit"
             disabled={pending}
           >

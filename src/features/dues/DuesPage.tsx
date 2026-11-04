@@ -1,4 +1,3 @@
-import { selectControl, formControl } from '../../components/ui'
 import { useEffect } from 'react'
 import {
   ArrowRight,
@@ -30,7 +29,6 @@ import {
 } from './data'
 import type { DuesFilters, DuesInvoice } from './types'
 import { DuesStatusBadge } from './DuesStatusBadge'
-import styles from './styles'
 
 function CurrentBill({ invoice }: { invoice: DuesInvoice }) {
   const location = useLocation()
@@ -39,12 +37,15 @@ function CurrentBill({ invoice }: { invoice: DuesInvoice }) {
     search: location.search,
   })
   return (
-    <section className={styles.bill} aria-labelledby="dues-bill-title">
-      <div className={styles.billHeading}>
+    <section
+      className="flex flex-col gap-5 rounded-card border border-border bg-surface p-6 @max-[580px]/page:p-5 [&_h2]:text-2xl [&_h2]:leading-tight [&_h2]:font-bold"
+      aria-labelledby="dues-bill-title"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <h2 id="dues-bill-title">Tagihan Iuran</h2>
         <DuesStatusBadge status={invoice.status} />
       </div>
-      <dl className={styles.billDetails}>
+      <dl className="m-0 grid grid-cols-5 gap-6 @max-[1000px]/page:grid-cols-3 @max-[580px]/page:grid-cols-2 @max-[580px]/page:gap-4 [&_dd]:m-0 [&_dd]:mt-1 [&_dd]:text-lg [&_dd]:leading-normal [&_dd]:font-bold [&_dd]:wrap-anywhere @max-[580px]/page:[&_dd]:text-base [&_dt]:text-sm [&_dt]:leading-normal [&_dt]:font-semibold [&_dt]:text-muted">
         <div>
           <dt>Nama Warga</dt>
           <dd>{invoice.identity_snapshot.full_name}</dd>
@@ -74,24 +75,30 @@ function CurrentBill({ invoice }: { invoice: DuesInvoice }) {
         </div>
       </dl>
       {invoice.status === 'lunas' ? (
-        <p className={styles.success}>
+        <p className="flex items-center gap-3 rounded-summary bg-emerald-50 p-4 text-sm leading-relaxed wrap-anywhere text-success forced-colors:border forced-colors:border-[CanvasText] [&>svg]:shrink-0">
           <CheckCircle2 size={20} aria-hidden="true" />
           Pembayaran {monthLabel(invoice.period)} telah diverifikasi pengurus.
         </p>
       ) : invoice.status === 'menunggu_verifikasi' ? (
-        <p className={styles.notice}>
+        <p className="block rounded-summary bg-amber-50 p-4 text-sm leading-relaxed wrap-anywhere text-warning forced-colors:border forced-colors:border-[CanvasText]">
           Konfirmasi pembayaran sudah dikirim. Pengurus akan memeriksa
           pembayaran Anda.
         </p>
       ) : null}
-      <div className={styles.billActions}>
+      <div className="flex flex-wrap items-center gap-4 [&>a:first-child]:min-w-60 @max-[580px]/page:[&>a:first-child]:w-full @max-[580px]/page:[&>a:first-child]:min-w-0">
         {invoice.status === 'belum_bayar' ? (
-          <Link className={styles.primary} to={destination('/bayar')}>
+          <Link
+            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
+            to={destination('/bayar')}
+          >
             <Wallet size={19} aria-hidden="true" />
             Bayar Iuran
           </Link>
         ) : null}
-        <Link className={styles.textLink} to={destination()}>
+        <Link
+          className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
+          to={destination()}
+        >
           Lihat detail <ArrowRight size={16} aria-hidden="true" />
         </Link>
       </div>
@@ -148,9 +155,12 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
       )
   }, [query.isSuccess, filters.page, pages, setParams])
   return (
-    <main className={styles.page} aria-labelledby="dues-page-title">
-      <div className={styles.pageContent}>
-        <header className={styles.pageHeader}>
+    <main
+      className="@container/page min-w-0 flex-1 p-6 max-sm:px-4"
+      aria-labelledby="dues-page-title"
+    >
+      <div className="mx-auto flex w-full max-w-[96rem] min-w-0 flex-col gap-6">
+        <header className="flex flex-wrap items-center justify-between gap-4 [&>div]:min-w-0 [&>div]:flex-[1_1_20rem]">
           <PageIntro
             id="dues-page-title"
             title="Iuran Warga"
@@ -162,7 +172,7 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
           />
           {manage ? (
             <Link
-              className={styles.secondary}
+              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
               to={{ pathname: `${base}/pengaturan`, search: location.search }}
             >
               <Settings2 size={18} aria-hidden="true" />
@@ -172,24 +182,27 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
         </header>
         {isManager(profile?.role) ? (
           <Link
-            className={styles.textLink}
+            className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
             to={manage ? '/warga/iuran-warga' : '/admin/iuran-warga'}
           >
             {manage ? 'Iuran saya' : 'Kelola iuran warga'}
             <ArrowRight size={16} aria-hidden="true" />
           </Link>
         ) : null}
-        <div className={styles.overview} aria-busy={query.isPending}>
+        <div className="flex flex-col gap-6" aria-busy={query.isPending}>
           {query.isPending ? (
-            <p className={styles.notice} role="status">
+            <p
+              className="block rounded-summary bg-amber-50 p-4 text-sm leading-relaxed wrap-anywhere text-warning forced-colors:border forced-colors:border-[CanvasText]"
+              role="status"
+            >
               Memuat iuran warga…
             </p>
           ) : query.isError ? (
-            <div className={styles.feedback}>
+            <div className="flex flex-col items-start gap-3">
               <Feedback>{duesError(query.error)}</Feedback>
               <button
                 type="button"
-                className={styles.secondary}
+                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
                 onClick={() => void query.refetch()}
               >
                 Coba lagi
@@ -248,7 +261,7 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
                   {data.current ? (
                     <CurrentBill invoice={data.current} />
                   ) : (
-                    <p className={styles.notice}>
+                    <p className="block rounded-summary bg-amber-50 p-4 text-sm leading-relaxed wrap-anywhere text-warning forced-colors:border forced-colors:border-[CanvasText]">
                       Belum ada tagihan untuk bulan ini.
                     </p>
                   )}
@@ -257,8 +270,11 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
             </>
           ) : null}
         </div>
-        <section className={styles.list} aria-labelledby="dues-history-title">
-          <header className={styles.listHeader}>
+        <section
+          className="min-w-0 overflow-hidden rounded-card border border-border bg-surface"
+          aria-labelledby="dues-history-title"
+        >
+          <header className="px-5 pt-5 [&_h2]:text-2xl [&_h2]:leading-tight [&_h2]:font-bold [&_p]:mt-1 [&_p]:text-sm [&_p]:leading-relaxed [&_p]:text-muted">
             <h2 id="dues-history-title">
               {manage ? 'Daftar tagihan warga' : 'Riwayat tagihan'}
             </h2>
@@ -268,7 +284,7 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
                 : 'Buka detail untuk melihat pembayaran atau membayar periode sebelumnya.'}
             </p>
           </header>
-          <div className={styles.filters}>
+          <div className="flex flex-wrap items-start gap-4 p-5 [&>*]:min-w-0 [&>*]:flex-[1_1_10rem]">
             {manage ? (
               <TextInput
                 label="Cari warga"
@@ -280,12 +296,12 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
                 onChange={(event) => change('cari', event.target.value)}
               />
             ) : null}
-            <div className={styles.field}>
+            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
               <label htmlFor="dues-period">Bulan</label>
               <input
                 id="dues-period"
                 type="month"
-                className={formControl}
+                className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
                 min="2000-01"
                 max="9999-12"
                 value={
@@ -297,17 +313,17 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
               {!manage && filters.period ? (
                 <button
                   type="button"
-                  className={styles.textLink}
+                  className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
                   onClick={() => change('bulan', '')}
                 >
                   Semua bulan
                 </button>
               ) : null}
             </div>
-            <div className={styles.field}>
+            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
               <label htmlFor="dues-status">Status</label>
               <select
-                className={selectControl}
+                className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
                 id="dues-status"
                 value={filters.status}
                 onChange={(event) => change('status', event.target.value)}
@@ -320,10 +336,10 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
                 ))}
               </select>
             </div>
-            <div className={styles.field}>
+            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
               <label htmlFor="dues-method">Metode</label>
               <select
-                className={selectControl}
+                className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
                 id="dues-method"
                 value={filters.method}
                 onChange={(event) => change('metode', event.target.value)}
@@ -337,19 +353,19 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
               </select>
             </div>
           </div>
-          <p className={styles.scrollHint}>
+          <p className="mx-5 mb-3 flex items-center gap-2 text-xs text-muted">
             <MoveHorizontal size={16} aria-hidden="true" />
             Geser tabel untuk melihat seluruh kolom.
           </p>
           <div
-            className={styles.tableRegion}
+            className="overflow-x-auto overscroll-x-contain [&_small]:block [&_small]:text-muted [&_table]:w-full [&_table]:min-w-[760px] [&_table]:border-collapse [&_table]:text-start [&_table]:text-sm [&_table]:leading-normal [&_tbody_th]:font-normal [&_td]:border-b [&_td]:border-border [&_td]:px-5 [&_td]:py-4 [&_td]:text-start [&_td]:text-slate-700 [&_th]:border-b [&_th]:border-border [&_th]:px-5 [&_th]:py-4 [&_th]:text-start [&_thead_th]:bg-page [&_thead_th]:text-xs [&_thead_th]:font-bold [&_thead_th]:text-muted [&_thead_th]:uppercase [&_tr:last-child>*]:border-b-0"
             role="region"
             aria-label="Tabel tagihan iuran"
             tabIndex={0}
             aria-busy={query.isFetching}
           >
             <table>
-              <caption className={styles.srOnly}>
+              <caption className="sr-only">
                 {manage ? 'Tagihan seluruh warga' : 'Tagihan iuran pribadi'}
               </caption>
               <thead>
@@ -394,7 +410,7 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
                     </td>
                     <td>
                       <Link
-                        className={styles.textLink}
+                        className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
                         aria-label={`Lihat detail ${monthLabel(invoice.period)}${manage ? `, ${invoice.identity_snapshot.full_name}` : ''}`}
                         to={{
                           pathname: `${base}/${invoice.id}`,
@@ -408,7 +424,10 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
                 ))}
                 {!data?.items.length ? (
                   <tr>
-                    <td colSpan={manage ? 7 : 6} className={styles.empty}>
+                    <td
+                      colSpan={manage ? 7 : 6}
+                      className="px-5! py-9! text-center!"
+                    >
                       {query.isPending
                         ? 'Memuat riwayat…'
                         : query.isError
@@ -420,14 +439,14 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
               </tbody>
             </table>
           </div>
-          <footer className={styles.pagination}>
+          <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-4 text-sm text-muted [&>div]:flex [&>div]:gap-2">
             <span>
               {data?.total ?? 0} tagihan · Halaman {filters.page} dari {pages}
             </span>
             <div>
               <button
                 type="button"
-                className={styles.iconButton}
+                className="inline-flex size-11 shrink-0 items-center justify-center rounded-control border border-border bg-surface p-2 text-muted enabled:hover:bg-soft disabled:cursor-default disabled:opacity-40"
                 aria-label="Halaman sebelumnya"
                 disabled={filters.page <= 1 || query.isFetching}
                 onClick={() => change('halaman', String(filters.page - 1))}
@@ -436,7 +455,7 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
               </button>
               <button
                 type="button"
-                className={styles.iconButton}
+                className="inline-flex size-11 shrink-0 items-center justify-center rounded-control border border-border bg-surface p-2 text-muted enabled:hover:bg-soft disabled:cursor-default disabled:opacity-40"
                 aria-label="Halaman berikutnya"
                 disabled={filters.page >= pages || query.isFetching}
                 onClick={() => change('halaman', String(filters.page + 1))}

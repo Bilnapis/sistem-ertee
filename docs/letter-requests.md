@@ -103,4 +103,4 @@ pemohon/kedua pengurus, penolakan warga lain/akun nonaktif/sesi dicabut, serta
 penolakan upsert/delete. Pengujian konkurensi dua koneksi PostgreSQL dan penerapan
 cloud juga belum diklaim; PGlite memverifikasi penolakan versi basi secara berurutan.
 
-Setelah migrasi Tailwind, utility surat berada di `src/features/letters/styles.ts`; form memakai gap 16 px, kontrol minimum 48 px dan dialog beradius 22 px. Batas lebar form/detail/pemilih tetap 1000/912/528 px. Hasil validasi bersama dicatat di `docs/tailwind-migration.md`.
+Setelah migrasi Tailwind, utility surat ditulis inline pada komponen, termasuk `src/features/letters/LetterForm.tsx`; form memakai gap 16 px, kontrol minimum 48 px dan dialog beradius 22 px. Batas lebar form/detail/pemilih tetap 1000/912/528 px. Hasil validasi bersama dicatat di `docs/tailwind-migration.md`.

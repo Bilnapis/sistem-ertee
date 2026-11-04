@@ -1,4 +1,5 @@
-import { field } from '../../components/ui'
+import { cn } from '../../lib/cn'
+
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { Link, useLocation } from 'react-router'
@@ -18,7 +19,6 @@ import {
   useRefreshResidents,
   useResidentHistory,
 } from './data'
-import styles from './styles'
 
 const eventLabels: Record<string, string> = {
   created: 'Data warga ditambahkan',
@@ -31,7 +31,10 @@ const eventLabels: Record<string, string> = {
 export function ResidentHistory({ id }: { id: string }) {
   const history = useResidentHistory(id)
   return (
-    <section className={styles.history} aria-label="Riwayat perubahan">
+    <section
+      className="border-t border-border pt-5 text-sm leading-relaxed [&_h3]:mb-3 [&_h3]:text-base [&_h3]:font-bold [&_li_p]:wrap-anywhere [&_li_p]:text-muted [&_ol]:flex [&_ol]:max-h-75 [&_ol]:list-decimal [&_ol]:flex-col [&_ol]:gap-4 [&_ol]:overflow-auto [&_ol]:ps-5"
+      aria-label="Riwayat perubahan"
+    >
       <h3>Riwayat perubahan</h3>
       {history.isPending ? (
         <p role="status">Memuat riwayat…</p>
@@ -40,7 +43,7 @@ export function ResidentHistory({ id }: { id: string }) {
           <Feedback>Riwayat belum dapat dimuat.</Feedback>
           <button
             type="button"
-            className={styles.textButton}
+            className="inline-flex min-h-11 max-w-full items-center gap-2 self-start border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
             onClick={() => void history.refetch()}
           >
             Coba lagi riwayat
@@ -88,9 +91,14 @@ export function ResidentHistory({ id }: { id: string }) {
 
 export function VerificationNote({ profile }: { profile: ResidentProfile }) {
   return (
-    <div className={styles.verificationNote}>
+    <div className="flex flex-col items-start gap-3 rounded-control bg-page p-4 text-sm leading-relaxed wrap-anywhere">
       <span
-        className={`${styles.badge} ${profile.verification_status === 'terverifikasi' ? styles.activeBadge : styles.pendingBadge}`}
+        className={cn(
+          'inline-flex w-fit max-w-full items-center rounded-full px-3 py-1 text-xs leading-normal font-semibold wrap-anywhere whitespace-normal forced-colors:border forced-colors:border-[CanvasText]',
+          profile.verification_status === 'terverifikasi'
+            ? 'bg-success-soft text-success'
+            : 'bg-warning-soft text-warning',
+        )}
       >
         {statusLabels[profile.verification_status]}
       </span>
@@ -188,9 +196,12 @@ export function ResidentDetails({
     ['Role', roleLabels[profile.role]],
   ]
   return (
-    <div className={styles.details}>
-      <div className={styles.profileSummary}>
-        <span className={styles.avatar} aria-hidden="true">
+    <div className="flex flex-col gap-5">
+      <div className="flex items-center gap-4 rounded-summary bg-page p-4 max-sm:flex-wrap max-sm:gap-3 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:wrap-anywhere max-sm:[&_h3]:text-lg [&_p]:mt-1 [&_p]:text-sm [&_p]:leading-normal [&_p]:text-muted [&>div]:min-w-0 [&>div]:flex-1">
+        <span
+          className="grid size-16 shrink-0 place-items-center rounded-full bg-brand text-2xl font-extrabold text-white max-sm:size-12 max-sm:text-lg"
+          aria-hidden="true"
+        >
           {initials(profile.full_name)}
         </span>
         <div>
@@ -198,7 +209,12 @@ export function ResidentDetails({
           <p>Blok {profile.house_block} · RT 04</p>
         </div>
         <span
-          className={`${styles.badge} ${profile.is_active ? styles.activeBadge : styles.mutedBadge}`}
+          className={cn(
+            'inline-flex w-fit max-w-full items-center rounded-full px-3 py-1 text-xs leading-normal font-semibold wrap-anywhere whitespace-normal forced-colors:border forced-colors:border-[CanvasText]',
+            profile.is_active
+              ? 'bg-success-soft text-success'
+              : 'bg-soft text-slate-600',
+          )}
         >
           {profile.archived_at
             ? 'Diarsipkan'
@@ -207,7 +223,7 @@ export function ResidentDetails({
               : 'Tidak Aktif'}
         </span>
       </div>
-      <dl className={styles.detailGrid}>
+      <dl className="m-0 grid grid-cols-2 gap-x-4 gap-y-3 max-sm:grid-cols-1 [&_dd]:m-0 [&_dd]:text-sm [&_dd]:leading-relaxed [&_dd]:font-bold [&_dd]:wrap-anywhere [&_dt]:mb-3 [&_dt]:text-sm [&_dt]:font-semibold [&_dt]:text-slate-600 [&>div]:min-w-0 [&>div]:rounded-summary [&>div]:border [&>div]:border-border [&>div]:p-3">
         {details.map(([label, value]) => (
           <div key={label}>
             <dt>{label}</dt>
@@ -217,7 +233,7 @@ export function ResidentDetails({
       </dl>
       <button
         type="button"
-        className={styles.textButton}
+        className="inline-flex min-h-11 max-w-full items-center gap-2 self-start border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
         aria-pressed={reveal}
         onClick={() => setReveal((value) => !value)}
       >
@@ -228,17 +244,17 @@ export function ResidentDetails({
         <Feedback>{residentError(mutation.error)}</Feedback>
       ) : null}
       {profile.archived_at ? (
-        <p className={styles.notice}>
+        <p className="flex items-start gap-3 rounded-control bg-blue-50 p-4 text-sm leading-relaxed text-info [&>svg]:mt-0.5 [&>svg]:shrink-0">
           Data diarsipkan pada {formatDate(profile.archived_at)}. Pulihkan
           arsip, lalu aktifkan akun melalui Edit Data bila diperlukan.
         </p>
       ) : null}
-      <div className={styles.managementActions}>
+      <div className="flex flex-wrap gap-3">
         {!profile.archived_at ? (
           <>
             <button
               type="button"
-              className={styles.secondary}
+              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
               disabled={
                 mutation.isPending ||
                 profile.verification_status === 'terverifikasi'
@@ -249,7 +265,7 @@ export function ResidentDetails({
             </button>
             <button
               type="button"
-              className={styles.secondary}
+              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
               disabled={mutation.isPending}
               onClick={() => {
                 setAction('repair')
@@ -260,7 +276,7 @@ export function ResidentDetails({
             </button>
             <button
               type="button"
-              className={styles.danger}
+              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-danger bg-danger px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-red-800 disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
               disabled={mutation.isPending}
               onClick={() => {
                 setAction('archive')
@@ -273,7 +289,7 @@ export function ResidentDetails({
         ) : (
           <button
             type="button"
-            className={styles.secondary}
+            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
             disabled={mutation.isPending}
             onClick={() => setAction('restore')}
           >
@@ -283,7 +299,7 @@ export function ResidentDetails({
       </div>
       {action ? (
         <section
-          className={styles.confirmation}
+          className="flex flex-col gap-3 rounded-control border border-amber-200 bg-amber-50 p-4 text-sm leading-relaxed [&_h3]:text-base [&_h3]:font-bold"
           aria-label="Konfirmasi tindakan"
         >
           <h3>
@@ -294,11 +310,11 @@ export function ResidentDetails({
                 : `Pulihkan ${profile.full_name}?`}
           </h3>
           {action === 'repair' ? (
-            <div className={field}>
+            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
               <label htmlFor="review-note">Alasan perbaikan *</label>
               <textarea
                 id="review-note"
-                className={styles.textarea}
+                className="min-h-25 w-full min-w-0 resize-y rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
                 value={note}
                 maxLength={2000}
                 aria-invalid={Boolean(noteError)}
@@ -324,10 +340,10 @@ export function ResidentDetails({
                 : 'Data kembali ke daftar dengan akun tetap tidak aktif.'}
             </p>
           )}
-          <div className={styles.inlineActions}>
+          <div className="flex flex-wrap gap-3">
             <button
               type="button"
-              className={styles.secondary}
+              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
               disabled={mutation.isPending}
               onClick={() => setAction(null)}
             >
@@ -335,7 +351,11 @@ export function ResidentDetails({
             </button>
             <button
               type="button"
-              className={action === 'archive' ? styles.danger : styles.primary}
+              className={
+                action === 'archive'
+                  ? 'inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-danger bg-danger px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-red-800 disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0'
+                  : 'inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0'
+              }
               disabled={mutation.isPending}
               onClick={() => void act(action)}
             >
@@ -345,12 +365,12 @@ export function ResidentDetails({
         </section>
       ) : null}
       <ResidentHistory id={profile.id} />
-      <footer className={styles.dialogActions}>
+      <footer className="sticky -bottom-7 z-1 flex items-center justify-between gap-3 bg-surface pt-4 pb-1 max-sm:-bottom-5 max-sm:flex-wrap [&>div]:flex [&>div]:flex-wrap [&>div]:gap-3 max-sm:[&>div]:flex-1 max-sm:[&>div]:justify-end">
         <span />
         <div>
           <button
             type="button"
-            className={styles.secondary}
+            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
             disabled={mutation.isPending}
             onClick={onClose}
           >
@@ -359,7 +379,7 @@ export function ResidentDetails({
           {!profile.archived_at ? (
             <Link
               aria-disabled={mutation.isPending}
-              className={styles.primary}
+              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
               to={{
                 pathname: `/admin/warga/${profile.id}/edit`,
                 search: location.search,

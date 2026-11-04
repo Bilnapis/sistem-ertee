@@ -7,7 +7,6 @@ import { getSupabase } from '../../lib/supabase'
 import { duesError, monthLabel, rupiah, useDuesConfiguration } from './data'
 import type { DuesConfiguration } from './types'
 import { DuesModal } from './DuesModal'
-import styles from './styles'
 
 function SettingsForm({
   config,
@@ -68,15 +67,18 @@ function SettingsForm({
         }}
         aria-busy={mutation.isPending}
       >
-        <p className={styles.notice}>
+        <p className="block rounded-summary bg-amber-50 p-4 text-sm leading-relaxed wrap-anywhere text-warning forced-colors:border forced-colors:border-[CanvasText]">
           Tarif bulan ini {rupiah(config.current_rate.amount)}, jatuh tempo
           tanggal {config.current_rate.due_day}. Perubahan tarif dan jatuh tempo
           berlaku mulai <strong>{monthLabel(config.next_month)}</strong>.
           Tagihan yang sudah terbit tetap.
         </p>
-        <fieldset className={styles.formFields} disabled={mutation.isPending}>
-          <legend className={styles.srOnly}>Tarif dan rekening iuran</legend>
-          <div className={styles.twoColumns}>
+        <fieldset
+          className="flex min-w-0 flex-col gap-4 border-0 p-0"
+          disabled={mutation.isPending}
+        >
+          <legend className="sr-only">Tarif dan rekening iuran</legend>
+          <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
             <TextInput
               label="Tarif bulanan (Rp)"
               type="number"
@@ -98,12 +100,12 @@ function SettingsForm({
               onChange={(event) => setDay(event.target.value)}
             />
           </div>
-          <p className={styles.helper}>
+          <p className="text-xs leading-relaxed text-muted">
             Jika tanggal tidak ada pada suatu bulan, jatuh tempo mengikuti hari
             terakhir bulan itu.
           </p>
           <h3>Rekening penerima transfer</h3>
-          <p className={styles.helper}>
+          <p className="text-xs leading-relaxed text-muted">
             Perubahan rekening berlaku untuk konfirmasi baru. Riwayat tujuan
             transfer yang sudah dikirim tetap tersimpan. Kosongkan semua kolom
             rekening untuk menonaktifkan transfer.
@@ -132,10 +134,10 @@ function SettingsForm({
         {error || mutation.isError ? (
           <Feedback>{error || duesError(mutation.error)}</Feedback>
         ) : null}
-        <div className={styles.dialogActions}>
+        <div className="mt-5 flex flex-wrap items-center gap-4 [&>*]:flex-[1_1_12rem]">
           <button
             type="button"
-            className={styles.secondary}
+            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
             disabled={mutation.isPending}
             onClick={close}
           >
@@ -143,7 +145,7 @@ function SettingsForm({
           </button>
           <button
             type="submit"
-            className={styles.primary}
+            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
             disabled={mutation.isPending}
           >
             {mutation.isPending ? 'Menyimpan…' : 'Simpan pengaturan'}
@@ -170,11 +172,11 @@ export default function DuesSettings() {
   return (
     <DuesModal title="Pengaturan Iuran" onClose={close}>
       {query.isError ? (
-        <div className={styles.feedback}>
+        <div className="flex flex-col items-start gap-3">
           <Feedback>{duesError(query.error)}</Feedback>
           <button
             type="button"
-            className={styles.secondary}
+            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
             onClick={() => void query.refetch()}
           >
             Coba lagi

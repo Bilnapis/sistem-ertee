@@ -1,4 +1,3 @@
-import { textareaControl } from '../../components/ui'
 import { useRef, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ChevronDown, FileUp, Info, Paperclip } from 'lucide-react'
@@ -22,7 +21,6 @@ import {
 } from './data'
 import { LetterModal } from './LetterModal'
 import { LetterTypePicker } from './LetterTypePicker'
-import styles from './styles'
 
 type Errors = Partial<
   Record<'type' | 'purpose' | 'phone' | 'notes' | 'file', string>
@@ -114,12 +112,19 @@ export default function LetterForm() {
       onClose={close}
     >
       {blocked ? (
-        <div className={styles.blocked}>
+        <div className="flex flex-col gap-4 py-3 [&>button]:self-start">
           <Feedback>{blocked}</Feedback>
-          <Link to="/warga/profil" className={styles.textLink}>
+          <Link
+            to="/warga/profil"
+            className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
+          >
             Periksa profil saya
           </Link>
-          <button type="button" className={styles.secondary} onClick={close}>
+          <button
+            type="button"
+            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
+            onClick={close}
+          >
             Kembali ke pengajuan
           </button>
         </div>
@@ -131,23 +136,23 @@ export default function LetterForm() {
           aria-busy={submission.isPending}
         >
           <fieldset
-            className={styles.formFields}
+            className="m-0 mb-5 grid min-w-0 grid-cols-2 gap-4 border-0 p-0 max-sm:grid-cols-1 [&_input[readonly]]:text-muted"
             disabled={submission.isPending}
           >
-            <legend className={styles.srOnly}>Informasi pengajuan surat</legend>
+            <legend className="sr-only">Informasi pengajuan surat</legend>
             <TextInput
               label="Nama Pemohon"
               value={profile.full_name}
               readOnly
             />
-            <div className={styles.field}>
+            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
               <label id="letter-type-label" htmlFor="letter-type">
                 Jenis Surat <span aria-hidden="true">*</span>
               </label>
               <button
                 id="letter-type"
                 type="button"
-                className={styles.selectTrigger}
+                className="flex min-h-12 w-full min-w-0 items-center justify-between gap-3 rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&>svg]:shrink-0 [&>svg]:text-muted [&[readonly]]:bg-page"
                 aria-haspopup="dialog"
                 aria-labelledby="letter-type-label letter-type-value"
                 aria-invalid={Boolean(errors.type)}
@@ -162,7 +167,7 @@ export default function LetterForm() {
               {errors.type ? (
                 <p
                   id="letter-type-error"
-                  className={styles.fieldError}
+                  className="text-xs leading-normal text-danger"
                   role="alert"
                 >
                   {errors.type}
@@ -199,10 +204,10 @@ export default function LetterForm() {
               onChange={(event) => setPhone(event.target.value)}
               error={errors.phone}
             />
-            <div className={styles.field}>
+            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
               <label htmlFor="letter-notes">Keterangan Tambahan</label>
               <textarea
-                className={textareaControl}
+                className="min-h-24 w-full min-w-0 resize-y rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
                 id="letter-notes"
                 rows={3}
                 placeholder="Tambahkan keterangan jika diperlukan"
@@ -215,14 +220,17 @@ export default function LetterForm() {
                 }
               />
               {errors.notes ? (
-                <p id="letter-notes-error" className={styles.fieldError}>
+                <p
+                  id="letter-notes-error"
+                  className="text-xs leading-normal text-danger"
+                >
                   {errors.notes}
                 </p>
               ) : null}
             </div>
-            <div className={styles.field}>
+            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
               <label htmlFor="letter-file">Lampiran Pendukung</label>
-              <div className={styles.fileControl}>
+              <div className="relative flex min-h-24 items-center justify-start gap-3 rounded-control border border-control-border p-4 text-sm leading-normal wrap-anywhere text-slate-700 focus-within:outline-3 focus-within:outline-offset-4 focus-within:outline-focus [&_input]:absolute [&_input]:inset-0 [&_input]:h-full [&_input]:w-full [&_input]:cursor-pointer [&_input]:opacity-0 [&_svg]:shrink-0 [&_svg]:text-muted">
                 <input
                   id="letter-file"
                   type="file"
@@ -247,13 +255,16 @@ export default function LetterForm() {
                 )}
                 <span>{file ? file.name : 'Unggah berkas (opsional)'}</span>
               </div>
-              <p id="letter-file-help" className={styles.helper}>
+              <p
+                id="letter-file-help"
+                className="text-xs leading-normal text-muted"
+              >
                 JPG, PNG, PDF • Maksimal 5 MB
               </p>
               {file ? (
                 <button
                   type="button"
-                  className={styles.textLink}
+                  className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
                   onClick={() => {
                     setFile(null)
                     const input = document.getElementById(
@@ -269,7 +280,7 @@ export default function LetterForm() {
               {errors.file ? (
                 <p
                   id="letter-file-error"
-                  className={styles.fieldError}
+                  className="text-xs leading-normal text-danger"
                   role="alert"
                 >
                   {errors.file}
@@ -277,7 +288,7 @@ export default function LetterForm() {
               ) : null}
             </div>
           </fieldset>
-          <p className={styles.notice}>
+          <p className="mt-5 flex items-start gap-3 rounded-summary border border-blue-200 bg-blue-50 px-4 py-3 text-sm leading-normal text-info [&>svg]:mt-0.5 [&>svg]:shrink-0">
             <Info size={20} aria-hidden="true" />
             <span>
               Pengajuan surat akan diproses secara manual oleh pengurus RT.
@@ -285,17 +296,17 @@ export default function LetterForm() {
             </span>
           </p>
           {submission.isError ? (
-            <div className={styles.feedback}>
+            <div className="my-3 flex flex-col gap-2">
               <Feedback>
                 {letterError(submission.error)} Data formulir tetap tersimpan di
                 dialog ini.
               </Feedback>
             </div>
           ) : null}
-          <div className={styles.formActions}>
+          <div className="mt-5 flex items-stretch justify-end gap-4 max-sm:flex-col max-sm:[&>button]:w-full max-sm:[&>button]:min-w-0 [&>button:first-child]:min-w-30 [&>button:last-child]:min-w-60">
             <button
               type="button"
-              className={styles.secondary}
+              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
               disabled={submission.isPending}
               onClick={close}
             >
@@ -303,7 +314,7 @@ export default function LetterForm() {
             </button>
             <button
               type="submit"
-              className={styles.primary}
+              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
               disabled={submission.isPending}
             >
               {submission.isPending ? 'Mengirim pengajuan…' : 'Kirim Pengajuan'}
