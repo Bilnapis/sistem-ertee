@@ -1,0 +1,81 @@
+.view {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  min-inline-size: 0;
+  margin: 0;
+  font-family: var(--font-sans);
+}
+
+.view[data-columns='2'] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.card {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  align-items: start;
+  gap: 0.25rem;
+  min-inline-size: 0;
+  padding: 1rem;
+  background: white;
+  border: 1px solid var(--color-input-border);
+  border-radius: 14px;
+  text-align: start;
+  color: #000;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.label,
+.value {
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.label a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.value {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: inherit;
+}
+
+@container (width < 46rem) {
+  .view {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .card[data-value-type='number'] {
+    grid-template-columns: minmax(0, 1fr) fit-content(45%);
+    grid-template-rows: auto;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+@container (width < 33rem) {
+  .card {
+    padding: 0.75rem;
+  }
+}
+
+@container (width < 20rem) {
+  .view[data-columns] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (forced-colors: active) {
+  .card {
+    border-color: CanvasText;
+  }
+}

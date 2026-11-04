@@ -12,6 +12,7 @@ import {
 import { Link, Outlet, useLocation, useSearchParams } from 'react-router'
 import { TextInput } from '../../components/TextInput'
 import { Feedback } from '../../components/Feedback'
+import { SummaryCardView } from '../../components/SummaryCardView'
 import type { LetterFilters, LetterStatus } from '../../lib/database.types'
 import { useAuth } from '../auth/AuthProvider'
 import { formatDate, isManager } from '../residents/data'
@@ -143,29 +144,30 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
                 </button>
               </div>
             ) : (
-              <dl className={styles.summaries}>
-                {(['total', 'pengajuan', 'diproses', 'selesai'] as const).map(
-                  (key) => (
-                    <div key={key} className={styles.metric} data-status={key}>
-                      <dt>
-                        {key === 'pengajuan' ? (
-                          <Link to="/admin/pengajuan-surat?status=pengajuan">
-                            Pengajuan{' '}
-                            <span className={styles.srOnly}>
-                              belum diproses
-                            </span>
-                          </Link>
-                        ) : key === 'total' ? (
-                          'Total Pengajuan'
-                        ) : (
-                          letterStatuses[key]
-                        )}
-                      </dt>
-                      <dd>{summary.data ? summary.data[key] : '—'}</dd>
-                    </div>
-                  ),
-                )}
-              </dl>
+              <SummaryCardView
+                items={[
+                  {
+                    id: 'total',
+                    label: 'Total Pengajuan',
+                    value: summary.data?.total ?? '—',
+                  },
+                  {
+                    id: 'pengajuan',
+                    label: 'Pengajuan',
+                    value: summary.data?.pengajuan ?? '—',
+                  },
+                  {
+                    id: 'diproses',
+                    label: letterStatuses.diproses,
+                    value: summary.data?.diproses ?? '—',
+                  },
+                  {
+                    id: 'selesai',
+                    label: letterStatuses.selesai,
+                    value: summary.data?.selesai ?? '—',
+                  },
+                ]}
+              />
             )}
           </section>
         ) : null}

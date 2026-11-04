@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { Link, Outlet, useLocation, useSearchParams } from 'react-router'
 import { Feedback } from '../../components/Feedback'
+import { SummaryCardView } from '../../components/SummaryCardView'
 import type { ResidentFilters, ResidentRole } from '../../lib/database.types'
 import {
   genderLabels,
@@ -78,27 +79,21 @@ export default function ResidentsPage() {
           </Link>
         </header>
         <section aria-label="Ringkasan pendataan">
-          <dl className={styles.summaries}>
-            {(
+          <SummaryCardView
+            aria-busy={summary.isPending}
+            items={(
               [
                 'total',
                 'menunggu_verifikasi',
                 'terverifikasi',
                 'perlu_perbaikan',
               ] as const
-            ).map((key) => (
-              <div key={key} className={styles.summary}>
-                <dt>{key === 'total' ? 'Total warga' : statusLabels[key]}</dt>
-                <dd>
-                  <bdi>
-                    {summary.isError
-                      ? '—'
-                      : (summary.data?.[key]?.toLocaleString('id-ID') ?? '…')}
-                  </bdi>
-                </dd>
-              </div>
-            ))}
-          </dl>
+            ).map((key) => ({
+              id: key,
+              label: key === 'total' ? 'Total warga' : statusLabels[key],
+              value: summary.isError ? '—' : (summary.data?.[key] ?? '…'),
+            }))}
+          />
         </section>
         {summary.isError ? (
           <div className={styles.retry}>

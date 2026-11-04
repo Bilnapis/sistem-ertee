@@ -34,52 +34,10 @@
   flex: 1 1 20rem;
   min-width: 0;
 }
-.summaries,
-.adminMetrics {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  margin: 0 0 20px;
-}
-.adminMetrics {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-bottom: 0;
-}
-.summaries > div,
-.adminMetrics > div {
-  background: white;
-  border: 1px solid var(--color-input-border);
-  border-radius: var(--radius-resident-card);
-  padding: 20px;
-  min-width: 0;
-}
-.summaries dt,
-.adminMetrics dt {
-  color: var(--color-muted);
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1.5;
-}
-.summaries dd,
-.adminMetrics dd {
-  margin: 4px 0 0;
-  font-size: 2rem;
-  line-height: 1.25;
-  font-weight: 800;
-  overflow-wrap: anywhere;
-  font-variant-numeric: tabular-nums;
-}
-.adminMetrics dd {
-  font-size: 1.5rem;
-}
-.metricStatus[data-status='lunas'] {
-  color: var(--color-resident-action);
-}
-.metricStatus[data-status='belum_bayar'] {
-  color: #b91c1c;
-}
-.metricStatus[data-status='menunggu_verifikasi'] {
-  color: #92400e;
+.overview {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 .bill {
   border: 1px solid var(--color-input-border);
@@ -589,24 +547,8 @@
   .billDetails {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  .adminMetrics {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 @container (max-width: 580px) {
-  .summaries {
-    gap: 12px;
-  }
-  .summaries > div,
-  .adminMetrics > div {
-    padding: 16px;
-  }
-  .summaries dd {
-    font-size: 1.5rem;
-  }
-  .summaries dt {
-    font-size: 0.875rem;
-  }
   .bill {
     padding: 20px;
   }
@@ -648,8 +590,7 @@
   .badge,
   .success,
   .notice,
-  .methods label,
-  .summaries > div {
+  .methods label {
     border: 1px solid CanvasText;
   }
 }

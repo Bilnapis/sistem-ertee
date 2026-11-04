@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { Link, Outlet, useLocation, useSearchParams } from 'react-router'
 import { Feedback } from '../../components/Feedback'
+import { SummaryCardView } from '../../components/SummaryCardView'
 import { TextInput } from '../../components/TextInput'
 import { useAuth } from '../auth/AuthProvider'
 import { isManager } from '../residents/data'
@@ -175,7 +176,7 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
             <ArrowRight size={16} aria-hidden="true" />
           </Link>
         ) : null}
-        <div aria-busy={query.isPending}>
+        <div className={styles.overview} aria-busy={query.isPending}>
           {query.isPending ? (
             <p className={styles.notice} role="status">
               Memuat iuran warga…
@@ -194,56 +195,53 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
           ) : data ? (
             <>
               {manage ? (
-                <dl
-                  className={styles.adminMetrics}
+                <SummaryCardView
                   aria-label="Ringkasan iuran periode terpilih"
-                >
-                  <div>
-                    <dt>Total tagihan</dt>
-                    <dd>{data.summary.total}</dd>
-                  </div>
-                  <div>
-                    <dt>Menunggu Verifikasi</dt>
-                    <dd>{data.summary.menunggu_verifikasi}</dd>
-                  </div>
-                  <div>
-                    <dt>Lunas</dt>
-                    <dd>{data.summary.lunas}</dd>
-                  </div>
-                  <div>
-                    <dt>
-                      Pemasukan iuran{' '}
-                      {monthLabel(
+                  items={[
+                    {
+                      id: 'total',
+                      label: 'Total tagihan',
+                      value: data.summary.total,
+                    },
+                    {
+                      id: 'menunggu_verifikasi',
+                      label: 'Menunggu Verifikasi',
+                      value: data.summary.menunggu_verifikasi,
+                    },
+                    {
+                      id: 'lunas',
+                      label: 'Lunas',
+                      value: data.summary.lunas,
+                    },
+                    {
+                      id: 'income',
+                      label: `Pemasukan iuran ${monthLabel(
                         filters.period ? `${filters.period}-01` : data.period,
-                      )}
-                    </dt>
-                    <dd>{rupiah(data.summary.income)}</dd>
-                  </div>
-                </dl>
+                      )}`,
+                      value: rupiah(data.summary.income),
+                    },
+                  ]}
+                />
               ) : (
                 <>
-                  <dl
-                    className={styles.summaries}
+                  <SummaryCardView
                     aria-label="Ringkasan iuran bulan ini"
-                  >
-                    <div>
-                      <dt>Iuran Bulan Ini</dt>
-                      <dd>
-                        {data.current ? rupiah(data.current.amount) : '—'}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt>Status Pembayaran</dt>
-                      <dd
-                        className={styles.metricStatus}
-                        data-status={data.current?.status}
-                      >
-                        {data.current
+                    columns={2}
+                    items={[
+                      {
+                        id: 'amount',
+                        label: 'Iuran Bulan Ini',
+                        value: data.current ? rupiah(data.current.amount) : '—',
+                      },
+                      {
+                        id: 'status',
+                        label: 'Status Pembayaran',
+                        value: data.current
                           ? duesStatuses[data.current.status]
-                          : 'Belum ada tagihan'}
-                      </dd>
-                    </div>
-                  </dl>
+                          : 'Belum ada tagihan',
+                      },
+                    ]}
+                  />
                   {data.current ? (
                     <CurrentBill invoice={data.current} />
                   ) : (

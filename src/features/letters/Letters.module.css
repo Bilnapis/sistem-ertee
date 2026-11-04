@@ -99,46 +99,6 @@
   font-size: 0.875rem;
   line-height: 1.6;
 }
-.summaries {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  margin: 0;
-}
-.metric {
-  background: white;
-  border: 1px solid var(--letter-border);
-  border-radius: 16px;
-  padding: 14px;
-  min-width: 0;
-}
-.metric dt {
-  color: var(--color-muted);
-  font-size: 0.875rem;
-  font-weight: 600;
-  line-height: 1.5;
-}
-.metric dt a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.metric dd {
-  margin: 4px 0 0;
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1.25;
-  font-variant-numeric: tabular-nums;
-}
-.metric[data-status='pengajuan'] dd {
-  color: #b45309;
-}
-.metric[data-status='diproses'] dd {
-  color: #245ce5;
-}
-.metric[data-status='selesai'] dd {
-  color: var(--letter-action);
-}
 .list {
   display: flex;
   flex-direction: column;
@@ -691,9 +651,6 @@
   }
   .pageHeader p {
     font-size: 1rem;
-  }
-  .summaries {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .filters {
     grid-template-columns: repeat(2, minmax(0, 1fr));

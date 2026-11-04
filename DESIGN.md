@@ -100,6 +100,11 @@ area sempit. Tabel yang melebihi area konten menampilkan petunjuk gulir yang
 terlihat. Rincian pengukuran dan pemeriksaan ada di `docs/residents-layout.md`.
 Kartu ringkasan bersifat informatif dan tidak dapat dipilih sebagai filter.
 
+`SummaryCardView` menjadi komponen bersama untuk ringkasan Data Warga,
+Pengajuan Surat, dan Iuran Warga. Seluruh gaya kartu, warna nilai, grid,
+dan aturan responsif berada di `src/components/SummaryCardView.module.css`.
+API dan aturan penggunaannya ada di `docs/summary-card-view.md`.
+
 Warna merek asli `#0ea546` dipertahankan. Tombol fitur dengan teks putih
 kecil memakai `#087e34`, dengan rasio kontras 5,19:1; warna merek asli
 memberikan 3,24:1. Penyesuaian ini mendukung teks normal WCAG AA.

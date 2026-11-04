@@ -423,7 +423,12 @@ for (const role of ['ketua_rt', 'pengurus_rt'] as const)
     await expect(
       page.getByRole('link', { name: 'Pengajuan Surat', exact: true }),
     ).toHaveAttribute('aria-current', 'page')
-    await page.getByRole('link', { name: /Pengajuan belum diproses/ }).click()
+    const summary = page.getByRole('region', {
+      name: 'Ringkasan pengajuan surat',
+    })
+    await expect(summary.getByRole('link')).toHaveCount(0)
+    await expect(summary.getByText('Pengajuan', { exact: true })).toBeVisible()
+    await page.getByLabel('Status', { exact: true }).selectOption('pengajuan')
     await expect(
       page.getByRole('heading', {
         name: 'Pengajuan Belum Diproses',
