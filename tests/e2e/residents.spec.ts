@@ -224,6 +224,36 @@ test('warga can update only their own profile and cannot open management routes'
   expect(state.profiles.get(uid(3))!.verification_status).toBe('menunggu_verifikasi')
 })
 
+for (const role of ['warga', 'ketua_rt', 'pengurus_rt'] as const) test(`${role} can edit their own data from the header account menu`, async ({ page }) => {
+  await page.setViewportSize({ width: role === 'warga' ? 320 : 1440, height: 900 })
+  const state = await mockResidents(page, { role })
+  await login(page, role)
+  await page.goto('/warga/iuran-warga')
+  const name = state.profiles.get(state.currentId)!.full_name
+  const trigger = page.getByRole('button', { name: `Menu akun ${name},`, exact: false })
+  const actions = page.getByRole('group', { name: 'Tindakan akun', exact: true })
+  await trigger.click()
+  await actions.getByRole('button', { name: 'Ubah data diri', exact: true }).click()
+  const dialog = page.getByRole('dialog', { name: 'Edit Profil Saya', exact: true })
+  await expect(dialog).toBeVisible()
+  await expect(actions).not.toBeVisible()
+  await expect(dialog.getByLabel('Nama Lengkap *', { exact: true })).toHaveValue(name)
+  await expect(dialog.getByLabel('Role *', { exact: true })).toHaveCount(0)
+  await dialog.getByRole('button', { name: 'Batal', exact: true }).click()
+  await expect(trigger).toBeFocused()
+  await trigger.click()
+  await actions.getByRole('button', { name: 'Ubah data diri', exact: true }).click()
+  await dialog.getByLabel('Nama Lengkap *', { exact: true }).fill('Nama Akun Diperbarui')
+  await dialog.getByRole('button', { name: 'Simpan Perubahan', exact: true }).click()
+  await expect(dialog).not.toBeVisible()
+  await expect(page.getByRole('button', { name: 'Menu akun Nama Akun Diperbarui,', exact: false })).toBeVisible()
+  await expect(page).toHaveURL(/\/warga\/iuran-warga$/)
+  const change = state.requests.find(request => request.path.endsWith('/update_resident'))!
+  expect(change.body.p_id).toBe(state.currentId)
+  expect(change.body.p_data).not.toHaveProperty('role')
+  expect(change.body.p_data).not.toHaveProperty('is_active')
+})
+
 test('creation validation and failures preserve input; a lost response retries without a second account', async ({ page }) => {
   const options: Options = { loseCreateResponse: true }
   const state = await mockResidents(page, options)

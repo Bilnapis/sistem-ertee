@@ -2,39 +2,39 @@
 name: ErTee Resident Management
 version: 1.0.0
 colors:
-  primary: "#087e34"
-  on-primary: "#ffffff"
-  brand: "#0ea546"
-  surface: "#ffffff"
-  on-surface: "#0f172a"
-  background: "#f8fafc"
-  on-background: "#0f172a"
-  muted: "#64748b"
-  soft: "#f1f5f9"
-  success: "#dcfce7"
-  on-success: "#166534"
-  warning: "#fef3c7"
-  on-warning: "#92400e"
+  primary: '#087e34'
+  on-primary: '#ffffff'
+  brand: '#0ea546'
+  surface: '#ffffff'
+  on-surface: '#0f172a'
+  background: '#f8fafc'
+  on-background: '#0f172a'
+  muted: '#64748b'
+  soft: '#f1f5f9'
+  success: '#dcfce7'
+  on-success: '#166534'
+  warning: '#fef3c7'
+  on-warning: '#92400e'
 typography:
   headline-lg:
     fontFamily: Inter
     fontSize: 32px
-    fontWeight: "700"
+    fontWeight: '700'
     lineHeight: 40px
   headline-md:
     fontFamily: Inter
     fontSize: 32px
-    fontWeight: "800"
+    fontWeight: '800'
     lineHeight: 40px
   body-md:
     fontFamily: Inter
     fontSize: 16px
-    fontWeight: "400"
+    fontWeight: '400'
     lineHeight: 24px
   body-sm:
     fontFamily: Inter
     fontSize: 14px
-    fontWeight: "400"
+    fontWeight: '400'
     lineHeight: 21px
 rounded:
   button: 12px
@@ -48,28 +48,28 @@ spacing:
   dialog-padding: 28px
 components:
   primary-button:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.on-primary}"
-    rounded: "{rounded.button}"
+    backgroundColor: '{colors.primary}'
+    textColor: '{colors.on-primary}'
+    rounded: '{rounded.button}'
     height: 48px
   resident-table:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.on-surface}"
-    rounded: "{rounded.card}"
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.on-surface}'
+    rounded: '{rounded.card}'
   table-header:
-    backgroundColor: "{colors.soft}"
-    textColor: "{colors.on-surface}"
+    backgroundColor: '{colors.soft}'
+    textColor: '{colors.on-surface}'
   helper-label:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.muted}"
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.muted}'
   brand-avatar:
-    backgroundColor: "{colors.brand}"
+    backgroundColor: '{colors.brand}'
   status-active:
-    backgroundColor: "{colors.success}"
-    textColor: "{colors.on-success}"
+    backgroundColor: '{colors.success}'
+    textColor: '{colors.on-success}'
   status-pending:
-    backgroundColor: "{colors.warning}"
-    textColor: "{colors.on-warning}"
+    backgroundColor: '{colors.warning}'
+    textColor: '{colors.on-warning}'
 ---
 
 # ErTee — Manajemen Warga
@@ -82,17 +82,17 @@ Token global berada di `src/styles.css`; gaya fitur memakai CSS Modules.
 Font Inter dan ikon Lucide menggunakan dependensi yang sudah tersedia.
 Batas input dan tabel memakai token `--color-input-border: #dce4ee`.
 
-| Keputusan | Implementasi |
-| --- | --- |
-| Sidebar | Pertahankan komponen 264 px dan drawer yang sudah diterapkan. |
-| Tabel | Header lembut, permukaan putih, radius 20 px, NIK tersamarkan. |
-| Kepadatan daftar | Judul 32 px desktop / 28 px area sempit; teks tabel 14 px, badge role 12 px, angka ringkasan 24 px. Ukuran teks memakai `rem`. |
-| Area konten | Maksimal 96rem, gutter 24 px desktop / 16 px area sempit; kolom tabel memiliki proporsi tetap. |
-| Filter daftar | Label terlihat, input/select 16 px, tinggi minimum 44 px, susunan mengikuti container halaman. |
-| Dialog | Maksimal 1000 px, radius 22 px, form dua kolom dengan gap 16 px. |
-| Ponsel | Form satu kolom di bawah 640 px; tabel digulir di dalam region sendiri. |
-| Role dan verifikasi | Badge role di bawah nama; ringkasan verifikasi di atas pencarian. |
-| Form akun | Tambahan email, role, status, password dan konfirmasi pada alur tambah. |
+| Keputusan           | Implementasi                                                                                                                   |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Sidebar             | Pertahankan komponen 264 px dan drawer yang sudah diterapkan.                                                                  |
+| Tabel               | Header lembut, permukaan putih, radius 20 px, NIK tersamarkan.                                                                 |
+| Kepadatan daftar    | Judul 32 px desktop / 28 px area sempit; teks tabel 14 px, badge role 12 px, angka ringkasan 24 px. Ukuran teks memakai `rem`. |
+| Area konten         | Maksimal 96rem, gutter 24 px desktop / 16 px area sempit; kolom tabel memiliki proporsi tetap.                                 |
+| Filter daftar       | Label terlihat, input/select 16 px, tinggi minimum 44 px, susunan mengikuti container halaman.                                 |
+| Dialog              | Maksimal 1000 px, radius 22 px, form dua kolom dengan gap 16 px.                                                               |
+| Ponsel              | Form satu kolom di bawah 640 px; tabel digulir di dalam region sendiri.                                                        |
+| Role dan verifikasi | Badge role di bawah nama; ringkasan verifikasi di atas pencarian.                                                              |
+| Form akun           | Tambahan email, role, status, password dan konfirmasi pada alur tambah.                                                        |
 
 Penyesuaian halaman daftar setelah implementasi awal mengikuti permintaan
 perbaikan layout. Ringkasan menjadi dua kolom dengan angka di sisi akhir pada
@@ -108,3 +108,27 @@ Status selalu memiliki label teks; fokus memakai outline global.
 Token warna, spasi, dan radius tambahan mengikuti elemen referensi.
 Ringkasan verifikasi, riwayat, status gagal/memuat/kosong, serta kontrol
 akun melengkapi kebutuhan fungsional yang tidak seluruhnya digambar.
+
+## Pengajuan surat
+
+Implementasi surat mengikuti Page 2 pada `design.fig`: daftar admin `0:4901`,
+daftar belum diproses `0:4988`, detail `0:5080`/`0:5221`, formulir `0:3965`,
+pemilih jenis `0:4062`, dan daftar tanpa ringkasan `0:5405`. File desain
+tetap utuh. Status Menunggu pada sumber diganti **Pengajuan** sesuai keputusan pengguna.
+
+- Formulir maksimal 1000 px, radius 22 px, padding 28 px, dua kolom dengan
+  gap 20 px. Pemilih jenis maksimal 528 px, radius 20 px, padding 24 px.
+  Detail maksimal 912 px, radius 22 px, dengan tinggi mengikuti isi.
+- Gunakan `TextInput`, sidebar 264 px, Inter dan Lucide yang sudah tersedia.
+  Gaya surat berada di CSS Modules dan tidak mengubah radius dialog warga.
+- Tombol memakai token aksi `#087e34`. Badge Pengajuan kuning, Diproses biru,
+  Selesai hijau; seluruhnya menyertakan label teks.
+- Label filter terlihat, pagination empat baris, tanggal WIB, dan tabel
+  berada di region gulir tersendiri. Formulir/detail satu kolom di bawah 640 px.
+- Daftar pribadi mengadaptasi tabel sumber dengan nomor pengajuan dan tombol
+  Ajukan Surat; admin mendapat tautan Pengajuan saya. Riwayat, lampiran,
+  kelayakan profil dan status gagal/memuat/kosong melengkapi kebutuhan fungsional.
+- Dialog bertingkat memakai native dialog, Escape menutup dialog paling atas,
+  dan fokus dikembalikan ke pemicu. Navigasi ponsel memakai drawer yang tersedia.
+
+Perbandingan browser dan batas pengujian dicatat di `docs/letter-requests.md`.

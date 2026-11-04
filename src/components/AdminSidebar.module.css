@@ -98,58 +98,29 @@
   color: white;
 }
 
-.footer {
+.productMark {
   display: flex;
   flex: 0 0 auto;
   flex-direction: column;
-  margin-block-start: auto;
-}
-
-.account {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  min-block-size: 4rem;
-  padding: 0.75rem;
-  border-radius: 0.75rem;
-  background: #1e293b;
-}
-
-.avatar {
-  display: grid;
-  flex: 0 0 2.25rem;
-  place-items: center;
-  inline-size: 2.25rem;
-  block-size: 2.25rem;
-  border-radius: 50%;
-  background: var(--color-brand);
-  color: white;
-  font-size: 0.75rem;
-  font-weight: 700;
-  line-height: 1.5;
-}
-
-.accountDetails {
-  display: flex;
-  min-inline-size: 0;
-  flex: 1;
-  flex-direction: column;
   gap: 0.125rem;
-}
-
-.accountName, .accountRole {
+  min-inline-size: 0;
+  margin-block-start: auto;
+  padding-inline: 0.75rem;
+  text-align: start;
   overflow-wrap: anywhere;
+  user-select: none;
 }
 
-.accountName {
-  font-size: 0.875rem;
-  font-weight: 700;
-  line-height: 1.5;
+.productName {
+  color: var(--color-brand);
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
-.accountRole {
+.productDescription {
   color: #94a3b8;
   font-size: 0.75rem;
-  font-weight: 400;
   line-height: 1.5;
 }

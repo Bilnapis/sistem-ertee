@@ -7,7 +7,7 @@ const profile = { id, email: user.email, full_name: 'Warga Uji', nik: '000000000
 const jwt = () => `${Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url')}.${Buffer.from(JSON.stringify({ sub: id, role: 'authenticated', exp: Math.floor(Date.now() / 1000) + 3600 })).toString('base64url')}.testsignature`
 const session = () => ({ access_token: jwt(), refresh_token: 'dummy-refresh-token', token_type: 'bearer', expires_in: 3600, user })
 
-async function mockSupabase(page: Page, options: { invalidPassword?: boolean; disabled?: boolean; immediateSession?: boolean; signupFailure?: boolean; profileFailure?: boolean } = {}) {
+async function mockSupabase(page: Page, options: { invalidPassword?: boolean; disabled?: boolean; immediateSession?: boolean; signupFailure?: boolean; profileFailure?: boolean; fullName?: string } = {}) {
   const calls: { signup?: Record<string, unknown>; logout?: boolean } = {}
   await page.route('http://127.0.0.1:54321/**', async route => {
     const path = new URL(route.request().url()).pathname
@@ -26,7 +26,7 @@ async function mockSupabase(page: Page, options: { invalidPassword?: boolean; di
     if (path.endsWith('/logout')) { calls.logout = true; return route.fulfill({ status: 204, headers }) }
     if (path.endsWith('/profiles')) {
       if (options.profileFailure) return route.fulfill({ status: 503, headers: { ...headers, 'retry-after': '0' }, json: { message: 'unavailable' } })
-      return route.fulfill({ headers, json: options.disabled ? [] : [profile] })
+      return route.fulfill({ headers, json: options.disabled ? [] : [{ ...profile, full_name: options.fullName ?? profile.full_name }] })
     }
     return route.fulfill({ status: 404, headers, json: {} })
   })
@@ -67,8 +67,6 @@ test('login, reload, logout, browser back, and direct access enforce session bou
   await expect(page.getByText(profile.nik, { exact: true })).toBeVisible()
   const sidebar = page.getByRole('complementary', { name: 'Sidebar admin' })
   await expect(sidebar).toBeVisible()
-  await expect(sidebar.getByTitle(profile.full_name, { exact: true })).toHaveText(profile.full_name)
-  await expect(sidebar.getByTitle('Warga', { exact: true })).toHaveText('Warga')
   await expect(sidebar.locator('a[aria-current="page"]')).toHaveText('Dashboard')
   await page.screenshot({ path: 'test-results/authenticated-home-desktop.png', fullPage: true })
   await sidebar.getByRole('link', { name: 'Warga', exact: true }).click()
@@ -105,7 +103,6 @@ test('the sidebar opens on mobile and closes with its button, backdrop, Escape, 
   await expect(page.getByRole('navigation', { name: 'Navigasi admin' })).toHaveCount(0)
   await trigger.click()
   await expect(drawer).toBeVisible()
-  await expect(drawer.getByTitle(profile.full_name)).toBeVisible()
   await page.screenshot({ path: 'test-results/authenticated-sidebar-mobile.png', fullPage: true })
   await drawer.getByRole('button', { name: 'Tutup menu navigasi' }).click()
   await expect(drawer).not.toBeVisible()
@@ -126,6 +123,70 @@ test('the sidebar opens on mobile and closes with its button, backdrop, Escape, 
   await expect(page.getByRole('heading', { name: 'Profil warga', exact: true })).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360)
   await page.screenshot({ path: 'test-results/authenticated-home-mobile.png', fullPage: true })
+})
+
+test('account actions support keyboard navigation, dismissal, and sign-out', async ({ page }) => {
+  const calls = await mockSupabase(page)
+  await login(page)
+  const trigger = page.getByRole('button', { name: 'Menu akun Warga Uji, Warga', exact: true })
+  const actions = page.getByRole('group', { name: 'Tindakan akun', exact: true })
+  await expect(actions).not.toBeVisible()
+  await trigger.focus()
+  await page.keyboard.press('Enter')
+  await expect(actions).toBeVisible()
+  await expect(trigger).toMatchAriaSnapshot('- button "Menu akun Warga Uji, Warga" [expanded]')
+  await page.keyboard.press('Tab')
+  await expect(actions.getByRole('button', { name: 'Ubah data diri', exact: true })).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(actions.getByRole('button', { name: 'Keluar', exact: true })).toBeFocused()
+  await page.keyboard.press('Escape')
+  await expect(actions).not.toBeVisible()
+  await expect(trigger).toBeFocused()
+  await page.keyboard.press('Space')
+  await expect(actions).toBeVisible()
+  await page.keyboard.press('Tab')
+  await page.keyboard.press('Tab')
+  await page.keyboard.press('Tab')
+  await expect(actions).not.toBeVisible()
+  await trigger.click()
+  await page.getByRole('heading', { name: 'Profil warga', exact: true }).click()
+  await expect(actions).not.toBeVisible()
+  await trigger.click()
+  await actions.getByRole('button', { name: 'Keluar', exact: true }).click()
+  await expect(page).toHaveURL(/\/login$/)
+  expect(calls.logout).toBe(true)
+})
+
+test('long account names remain readable in the submenu at narrow widths and enlarged text', async ({ page }) => {
+  const fullName = 'Warga Dengan Nama Lengkap Yang Sangat Panjang Untuk Pemeriksaan Layout'
+  await mockSupabase(page, { fullName })
+  await login(page)
+  const trigger = page.getByRole('button', { name: `Menu akun ${fullName}, Warga`, exact: true })
+  const actions = page.getByRole('group', { name: 'Tindakan akun', exact: true })
+  for (const width of [320, 360, 528, 768, 1024, 1440, 1920]) {
+    await page.setViewportSize({ width, height: 900 })
+    for (const dir of ['ltr', 'rtl']) {
+      for (const fontSize of ['100%', '200%']) {
+        await page.evaluate(({ dir, fontSize }) => {
+          document.documentElement.dir = dir
+          document.documentElement.style.fontSize = fontSize
+        }, { dir, fontSize })
+        await trigger.click()
+        await expect(actions.getByText(fullName, { exact: true })).toBeVisible()
+        for (const element of [trigger, actions, actions.getByRole('button', { name: 'Keluar', exact: true })]) {
+          await element.scrollIntoViewIfNeeded()
+          const box = (await element.boundingBox())!
+          expect(box.x, `${width}px ${dir} ${fontSize}`).toBeGreaterThanOrEqual(0)
+          expect(box.x + box.width, `${width}px ${dir} ${fontSize}`).toBeLessThanOrEqual(width + 1)
+          expect(box.y, `${width}px ${dir} ${fontSize}`).toBeGreaterThanOrEqual(0)
+          expect(box.y + box.height, `${width}px ${dir} ${fontSize}`).toBeLessThanOrEqual(901)
+        }
+        if ([320, 360, 1440].includes(width) && dir === 'ltr' && fontSize === '100%')
+          await page.screenshot({ path: `test-results/account-menu-${width}.png` })
+        await page.keyboard.press('Escape')
+      }
+    }
+  }
 })
 
 test('remember me selects persistent storage, unchecked uses tab storage', async ({ page }) => {
