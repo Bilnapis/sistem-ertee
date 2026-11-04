@@ -3,7 +3,7 @@
 Komponen [`AdminSidebar`](../src/components/AdminSidebar.tsx) diadaptasi dari komponen `Sidebar / ErTee / Admin` (`0:4332`) dalam `design.fig` dengan ukuran yang lebih ringkas untuk dashboard. Styling memakai CSS Modules sehingga tidak memengaruhi formulir autentikasi.
 
 Informasi akun telah dipindahkan ke [menu akun pada header](account-menu.md).
-Sidebar desktop maupun drawer mobile memuat identitas RT/RW, navigasi, dan
+Sidebar desktop maupun drawer mobile memuat identitas RT, navigasi, dan
 identitas produk **ErTee** di bagian bawah dengan gaya merek seperti pada header:
 nama hijau 20 px dan subjudul “Layanan Digital Warga” 12 px, tersusun vertikal
 dengan jarak 2 px dan rata awal. Warna subjudul mengikuti teks sekunder sidebar
@@ -12,12 +12,12 @@ bersifat dekoratif agar nama produk tidak dibacakan berulang.
 
 ## Penggunaan
 
-Render di dalam React Router yang sudah digunakan aplikasi. Identitas RT/RW diberikan oleh halaman induk:
+Render di dalam React Router yang sudah digunakan aplikasi. Identitas RT diberikan oleh halaman induk:
 
 ```tsx
 import { AdminSidebar } from './components/AdminSidebar'
 
-;<AdminSidebar communityLabel="ADMIN RT 04 / RW 08" basePath="/admin" />
+;<AdminSidebar communityLabel="ADMIN RT 04" basePath="/admin" />
 ```
 
 `className` dapat digunakan untuk menyesuaikan penempatan oleh layout induk. `paths` dapat menyesuaikan URL setiap menu dan `onNavigate` dipanggil saat link dipilih. Tinggi default mengikuti viewport (`100dvh`); sidebar dapat digulir pada viewport pendek agar seluruh menu tetap terjangkau.
@@ -44,10 +44,10 @@ Jalankan `npm run dev`, lalu buka `/preview/admin-sidebar`. Route ini hanya dise
 | Warna      | Latar `#0f172a`, aktif `#0ea546`                        | Token `--color-ink` dan `--color-brand`.                                                                                                                |
 | Menu       | Tinggi minimum 60 px, gap 12 px, radius 16 px           | Tinggi minimum 44 px, gap 4 px, radius 12 px. Padding vertikal 10 px memungkinkan label panjang membungkus.                                             |
 | Ikon       | Lucide, ukuran 24 px, stroke 2 px                       | Lucide, ukuran 20 px, stroke 2 px.                                                                                                                      |
-| Tipografi  | Inter; merek 32/800, menu 18/600, menu aktif 18/800     | Inter; merek 28/800, menu 14/600 termasuk menu aktif, label RT/RW 12/600. Ukuran memakai `rem`, line-height unitless.                                   |
+| Tipografi  | Inter; merek 32/800, menu 18/600, menu aktif 18/800     | Inter; merek 28/800, menu 14/600 termasuk menu aktif, label RT 12/600. Ukuran memakai `rem`, line-height unitless.                                   |
 | Kartu akun | Ditampilkan pada bagian bawah sidebar                   | Dihapus dari sidebar; informasi dan tindakan akun tersedia pada header.                                                                                 |
 
-Nilai piksel di atas berlaku pada ukuran font root 16 px. Logo, label RT/RW, dan ikon menu berbagi tepi awal 28 px. Jarak antarkelompok 32 px membedakan identitas dan navigasi; tinggi navigasi mengikuti isinya.
+Nilai piksel di atas berlaku pada ukuran font root 16 px. Logo, label RT, dan ikon menu berbagi tepi awal 28 px. Jarak antarkelompok 32 px membedakan identitas dan navigasi; tinggi navigasi mengikuti isinya.
 
 Sidebar telah dipasang pada layout semua halaman terlindungi setelah login. Label WARGA/ADMIN mengikuti peran. Pada desktop sidebar berada di sisi awal sesuai arah dokumen; pada lebar di bawah 1024 px tombol menu membuka dialog navigasi yang mendukung Escape dan menutup setelah memilih menu. Drawer menyisakan ruang untuk tombol tutup pada header serta mengikuti tinggi viewport dinamis. Tindakan Keluar tersedia pada submenu akun di header.
 

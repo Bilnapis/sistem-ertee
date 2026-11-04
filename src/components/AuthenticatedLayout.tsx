@@ -13,7 +13,7 @@ export function AuthenticatedLayout() {
   const drawer = useRef<HTMLDialogElement>(null)
   if (!profile) return null
   const sidebarProps = {
-    communityLabel: `${profile.role === 'warga' ? 'WARGA' : 'ADMIN'} RT 04 / RW 08`,
+    communityLabel: `${profile.role === 'warga' ? 'WARGA' : 'ADMIN'} RT 04`,
     basePath: '/warga',
     paths: {
       warga: isManager(profile.role) ? '/admin/warga' : '/warga/profil',

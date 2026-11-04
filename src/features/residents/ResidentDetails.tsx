@@ -47,10 +47,10 @@ export function ResidentDetails({ profile, onClose, onPending }: { profile: Resi
     ['Jenis Kelamin', profile.gender ? genderLabels[profile.gender] : 'Belum diisi'],
     ['Status Pernikahan', profile.marital_status ? maritalLabels[profile.marital_status] : 'Belum diisi'],
     ['Blok Rumah', profile.house_block], ['Nomor Rumah', profile.house_number ?? 'Belum diisi'], ['Nomor HP', profile.phone],
-    ['Alamat Lengkap', profile.address], ['RT / RW', '04 / 08'], ['Email', profile.email], ['Role', roleLabels[profile.role]],
+    ['Alamat Lengkap', profile.address], ['RT', '04'], ['Email', profile.email], ['Role', roleLabels[profile.role]],
   ]
   return <div className={styles.details}>
-    <div className={styles.profileSummary}><span className={styles.avatar} aria-hidden="true">{initials(profile.full_name)}</span><div><h3>{profile.full_name}</h3><p>Blok {profile.house_block} · RT 04 / RW 08</p></div><span className={`${styles.badge} ${profile.is_active ? styles.activeBadge : styles.mutedBadge}`}>{profile.archived_at ? 'Diarsipkan' : profile.is_active ? 'Aktif' : 'Tidak Aktif'}</span></div>
+    <div className={styles.profileSummary}><span className={styles.avatar} aria-hidden="true">{initials(profile.full_name)}</span><div><h3>{profile.full_name}</h3><p>Blok {profile.house_block} · RT 04</p></div><span className={`${styles.badge} ${profile.is_active ? styles.activeBadge : styles.mutedBadge}`}>{profile.archived_at ? 'Diarsipkan' : profile.is_active ? 'Aktif' : 'Tidak Aktif'}</span></div>
     <dl className={styles.detailGrid}>{details.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
     <button type="button" className={styles.textButton} aria-pressed={reveal} onClick={() => setReveal(value => !value)}>{reveal ? 'Samarkan NIK dan KK' : 'Tampilkan NIK dan KK'}</button>
     <VerificationNote profile={profile} />

@@ -110,7 +110,7 @@ async function fillNewResident(page: Page) {
   await dialog.getByLabel('Jenis Kelamin *', { exact: true }).selectOption('perempuan')
   await dialog.getByLabel('Status Pernikahan *', { exact: true }).selectOption('belum_menikah')
   await dialog.getByLabel('Blok Rumah *', { exact: true }).fill('DUMMY-C')
-  await dialog.getByLabel('Nomor Rumah', { exact: true }).fill('50')
+  await expect(dialog.getByLabel(/^(Nomor Rumah|RT|RW)$/)).toHaveCount(0)
   await dialog.getByLabel('Nomor HP *', { exact: true }).fill('0812-3456-7890')
   await dialog.getByLabel('Alamat Lengkap *', { exact: true }).fill('Jalan Dummy Nomor 50')
   await dialog.getByLabel('Email *', { exact: true }).fill('newdummy@example.test')
@@ -133,6 +133,7 @@ for (const role of ['ketua_rt', 'pengurus_rt'] as const) test(`${role} can creat
   await expect(dialog.getByText('Terverifikasi', { exact: true }).first()).toBeVisible()
   await dialog.getByRole('link', { name: 'Edit Data', exact: true }).click()
   const editor = page.getByRole('dialog', { name: 'Edit Data Warga', exact: true })
+  await expect(editor.getByLabel(/^(Nomor Rumah|RT|RW)$/)).toHaveCount(0)
   await editor.getByLabel('Alamat Lengkap *', { exact: true }).fill('Alamat Dummy Diperbarui')
   await editor.getByLabel('Role *', { exact: true }).selectOption('ketua_rt')
   await editor.getByLabel('Status Warga *', { exact: true }).selectOption('false')
@@ -144,6 +145,9 @@ for (const role of ['ketua_rt', 'pengurus_rt'] as const) test(`${role} can creat
   await expect(dialog.getByText('Tidak Aktif', { exact: true })).toBeVisible()
   const creation = state.requests.find(request => request.path.endsWith('/create-resident'))!.body
   expect(creation.phone).toBe('081234567890')
+  expect(creation.house_number).toBe('')
+  expect(creation).not.toHaveProperty('rt')
+  expect(creation).not.toHaveProperty('rw')
   expect(creation).not.toHaveProperty('confirmation')
 })
 
@@ -214,6 +218,7 @@ test('warga can update only their own profile and cannot open management routes'
   await page.getByRole('button', { name: 'Edit profil sendiri' }).click()
   const dialog = page.getByRole('dialog', { name: 'Edit Profil Saya' })
   await expect(dialog.getByLabel('Role *', { exact: true })).toHaveCount(0)
+  await expect(dialog.getByLabel(/^(Nomor Rumah|RT|RW)$/)).toHaveCount(0)
   await dialog.getByLabel('Alamat Lengkap *', { exact: true }).fill('Alamat Dummy Milik Sendiri')
   await dialog.getByRole('button', { name: 'Simpan Perubahan' }).click()
   await expect(dialog).not.toBeVisible()
@@ -221,6 +226,8 @@ test('warga can update only their own profile and cannot open management routes'
   const change = state.requests.find(request => request.path.endsWith('/update_resident'))!
   expect(change.body.p_id).toBe(uid(3))
   expect(change.body.p_data).not.toHaveProperty('role')
+  expect(change.body.p_data).toHaveProperty('house_number', '3')
+  expect(state.profiles.get(uid(3))!.house_number).toBe('3')
   expect(state.profiles.get(uid(3))!.verification_status).toBe('menunggu_verifikasi')
 })
 

@@ -42,7 +42,7 @@ export function LoginPage() {
           <button className="primary-button" type="submit" disabled={pending}>{pending ? 'Sedang masuk…' : 'Masuk'}</button>
         </div>
       </form>
-      <div className="account-support"><p className="account-link">Belum punya akun? <Link to="/register">Daftar di sini</Link></p><p className="help-text">Butuh bantuan? Hubungi Admin RT/RW</p></div>
+      <div className="account-support"><p className="account-link">Belum punya akun? <Link to="/register">Daftar di sini</Link></p><p className="help-text">Butuh bantuan? Hubungi Admin RT</p></div>
     </section>
     <footer className="auth-copyright">© ErTee • Layanan Digital Warga</footer>
     {!isSupabaseConfigured ? <p className="setup-note" role="status">Mode persiapan · Koneksi Supabase belum dikonfigurasi.</p> : null}

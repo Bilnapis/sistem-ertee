@@ -18,7 +18,7 @@ export default function AdminSidebarPreview() {
 
   return (
     <div className={styles.preview}>
-      <AdminSidebar communityLabel="ADMIN RT 04 / RW 08" basePath={basePath} />
+      <AdminSidebar communityLabel="ADMIN RT 04" basePath={basePath} />
       <main className={styles.content}>
         <p className={styles.caption}>Pratinjau komponen</p>
         <h1>{pageLabels[section] ?? 'Sidebar admin'}</h1>

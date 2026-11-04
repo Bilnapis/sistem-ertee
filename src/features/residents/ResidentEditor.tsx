@@ -69,7 +69,7 @@ export function ResidentEditor({ profile, manageAccess = false, onSaved, onCance
     setFields(fieldsFromProfile(original)); setEmail(original?.email ?? ''); setPassword(''); setConfirmation('')
     setRole(original?.role ?? 'warga'); setActive(original?.is_active ?? true); setErrors({}); mutation.reset(); setConfirmDisable(false)
   }
-  const placeholders: Partial<Record<keyof ResidentFields, string>> = { full_name: 'Masukkan nama lengkap', nik: '16 digit angka', family_card_number: '16 digit angka', house_block: 'Contoh: A-05', house_number: 'Contoh: 12', phone: 'Contoh: 0812-0000-0408', address: 'Masukkan alamat lengkap' }
+  const placeholders: Partial<Record<keyof ResidentFields, string>> = { full_name: 'Masukkan nama lengkap', nik: '16 digit angka', family_card_number: '16 digit angka', house_block: 'Contoh: A-05', phone: 'Contoh: 0812-0000-0408', address: 'Masukkan alamat lengkap' }
   const textField = (key: keyof ResidentFields, label: string, maxLength: number, inputMode?: 'numeric' | 'tel') => <FormField id={`resident-${key}`} label={label} value={fields[key]} error={errors[key]} placeholder={placeholders[key]} required={label.endsWith(' *')} maxLength={maxLength} inputMode={inputMode} onChange={event => setField(key, event.target.value)} />
   const selection = (key: 'gender' | 'marital_status', label: string, options: Record<string, string>) => <div className="field"><label htmlFor={`resident-${key}`}>{label}</label><select required className={styles.select} id={`resident-${key}`} value={fields[key]} onChange={event => setField(key, event.target.value)} aria-invalid={Boolean(errors[key])} aria-describedby={errors[key] ? `resident-${key}-error` : undefined}><option value="">Pilih {label.toLocaleLowerCase('id-ID').replace(' *', '')}</option>{Object.entries(options).map(([value, text]) => <option key={value} value={value}>{text}</option>)}</select>{errors[key] ? <p className="field-error" id={`resident-${key}-error`}>{errors[key]}</p> : null}</div>
 
@@ -79,9 +79,7 @@ export function ResidentEditor({ profile, manageAccess = false, onSaved, onCance
       {textField('full_name', 'Nama Lengkap *', 150)}{textField('nik', 'NIK *', 16, 'numeric')}
       {textField('family_card_number', 'Nomor Kartu Keluarga *', 16, 'numeric')}{selection('gender', 'Jenis Kelamin *', genderLabels)}
       {selection('marital_status', 'Status Pernikahan *', maritalLabels)}{textField('house_block', 'Blok Rumah *', 50)}
-      {textField('house_number', 'Nomor Rumah', 30)}{textField('phone', 'Nomor HP *', 25, 'tel')}
-      {textField('address', 'Alamat Lengkap *', 500)}<FormField id="resident-rt" label="RT" value="04" readOnly />
-      <FormField id="resident-rw" label="RW" value="08" readOnly />
+      {textField('phone', 'Nomor HP *', 25, 'tel')}{textField('address', 'Alamat Lengkap *', 500)}
       <FormField id="resident-email" label="Email *" type="email" required value={email} readOnly={Boolean(original)} error={errors.email} maxLength={254} autoComplete="off" onChange={event => setEmail(event.target.value)} />
       {manageAccess ? <><div className="field"><label htmlFor="resident-role">Role *</label><select id="resident-role" className={styles.select} value={role} onChange={event => { setRole(event.target.value as ResidentRole); setConfirmDisable(false) }}>{Object.entries(roleLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></div>
         <div className="field"><label htmlFor="resident-active">Status Warga *</label><select id="resident-active" className={styles.select} value={String(active)} onChange={event => { setActive(event.target.value === 'true'); setConfirmDisable(false) }}><option value="true">Aktif</option><option value="false">Tidak Aktif</option></select></div></> : null}

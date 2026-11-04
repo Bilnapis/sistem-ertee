@@ -11,7 +11,7 @@
   --color-text-input-focus: #e1f3e8;
   --color-text-input-error: #b91c1c;
   --color-text-input-error-soft: #fee2e2;
-  --radius-text-input: 14px;
+  --radius-text-input: 12px;
   --color-resident-action: #087e34;
   --color-resident-soft: #f1f5f9;
   --radius-resident-card: 20px;
@@ -121,7 +121,7 @@ h1 {
   color: #334155;
 }
 .login-fields {
-  --text-input-min-height: 60px;
+  --text-input-min-height: 48px;
   --text-input-gap: 8px;
 }
 .login-actions {

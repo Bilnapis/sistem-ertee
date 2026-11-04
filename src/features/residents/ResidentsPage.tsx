@@ -70,7 +70,7 @@ export default function ResidentsPage() {
         <header className={styles.pageHeader}>
           <div className={styles.pageIntro}>
             <h1 id="resident-page-title">Data Warga</h1>
-            <p>Kelola data warga RT 04 / RW 08</p>
+            <p>Kelola data warga RT 04</p>
           </div>
           <Link className={styles.primary} to={linkTo('tambah')}>
             <Plus size={18} aria-hidden="true" />

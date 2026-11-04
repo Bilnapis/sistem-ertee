@@ -35,7 +35,10 @@ yang sama dengan warga lain.
 
 Migrasi mempertahankan data profil lama. Nomor KK, jenis kelamin, dan status
 pernikahan awal boleh kosong untuk kompatibilitas; lengkapi melalui editor
-sebelum melakukan verifikasi. RT/RW tetap 04/08 untuk instalasi satu RT.
+sebelum melakukan verifikasi. Instalasi ini memakai RT 04 yang sudah ditentukan,
+tanpa RW. Form tambah/edit warga dan edit profil sendiri tidak menampilkan
+input nomor rumah, RT, atau RW. Nomor rumah bersifat opsional di penyimpanan;
+data lama tetap dipertahankan saat profil diedit.
 Tidak ada data warga contoh yang otomatis ditambahkan ke aplikasi.
 
 Untuk pengembangan lokal dengan CLI dan Docker tersedia, jalankan

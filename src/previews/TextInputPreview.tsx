@@ -60,7 +60,7 @@ export default function TextInputPreview() {
           </article>
           <article className={styles.example}>
             <div className={styles.exampleHeading}><span className={styles.number}>04</span><h3>Disabled</h3><span className={styles.stateNote}>Tidak dapat diubah</span></div>
-            <TextInput label="Wilayah tempat tinggal" defaultValue="RT 04 / RW 08" helperText="Wilayah ditentukan oleh pengurus RT." leadingIcon={<LockKeyhole />} disabled />
+            <TextInput label="Wilayah tempat tinggal" defaultValue="RT 04" helperText="Wilayah ditentukan oleh pengurus RT." leadingIcon={<LockKeyhole />} disabled />
           </article>
         </div>
       </section>
