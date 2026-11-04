@@ -1,0 +1,12 @@
+# Dependencies and generated files
+node_modules/
+dist/
+dist-ssr/
+coverage/
+playwright-report/
+test-results/
+supabase/.temp/
+supabase/.branches/
+
+# Managed by npm
+package-lock.json

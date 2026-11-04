@@ -14,6 +14,19 @@ npm run dev
 
 Buka URL yang ditampilkan Vite, biasanya `http://localhost:5173`. Tanpa konfigurasi Supabase, halaman login dan register dapat dilihat, tetapi pengiriman formulir akan menjelaskan bahwa layanan belum terhubung. Tidak ada autentikasi demo yang menyamar sebagai login berhasil.
 
+## Format kode
+
+Proyek menggunakan Prettier dengan aturan pada [`.prettierrc.json`](.prettierrc.json): tanpa titik koma, kutip tunggal, indentasi 2 spasi, dan akhir baris LF.
+
+Untuk format otomatis saat menyimpan, buka folder proyek di VS Code atau Cursor lalu instal ekstensi **Prettier - Code formatter** (`esbenp.prettier-vscode`) dari rekomendasi workspace. Pengaturan workspace sudah mengaktifkan **Format On Save** dan menjadikan Prettier sebagai formatter default.
+
+```sh
+npm run format        # Format seluruh file yang didukung
+npm run format:check  # Periksa format tanpa mengubah file
+```
+
+Dependency, hasil build, laporan pengujian, dan `package-lock.json` diabaikan saat format.
+
 ## Menghubungkan Supabase
 
 1. Buat project Supabase pengembangan yang masih kosong.
@@ -46,17 +59,17 @@ Migrasi diterapkan saat stack lokal diinisialisasi. Salin API URL dan anon/publi
 
 ## Alur yang tersedia
 
-| Route | Perilaku |
-| --- | --- |
-| `/login` | Masuk dengan email/password; pilihan menyimpan sesi dan kontrol tampil/sembunyikan password. |
-| `/register` | Nama, email, NIK dummy 16 digit, nomor HP, alamat, blok rumah, password, dan konfirmasi. |
-| `/auth/callback` | Menangani konfirmasi email Supabase menggunakan PKCE. |
-| `/warga` | Dashboard terlindungi dengan sidebar, profil milik sesi aktif, dan tombol Keluar. |
-| `/warga/profil` | Profil warga sendiri, dibuka dari menu Warga. |
-| `/admin/warga` | Daftar, pencarian, filter role/status/verifikasi, dan pagination bagi Ketua RT/Pengurus RT. |
-| `/admin/warga/tambah` | Menambah data warga sekaligus akun login. |
-| `/admin/warga/:id`, `/admin/warga/:id/edit` | Detail, edit, role/status akun, verifikasi, arsip/pemulihan, dan riwayat. |
-| `/warga/pengajuan-surat`, `/warga/iuran-warga`, `/warga/pengaduan` | Halaman terlindungi dengan keterangan layanan yang sedang disiapkan. |
+| Route                                                              | Perilaku                                                                                     |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| `/login`                                                           | Masuk dengan email/password; pilihan menyimpan sesi dan kontrol tampil/sembunyikan password. |
+| `/register`                                                        | Nama, email, NIK dummy 16 digit, nomor HP, alamat, blok rumah, password, dan konfirmasi.     |
+| `/auth/callback`                                                   | Menangani konfirmasi email Supabase menggunakan PKCE.                                        |
+| `/warga`                                                           | Dashboard terlindungi dengan sidebar, profil milik sesi aktif, dan tombol Keluar.            |
+| `/warga/profil`                                                    | Profil warga sendiri, dibuka dari menu Warga.                                                |
+| `/admin/warga`                                                     | Daftar, pencarian, filter role/status/verifikasi, dan pagination bagi Ketua RT/Pengurus RT.  |
+| `/admin/warga/tambah`                                              | Menambah data warga sekaligus akun login.                                                    |
+| `/admin/warga/:id`, `/admin/warga/:id/edit`                        | Detail, edit, role/status akun, verifikasi, arsip/pemulihan, dan riwayat.                    |
+| `/warga/pengajuan-surat`, `/warga/iuran-warga`, `/warga/pengaduan` | Halaman terlindungi dengan keterangan layanan yang sedang disiapkan.                         |
 
 Registrasi membuat Auth user dan profil secara atomik melalui trigger. Profil baru selalu berperan `warga`, aktif, dan berstatus `menunggu_verifikasi`, termasuk jika request memalsukan metadata peran. Dengan konfirmasi email aktif, buka tautan pada browser yang dipakai mendaftar; tab baru didukung. Dengan konfirmasi email nonaktif, register dapat langsung menghasilkan sesi.
 
