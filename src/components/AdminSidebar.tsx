@@ -11,6 +11,7 @@ import { Link, NavLink } from 'react-router'
 export type AdminSidebarProps = {
   communityLabel: string
   basePath?: string
+  collapsed?: boolean
   className?: string
   paths?: Partial<
     Record<'dashboard' | 'warga' | 'surat' | 'iuran' | 'pengaduan', string>
@@ -40,6 +41,7 @@ const navigation = [
 export function AdminSidebar({
   communityLabel,
   basePath = '/admin',
+  collapsed = false,
   className,
   paths,
   onNavigate,
@@ -51,24 +53,27 @@ export function AdminSidebar({
   return (
     <aside
       className={cn(
-        'flex h-dvh w-sidebar max-w-full shrink-0 [scrollbar-width:thin] [scrollbar-color:#475569_transparent] flex-col gap-8 overflow-y-auto bg-ink px-4 py-6 text-start font-sans text-white',
+        'group/sidebar flex h-dvh w-sidebar max-w-full shrink-0 [scrollbar-width:thin] [scrollbar-color:#475569_transparent] flex-col gap-8 overflow-y-auto bg-ink px-4 py-6 text-start font-sans text-white data-[collapsed=true]:w-sidebar-collapsed',
         className,
       )}
       aria-label="Sidebar admin"
+      data-collapsed={collapsed}
     >
-      <header className="flex min-w-0 flex-none flex-col gap-1 px-3 pe-[var(--sidebar-brand-padding-end,0.75rem)]">
-        <Link
-          className="block text-[1.75rem] leading-tight font-extrabold tracking-[-0.02em] text-white"
-          to={paths?.dashboard ?? rootPath}
-          onClick={onNavigate}
-          aria-label="ErTee — dashboard admin"
-        >
-          ErTee
-        </Link>
-        <p className="text-xs leading-normal font-semibold tracking-wider wrap-anywhere text-slate-400">
-          {communityLabel}
-        </p>
-      </header>
+      {!collapsed ? (
+        <header className="flex min-w-0 flex-none flex-col gap-1 px-3 pe-[var(--sidebar-brand-padding-end,0.75rem)]">
+          <Link
+            className="block text-[1.75rem] leading-tight font-extrabold tracking-[-0.02em] text-white"
+            to={paths?.dashboard ?? rootPath}
+            onClick={onNavigate}
+            aria-label="ErTee — dashboard admin"
+          >
+            ErTee
+          </Link>
+          <p className="text-xs leading-normal font-semibold tracking-wider wrap-anywhere text-slate-400">
+            {communityLabel}
+          </p>
+        </header>
+      ) : null}
 
       <nav className="min-w-0 flex-none" aria-label="Navigasi admin">
         <ul className="m-0 flex list-none flex-col gap-1 p-0">
@@ -78,7 +83,8 @@ export function AdminSidebar({
                 to={paths?.[id] ?? destination(path)}
                 end={id === 'dashboard'}
                 onClick={onNavigate}
-                className="group/nav flex min-h-11 items-center gap-3 rounded-control px-3 py-2.5 text-sm leading-normal font-semibold text-slate-300 hover:bg-slate-800 hover:text-white aria-[current=page]:bg-brand aria-[current=page]:text-white"
+                title={collapsed ? label : undefined}
+                className="group/nav flex min-h-11 items-center gap-3 rounded-control px-3 py-2.5 text-sm leading-normal font-semibold text-slate-300 group-data-[collapsed=true]/sidebar:justify-center group-data-[collapsed=true]/sidebar:px-0 hover:bg-slate-800 hover:text-white aria-[current=page]:bg-brand aria-[current=page]:text-white"
               >
                 <Icon
                   size={20}
@@ -87,23 +93,27 @@ export function AdminSidebar({
                   aria-hidden="true"
                   focusable="false"
                 />
-                <span className="min-w-0 wrap-anywhere">{label}</span>
+                <span className="min-w-0 wrap-anywhere group-data-[collapsed=true]/sidebar:sr-only">
+                  {label}
+                </span>
               </NavLink>
             </li>
           ))}
         </ul>
       </nav>
-      <footer
-        className="mt-auto flex min-w-0 flex-none flex-col gap-0.5 px-3 text-start wrap-anywhere select-none"
-        aria-hidden="true"
-      >
-        <span className="text-xl leading-[1.2] font-extrabold tracking-[-0.02em] text-brand">
-          ErTee
-        </span>
-        <span className="text-xs leading-normal text-slate-400">
-          Layanan Digital Warga
-        </span>
-      </footer>
+      {!collapsed ? (
+        <footer
+          className="mt-auto flex min-w-0 flex-none flex-col gap-0.5 px-3 text-start wrap-anywhere select-none"
+          aria-hidden="true"
+        >
+          <span className="text-xl leading-[1.2] font-extrabold tracking-[-0.02em] text-brand">
+            ErTee
+          </span>
+          <span className="text-xs leading-normal text-slate-400">
+            Layanan Digital Warga
+          </span>
+        </footer>
+      ) : null}
     </aside>
   )
 }

@@ -4,7 +4,7 @@ Komponen [`AdminSidebar`](../src/components/AdminSidebar.tsx) diadaptasi dari ko
 
 Informasi akun telah dipindahkan ke [menu akun pada header](account-menu.md).
 Sidebar desktop maupun drawer mobile memuat identitas RT, navigasi, dan
-identitas produk **ErTee** di bagian bawah dengan gaya merek seperti pada header:
+identitas produk **ErTee** di bagian bawah dengan gaya merek:
 nama hijau 20 px dan subjudul “Layanan Digital Warga” 12 px, tersusun vertikal
 dengan jarak 2 px dan rata awal. Warna subjudul mengikuti teks sekunder sidebar
 untuk latar gelap. Identitas produk mengikuti alur scroll pada layar pendek dan
@@ -22,6 +22,28 @@ import { AdminSidebar } from './components/AdminSidebar'
 
 `className` dapat digunakan untuk menyesuaikan penempatan oleh layout induk. `paths` dapat menyesuaikan URL setiap menu dan `onNavigate` dipanggil saat link dipilih. Tinggi default mengikuti viewport (`100dvh`); sidebar dapat digulir pada viewport pendek agar seluruh menu tetap terjangkau.
 
+Prop `collapsed` (default `false`) menampilkan hanya ikon menu dengan lebar
+`5rem` (80 px). Identitas RT serta merek di atas dan bawah disembunyikan;
+nama setiap menu tetap tersedia bagi pembaca layar dan pada tooltip native.
+Penanda menu aktif dan tujuan tautan tetap mengikuti URL.
+
+Pada `AuthenticatedLayout`, tombol ikon di header menggantikan teks ErTee
+dan mengubah sidebar desktop dari `16.5rem` (264 px) menjadi `5rem` (80 px).
+Kolom konten ikut menyesuaikan lebarnya. Tombol mendukung Enter dan Space,
+mempertahankan fokus setelah toggle, serta memakai `aria-controls` dan
+`aria-expanded`. Ikon mengikuti arah dokumen RTL. Keadaan collapse disimpan
+di state layout selama navigasi dan kembali terbuka setelah layout dimuat ulang.
+Di bawah 1024 px, tombol menu membuka drawer dengan label menu lengkap;
+keadaan collapse desktop tidak memengaruhi drawer.
+
+Verifikasi toggle: build, lint, dan seluruh 73 pengujian E2E lulus. Pengujian
+baru memeriksa lebar 264/80 px pada 1024 dan 1280 px, LTR/RTL, Enter/Space,
+fokus setelah toggle, nama aksesibel menu, penanda aktif, navigasi saat
+collapsed, serta perpindahan desktop ke drawer mobile 375 px. Screenshot
+desktop terbuka, collapsed, dan mobile juga diperiksa. No actionable
+accessibility findings pada alur yang diperiksa; pengujian manual dengan
+pembaca layar dan audit aksesibilitas menyeluruh belum dilakukan.
+
 | Menu            | Tujuan default           |
 | --------------- | ------------------------ |
 | Dashboard       | `/admin`                 |
@@ -38,14 +60,14 @@ Jalankan `npm run dev`, lalu buka `/preview/admin-sidebar`. Route ini hanya dise
 
 ## Ukuran dan batas integrasi
 
-| Elemen     | Sebelumnya                                              | Sekarang                                                                                                                                                |
-| ---------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Sidebar    | Lebar 320 px, padding 32 px vertikal / 28 px horizontal | Lebar `16.5rem` (264 px), padding 24 px vertikal / 16 px horizontal. Lebar sidebar, kolom layout, dan drawer memakai token `--sidebar-width` yang sama. |
-| Warna      | Latar `#0f172a`, aktif `#0ea546`                        | Token `--color-ink` dan `--color-brand`.                                                                                                                |
-| Menu       | Tinggi minimum 60 px, gap 12 px, radius 16 px           | Tinggi minimum 44 px, gap 4 px, radius 12 px. Padding vertikal 10 px memungkinkan label panjang membungkus.                                             |
-| Ikon       | Lucide, ukuran 24 px, stroke 2 px                       | Lucide, ukuran 20 px, stroke 2 px.                                                                                                                      |
-| Tipografi  | Inter; merek 32/800, menu 18/600, menu aktif 18/800     | Inter; merek 28/800, menu 14/600 termasuk menu aktif, label RT 12/600. Ukuran memakai `rem`, line-height unitless.                                      |
-| Kartu akun | Ditampilkan pada bagian bawah sidebar                   | Dihapus dari sidebar; informasi dan tindakan akun tersedia pada header.                                                                                 |
+| Elemen     | Sebelumnya                                              | Sekarang                                                                                                                                                                                                                                     |
+| ---------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Sidebar    | Lebar 320 px, padding 32 px vertikal / 28 px horizontal | Lebar `16.5rem` (264 px), padding 24 px vertikal / 16 px horizontal. Token `--spacing-sidebar` dipakai sidebar terbuka dan drawer; `--spacing-sidebar-collapsed` (80 px) dipakai sidebar yang diciutkan. Kolom layout mengikuti kedua token. |
+| Warna      | Latar `#0f172a`, aktif `#0ea546`                        | Token `--color-ink` dan `--color-brand`.                                                                                                                                                                                                     |
+| Menu       | Tinggi minimum 60 px, gap 12 px, radius 16 px           | Tinggi minimum 44 px, gap 4 px, radius 12 px. Padding vertikal 10 px memungkinkan label panjang membungkus.                                                                                                                                  |
+| Ikon       | Lucide, ukuran 24 px, stroke 2 px                       | Lucide, ukuran 20 px, stroke 2 px.                                                                                                                                                                                                           |
+| Tipografi  | Inter; merek 32/800, menu 18/600, menu aktif 18/800     | Inter; merek 28/800, menu 14/600 termasuk menu aktif, label RT 12/600. Ukuran memakai `rem`, line-height unitless.                                                                                                                           |
+| Kartu akun | Ditampilkan pada bagian bawah sidebar                   | Dihapus dari sidebar; informasi dan tindakan akun tersedia pada header.                                                                                                                                                                      |
 
 Nilai piksel di atas berlaku pada ukuran font root 16 px. Logo, label RT, dan ikon menu berbagi tepi awal 28 px. Jarak antarkelompok 32 px membedakan identitas dan navigasi; tinggi navigasi mengikuti isinya.
 

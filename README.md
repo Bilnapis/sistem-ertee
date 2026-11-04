@@ -1,6 +1,6 @@
 # Sistem ErTee
 
-Aplikasi layanan RT menggunakan React, Vite, TypeScript, React Router v7, TanStack Query, Tailwind CSS, dan Supabase. Fitur tersedia mencakup **autentikasi, manajemen warga dan akun, verifikasi, arsip, pembaruan profil sendiri, pengajuan surat, serta iuran warga bulanan**.
+Aplikasi layanan RT menggunakan React, Vite, TypeScript, React Router v7, TanStack Query, Tailwind CSS, dan Supabase. Fitur tersedia mencakup **autentikasi, manajemen warga dan akun, verifikasi, arsip, pembaruan profil sendiri, pengajuan surat, iuran warga bulanan, serta pengaduan warga**.
 
 ## Menjalankan aplikasi
 
@@ -81,7 +81,8 @@ Migrasi diterapkan saat stack lokal diinisialisasi. Salin API URL dan anon/publi
 | `/admin/pengajuan-surat`, `/admin/pengajuan-surat/:id`                                  | Daftar seluruh warga, ringkasan dan pemrosesan surat oleh pengurus.                           |
 | `/warga/iuran-warga`, `/warga/iuran-warga/:id`, `/warga/iuran-warga/:id/bayar`          | Tagihan pribadi, riwayat dan konfirmasi Tunai/Cash atau Transfer dengan bukti privat.         |
 | `/admin/iuran-warga`, `/admin/iuran-warga/:id`, `/admin/iuran-warga/pengaturan`         | Daftar seluruh tagihan, verifikasi/pembatalan, rekap pemasukan dan pengaturan tarif/rekening. |
-| `/warga/pengaduan`                                                                      | Halaman terlindungi dengan keterangan layanan yang sedang disiapkan.                          |
+| `/warga/pengaduan`, `/warga/pengaduan/tambah`, `/warga/pengaduan/:id`                   | Pengajuan, daftar pribadi, detail, hasil penanganan dan riwayat.                              |
+| `/admin/pengaduan`, `/admin/pengaduan/:id`                                              | Rekap berfilter, detail, koreksi kategori serta pemrosesan pengaduan oleh pengelola.          |
 
 Registrasi membuat Auth user dan profil secara atomik melalui trigger. Profil baru selalu berperan `warga`, aktif, dan berstatus `menunggu_verifikasi`, termasuk jika request memalsukan metadata peran. Dengan konfirmasi email aktif, buka tautan pada browser yang dipakai mendaftar; tab baru didukung. Dengan konfirmasi email nonaktif, register dapat langsung menghasilkan sesi.
 
@@ -90,7 +91,7 @@ Registrasi membuat Auth user dan profil secara atomik melalui trigger. Profil ba
 ## Manajemen warga dan batas fitur
 
 - Ketua RT dan Pengurus RT memiliki kewenangan sama untuk mengelola data/akun, role, status aktif, verifikasi/perbaikan, serta arsip/pemulihan. Pengelola aktif terakhir tidak dapat dinonaktifkan, diarsipkan, atau diturunkan menjadi Warga.
-- Warga dapat mengedit identitas sendiri, termasuk nomor KK, jenis kelamin, dan status pernikahan. Perubahan identitas memerlukan verifikasi ulang. Tanggal lahir, kas lengkap dan pengaduan belum termasuk fitur ini. RBAC surat dan iuran tersedia melalui modul masing-masing.
+- Warga dapat mengedit identitas sendiri, termasuk nomor KK, jenis kelamin, dan status pernikahan. Perubahan identitas memerlukan verifikasi ulang. Tanggal lahir dan kas lengkap belum termasuk fitur ini. RBAC surat dan iuran tersedia melalui modul masing-masing.
 - Setelah migrasi autentikasi, terapkan migrasi manajemen warga dan deploy Edge Function `create-resident`. Panduan lengkap, bootstrap Ketua RT pertama, kontrak API, serta batas pengujian ada di [`docs/resident-management.md`](docs/resident-management.md).
 - Pendaftaran mandiri menyesuaikan permintaan terbaru pengguna. Login menggunakan **email** sesuai PRD; desain memakai HP/NIK. HP/NIK tetap dikumpulkan sebagai data profil dan bukan identitas login pada tahap ini.
 - Tombol “Lupa password?” membuka petunjuk menghubungi pengurus. Pemulihan mandiri belum tersedia.
@@ -131,6 +132,21 @@ kontrak, privasi, perhitungan kas, serta batas pengujian ada di
 Pemasukan lain, pengeluaran, saldo kas lengkap dan ekspor CSV belum termasuk tahap ini.
 Migrasi/Cron cloud dan deployment hosting belum dijalankan.
 
+## Pengaduan warga
+
+Akun aktif nonarsip dapat mengajukan pengaduan tanpa syarat profil terverifikasi.
+Kategori tersedia: Fasilitas Umum, Keamanan, serta Kebersihan dan Sampah. Ketua RT
+atau Pengurus RT menindaklanjuti **Diajukan → Diproses → Selesai**, atau menolak
+pada status Diajukan/Diproses. Penyelesaian dan penolakan wajib memiliki penjelasan
+yang dapat dibaca pengaju. Koreksi kategori dan seluruh tindakan menyimpan riwayat.
+
+Setelah empat migrasi sebelumnya, terapkan
+[`20261104000300_complaints.sql`](supabase/migrations/20261104000300_complaints.sql).
+Panduan pemasangan, kontrak RPC, privasi, desain, dan batas pengujian tersedia di
+[`docs/pengaduan.md`](docs/pengaduan.md). Rekap pengelola mengikuti filter sebelum
+pagination. Notifikasi dan ekspor CSV ditunda; migrasi cloud dan deployment
+hosting belum dijalankan.
+
 ## Pengujian
 
 ```sh
@@ -150,6 +166,7 @@ src/features/auth/       Formulir, validasi, session provider, dan pesan kesalah
 src/features/residents/  Beranda, profil sendiri dan manajemen warga
 src/features/letters/    Pengajuan pribadi, pemrosesan pengurus dan lampiran
 src/features/dues/       Tagihan bulanan, pembayaran, verifikasi dan pengaturan
+src/features/complaints/ Pengaduan pribadi, penanganan pengurus dan rekap
 src/components/          Komponen formulir dan umpan balik
 src/lib/                 Supabase client dan tipe database
 supabase/                Konfigurasi lokal dan migrasi PostgreSQL

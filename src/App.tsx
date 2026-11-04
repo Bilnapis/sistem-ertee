@@ -12,7 +12,6 @@ import { LoginPage } from './features/auth/LoginPage'
 import { RegisterPage } from './features/auth/RegisterPage'
 import { ResidentHome } from './features/residents/ResidentHome'
 import { SignOutButton } from './features/auth/SignOutButton'
-import { UpcomingModule } from './features/residents/UpcomingModule'
 import { AuthenticatedLayout } from './components/AuthenticatedLayout'
 import { Feedback, LoadingScreen } from './components/Feedback'
 import { isManager, ResidentQueryProvider } from './features/residents/data'
@@ -26,6 +25,13 @@ const DuesPage = lazy(() => import('./features/dues/DuesPage'))
 const DuesPaymentForm = lazy(() => import('./features/dues/DuesPaymentForm'))
 const DuesDetails = lazy(() => import('./features/dues/DuesDetails'))
 const DuesSettings = lazy(() => import('./features/dues/DuesSettings'))
+const ComplaintsPage = lazy(
+  () => import('./features/complaints/ComplaintsPage'),
+)
+const ComplaintForm = lazy(() => import('./features/complaints/ComplaintForm'))
+const ComplaintDetails = lazy(
+  () => import('./features/complaints/ComplaintDetails'),
+)
 
 const AdminSidebarPreview = import.meta.env.DEV
   ? lazy(() => import('./previews/AdminSidebarPreview'))
@@ -138,6 +144,12 @@ export function App() {
               <Route element={<ProtectedLayout />}>
                 <Route element={<ManagerOnly />}>
                   <Route
+                    path="/admin/pengaduan"
+                    element={<ComplaintsPage manage />}
+                  >
+                    <Route path=":id" element={<ComplaintDetails manage />} />
+                  </Route>
+                  <Route
                     path="/admin/iuran-warga"
                     element={<DuesPage manage />}
                   >
@@ -179,15 +191,10 @@ export function App() {
                   <Route path=":id" element={<DuesDetails />} />
                   <Route path=":id/bayar" element={<DuesPaymentForm />} />
                 </Route>
-                <Route
-                  path="/warga/pengaduan/*"
-                  element={
-                    <UpcomingModule
-                      title="Pengaduan"
-                      description="Pengajuan dan status pengaduan Anda akan tersedia di sini."
-                    />
-                  }
-                />
+                <Route path="/warga/pengaduan" element={<ComplaintsPage />}>
+                  <Route path="tambah" element={<ComplaintForm />} />
+                  <Route path=":id" element={<ComplaintDetails />} />
+                </Route>
               </Route>
               <Route path="*" element={<Navigate to="/warga" replace />} />
             </Routes>

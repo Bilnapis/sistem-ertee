@@ -84,7 +84,7 @@ Batas input dan tabel memakai token `--color-border: #dce4ee`; border kontrol me
 
 | Keputusan           | Implementasi                                                                                                                   |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Sidebar             | Pertahankan komponen 264 px dan drawer yang sudah diterapkan.                                                                  |
+| Sidebar             | Sidebar desktop 264 px, dapat diciutkan menjadi 80 px melalui tombol ikon di header; drawer mobile memakai label menu lengkap. |
 | Tabel               | Header lembut, permukaan putih, radius 20 px, NIK tersamarkan.                                                                 |
 | Kepadatan daftar    | Judul 32 px desktop / 28 px area sempit; teks tabel 14 px, badge role 12 px, angka ringkasan 24 px. Ukuran teks memakai `rem`. |
 | Area konten         | Maksimal 96rem, gutter 24 px desktop / 16 px area sempit; kolom tabel memiliki proporsi tetap.                                 |
@@ -187,3 +187,21 @@ Container halaman diberi nama `page`; header dan menu akun menargetkan
 container tetap mengikuti layout sebelumnya. CSS khusus hanya mengatur dasar
 dokumen dan transisi native drawer. Catatan migrasi dan validasi berada di
 `docs/tailwind-migration.md`.
+
+## Pengaduan warga
+
+Belum tersedia frame khusus pengaduan dalam `design.fig`. Halaman mengadaptasi
+pola daftar surat `0:4901`, formulir `0:3965`, serta detail `0:5080` tanpa
+mengubah desain sumber. PageIntro, SummaryCardView, TablePagination dan TextInput
+memakai komponen bersama. Sidebar/header yang tersedia tetap menjadi shell.
+
+Formulir maksimal 1000 px dan detail 912 px, radius 22 px, padding desktop 28 px,
+gap field 16 px, serta kontrol minimum 48 px. Formulir menjadi satu kolom di bawah
+640 px; tabel bergulir dalam region sendiri. Empat kartu pengelola menyajikan
+Diajukan, Diproses, Selesai dan Ditolak sesuai seluruh filter sebelum pagination.
+Status memakai badge warning/info/success/danger beserta label teks.
+
+Konfirmasi penolakan memakai dialog bertingkat maksimal 528 px dan menyebut judul
+pengaduan. Riwayat, alasan penolakan, hasil penanganan dan keadaan gagal/memuat/kosong
+melengkapi kebutuhan PRD. Screenshot responsif dan batas pengujian dijelaskan di
+`docs/pengaduan.md`.

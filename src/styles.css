@@ -27,6 +27,7 @@
   --radius-summary: 14px;
   --radius-dialog: 22px;
   --spacing-sidebar: 16.5rem;
+  --spacing-sidebar-collapsed: 5rem;
   --shadow-card: 0 20px 40px #0f172a12;
   --shadow-dialog: 0 24px 60px #0f172a29;
   --ease-ui: cubic-bezier(0.2, 0, 0, 1);

@@ -209,6 +209,133 @@ test('login, reload, logout, browser back, and direct access enforce session bou
   expect(tokens).toEqual([])
 })
 
+test('desktop sidebar toggles with the keyboard and keeps icon navigation accessible', async ({
+  page,
+}) => {
+  await mockSupabase(page)
+  await login(page)
+  const sidebar = page.getByRole('complementary', { name: 'Sidebar admin' })
+  const collapse = page.getByRole('button', {
+    name: 'Ciutkan sidebar',
+    exact: true,
+  })
+  const expand = page.getByRole('button', {
+    name: 'Perluas sidebar',
+    exact: true,
+  })
+  const labels = [
+    'Dashboard',
+    'Warga',
+    'Pengajuan Surat',
+    'Iuran Warga',
+    'Pengaduan',
+  ]
+
+  for (const width of [1024, 1280]) {
+    await page.setViewportSize({ width, height: 900 })
+    for (const dir of ['ltr', 'rtl']) {
+      await page.evaluate((direction) => {
+        document.documentElement.dir = direction
+      }, dir)
+      await expect(collapse).toHaveAttribute('aria-expanded', 'true')
+      expect((await sidebar.boundingBox())!.width).toBe(264)
+      const controlledId = await collapse.getAttribute('aria-controls')
+      expect(await sidebar.evaluate((node) => node.parentElement?.id)).toBe(
+        controlledId,
+      )
+
+      await collapse.focus()
+      await page.keyboard.press('Enter')
+      await expect(expand).toBeFocused()
+      await expect(expand).toHaveAttribute('aria-expanded', 'false')
+      expect((await sidebar.boundingBox())!.width).toBe(80)
+      await expect(sidebar.getByRole('link')).toHaveCount(5)
+      for (const label of labels) {
+        const link = sidebar.getByRole('link', { name: label, exact: true })
+        await expect(link).toBeVisible()
+        await expect(link).toHaveAttribute('title', label)
+        expect(
+          (await link.locator('span').boundingBox())!.width,
+        ).toBeLessThanOrEqual(1)
+      }
+      const residentLink = sidebar.getByRole('link', {
+        name: 'Warga',
+        exact: true,
+      })
+      await residentLink.focus()
+      await page.keyboard.press('Enter')
+      await expect(page).toHaveURL(/\/warga\/profil$/)
+      await expect(residentLink).toHaveAttribute('aria-current', 'page')
+      await expect(expand).toHaveAttribute('aria-expanded', 'false')
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth),
+      ).toBeLessThanOrEqual(width)
+      if (width === 1280 && dir === 'ltr') {
+        await page.screenshot({
+          path: 'test-results/authenticated-sidebar-collapsed.png',
+          fullPage: true,
+        })
+      }
+
+      await expand.focus()
+      await page.keyboard.press('Space')
+      await expect(collapse).toBeFocused()
+      await expect(collapse).toHaveAttribute('aria-expanded', 'true')
+      expect((await sidebar.boundingBox())!.width).toBe(264)
+      await expect(
+        sidebar.getByRole('link', { name: 'ErTee — dashboard admin' }),
+      ).toBeVisible()
+      expect(
+        (await residentLink.locator('span').boundingBox())!.width,
+      ).toBeGreaterThan(1)
+    }
+  }
+})
+
+test('a collapsed desktop sidebar keeps the full mobile drawer when the viewport changes', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await mockSupabase(page)
+  await login(page)
+  await page
+    .getByRole('button', { name: 'Ciutkan sidebar', exact: true })
+    .click()
+  await page.setViewportSize({ width: 375, height: 900 })
+  await expect(
+    page.getByRole('button', { name: 'Perluas sidebar', exact: true }),
+  ).not.toBeVisible()
+  const trigger = page.getByRole('button', {
+    name: 'Buka menu navigasi',
+    exact: true,
+  })
+  await trigger.click()
+  const drawer = page.getByRole('dialog', {
+    name: 'Menu navigasi',
+    exact: true,
+  })
+  await expect(drawer).toBeVisible()
+  const residentLink = drawer.getByRole('link', { name: 'Warga', exact: true })
+  expect(
+    (await residentLink.locator('span').boundingBox())!.width,
+  ).toBeGreaterThan(1)
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth),
+  ).toBeLessThanOrEqual(375)
+  await page.keyboard.press('Escape')
+  await expect(drawer).not.toBeVisible()
+  await expect(trigger).toBeFocused()
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await expect(
+    page.getByRole('button', { name: 'Perluas sidebar', exact: true }),
+  ).toHaveAttribute('aria-expanded', 'false')
+  expect(
+    (await page
+      .getByRole('complementary', { name: 'Sidebar admin' })
+      .boundingBox())!.width,
+  ).toBe(80)
+})
+
 test('the sidebar opens on mobile and closes with its button, backdrop, Escape, or navigation', async ({
   page,
 }) => {

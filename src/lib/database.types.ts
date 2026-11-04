@@ -4,6 +4,12 @@ import type {
   ResidentRole,
 } from '../../supabase/functions/_shared/resident'
 import type {
+  Complaint,
+  ComplaintEvent,
+  ComplaintOverview,
+  ComplaintDetail,
+} from '../features/complaints/types'
+import type {
   DuesConfiguration,
   DuesDetail,
   DuesOverview,
@@ -138,6 +144,8 @@ type ReadOnlyTable<Row> = {
 export type Database = {
   public: {
     Tables: {
+      complaints: ReadOnlyTable<Complaint & { submitted_payload: Json }>
+      complaint_events: ReadOnlyTable<ComplaintEvent>
       dues_settings: ReadOnlyTable<
         Omit<DuesConfiguration, 'current_rate' | 'next_rate' | 'next_month'> & {
           id: boolean
@@ -184,6 +192,42 @@ export type Database = {
     }
     Views: { [_ in never]: never }
     Functions: {
+      complaints_overview: {
+        Args: {
+          p_scope: string
+          p_search: string
+          p_category: string
+          p_status: string
+          p_from: string | null
+          p_to: string | null
+          p_sort: string
+          p_page: number
+        }
+        Returns: ComplaintOverview
+      }
+      complaint_detail: {
+        Args: { p_id: string; p_scope: string }
+        Returns: ComplaintDetail
+      }
+      submit_complaint: {
+        Args: {
+          p_request_id: string
+          p_title: string
+          p_description: string
+          p_category: string
+        }
+        Returns: Complaint
+      }
+      review_complaint: {
+        Args: {
+          p_id: string
+          p_action: string
+          p_category: string | null
+          p_note: string
+          p_expected_updated_at: string
+        }
+        Returns: ComplaintDetail
+      }
       dues_configuration: {
         Args: Record<string, never>
         Returns: DuesConfiguration
