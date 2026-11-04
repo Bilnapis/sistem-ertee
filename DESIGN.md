@@ -132,3 +132,17 @@ tetap utuh. Status Menunggu pada sumber diganti **Pengajuan** sesuai keputusan p
   dan fokus dikembalikan ke pemicu. Navigasi ponsel memakai drawer yang tersedia.
 
 Perbandingan browser dan batas pengujian dicatat di `docs/letter-requests.md`.
+
+## Iuran warga bulanan
+
+Acuan langsung `design.fig`: belum bayar `0:4158`, pembayaran `0:4216`, dan
+lunas `0:4319`, seluruhnya 1648 × 1056 px. Token global, sidebar/header aplikasi,
+Inter, Lucide dan `TextInput` tetap digunakan. Kartu beradius 20 px; dialog
+maksimal 648 px, radius 22 px, padding 28 px. Tombol memakai token aksi
+aksesibel `#087e34` dan status selalu berlabel teks.
+
+Dua ringkasan bulan berjalan dipakai konsisten. Pilihan Tunai/Cash dan Transfer,
+tanggal pembayaran, filter, pagination, detail/riwayat dan halaman pengurus
+melengkapi keputusan fitur. Form/detail menjadi satu kolom di bawah 640 px;
+tabel bergulir dalam region sendiri. Perbandingan pada 375, 768 dan 1648 px
+serta batas pengujian ada di `docs/monthly-dues.md`.

@@ -22,6 +22,10 @@ const ResidentDialog = lazy(() => import('./features/residents/ResidentDialog'))
 const LettersPage = lazy(() => import('./features/letters/LettersPage'))
 const LetterForm = lazy(() => import('./features/letters/LetterForm'))
 const LetterDetails = lazy(() => import('./features/letters/LetterDetails'))
+const DuesPage = lazy(() => import('./features/dues/DuesPage'))
+const DuesPaymentForm = lazy(() => import('./features/dues/DuesPaymentForm'))
+const DuesDetails = lazy(() => import('./features/dues/DuesDetails'))
+const DuesSettings = lazy(() => import('./features/dues/DuesSettings'))
 
 const AdminSidebarPreview = import.meta.env.DEV
   ? lazy(() => import('./previews/AdminSidebarPreview'))
@@ -125,6 +129,13 @@ export function App() {
               <Route element={<ProtectedLayout />}>
                 <Route element={<ManagerOnly />}>
                   <Route
+                    path="/admin/iuran-warga"
+                    element={<DuesPage manage />}
+                  >
+                    <Route path="pengaturan" element={<DuesSettings />} />
+                    <Route path=":id" element={<DuesDetails manage />} />
+                  </Route>
+                  <Route
                     path="/admin"
                     element={<Navigate to="/admin/warga" replace />}
                   />
@@ -155,15 +166,10 @@ export function App() {
                   <Route path="tambah" element={<LetterForm />} />
                   <Route path=":id" element={<LetterDetails />} />
                 </Route>
-                <Route
-                  path="/warga/iuran-warga/*"
-                  element={
-                    <UpcomingModule
-                      title="Iuran Warga"
-                      description="Riwayat pembayaran iuran Anda akan tersedia di sini."
-                    />
-                  }
-                />
+                <Route path="/warga/iuran-warga" element={<DuesPage />}>
+                  <Route path=":id" element={<DuesDetails />} />
+                  <Route path=":id/bayar" element={<DuesPaymentForm />} />
+                </Route>
                 <Route
                   path="/warga/pengaduan/*"
                   element={

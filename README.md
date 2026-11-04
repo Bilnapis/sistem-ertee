@@ -1,6 +1,6 @@
 # Sistem ErTee
 
-Aplikasi layanan RT menggunakan React, Vite, TypeScript, React Router v7, TanStack Query, Tailwind CSS, dan Supabase. Fitur tersedia mencakup **autentikasi, manajemen warga dan akun, verifikasi, arsip, pembaruan profil sendiri, serta pengajuan dan pemrosesan surat**.
+Aplikasi layanan RT menggunakan React, Vite, TypeScript, React Router v7, TanStack Query, Tailwind CSS, dan Supabase. Fitur tersedia mencakup **autentikasi, manajemen warga dan akun, verifikasi, arsip, pembaruan profil sendiri, pengajuan surat, serta iuran warga bulanan**.
 
 ## Menjalankan aplikasi
 
@@ -59,19 +59,21 @@ Migrasi diterapkan saat stack lokal diinisialisasi. Salin API URL dan anon/publi
 
 ## Alur yang tersedia
 
-| Route                                                                                   | Perilaku                                                                                     |
-| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `/login`                                                                                | Masuk dengan email/password; pilihan menyimpan sesi dan kontrol tampil/sembunyikan password. |
-| `/register`                                                                             | Nama, email, NIK dummy 16 digit, nomor HP, alamat, blok rumah, password, dan konfirmasi.     |
-| `/auth/callback`                                                                        | Menangani konfirmasi email Supabase menggunakan PKCE.                                        |
-| `/warga`                                                                                | Dashboard terlindungi dengan sidebar, profil milik sesi aktif, dan tombol Keluar.            |
-| `/warga/profil`                                                                         | Profil warga sendiri, dibuka dari menu Warga.                                                |
-| `/admin/warga`                                                                          | Daftar, pencarian, filter role/status/verifikasi, dan pagination bagi Ketua RT/Pengurus RT.  |
-| `/admin/warga/tambah`                                                                   | Menambah data warga sekaligus akun login.                                                    |
-| `/admin/warga/:id`, `/admin/warga/:id/edit`                                             | Detail, edit, role/status akun, verifikasi, arsip/pemulihan, dan riwayat.                    |
-| `/warga/pengajuan-surat`, `/warga/pengajuan-surat/tambah`, `/warga/pengajuan-surat/:id` | Daftar sendiri, pengajuan baru, detail, riwayat dan lampiran privat.                         |
-| `/admin/pengajuan-surat`, `/admin/pengajuan-surat/:id`                                  | Daftar seluruh warga, ringkasan dan pemrosesan surat oleh pengurus.                          |
-| `/warga/iuran-warga`, `/warga/pengaduan`                                                | Halaman terlindungi dengan keterangan layanan yang sedang disiapkan.                         |
+| Route                                                                                   | Perilaku                                                                                      |
+| --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `/login`                                                                                | Masuk dengan email/password; pilihan menyimpan sesi dan kontrol tampil/sembunyikan password.  |
+| `/register`                                                                             | Nama, email, NIK dummy 16 digit, nomor HP, alamat, blok rumah, password, dan konfirmasi.      |
+| `/auth/callback`                                                                        | Menangani konfirmasi email Supabase menggunakan PKCE.                                         |
+| `/warga`                                                                                | Dashboard terlindungi dengan sidebar, profil milik sesi aktif, dan tombol Keluar.             |
+| `/warga/profil`                                                                         | Profil warga sendiri, dibuka dari menu Warga.                                                 |
+| `/admin/warga`                                                                          | Daftar, pencarian, filter role/status/verifikasi, dan pagination bagi Ketua RT/Pengurus RT.   |
+| `/admin/warga/tambah`                                                                   | Menambah data warga sekaligus akun login.                                                     |
+| `/admin/warga/:id`, `/admin/warga/:id/edit`                                             | Detail, edit, role/status akun, verifikasi, arsip/pemulihan, dan riwayat.                     |
+| `/warga/pengajuan-surat`, `/warga/pengajuan-surat/tambah`, `/warga/pengajuan-surat/:id` | Daftar sendiri, pengajuan baru, detail, riwayat dan lampiran privat.                          |
+| `/admin/pengajuan-surat`, `/admin/pengajuan-surat/:id`                                  | Daftar seluruh warga, ringkasan dan pemrosesan surat oleh pengurus.                           |
+| `/warga/iuran-warga`, `/warga/iuran-warga/:id`, `/warga/iuran-warga/:id/bayar`          | Tagihan pribadi, riwayat dan konfirmasi Tunai/Cash atau Transfer dengan bukti privat.         |
+| `/admin/iuran-warga`, `/admin/iuran-warga/:id`, `/admin/iuran-warga/pengaturan`         | Daftar seluruh tagihan, verifikasi/pembatalan, rekap pemasukan dan pengaturan tarif/rekening. |
+| `/warga/pengaduan`                                                                      | Halaman terlindungi dengan keterangan layanan yang sedang disiapkan.                          |
 
 Registrasi membuat Auth user dan profil secara atomik melalui trigger. Profil baru selalu berperan `warga`, aktif, dan berstatus `menunggu_verifikasi`, termasuk jika request memalsukan metadata peran. Dengan konfirmasi email aktif, buka tautan pada browser yang dipakai mendaftar; tab baru didukung. Dengan konfirmasi email nonaktif, register dapat langsung menghasilkan sesi.
 
@@ -80,7 +82,7 @@ Registrasi membuat Auth user dan profil secara atomik melalui trigger. Profil ba
 ## Manajemen warga dan batas fitur
 
 - Ketua RT dan Pengurus RT memiliki kewenangan sama untuk mengelola data/akun, role, status aktif, verifikasi/perbaikan, serta arsip/pemulihan. Pengelola aktif terakhir tidak dapat dinonaktifkan, diarsipkan, atau diturunkan menjadi Warga.
-- Warga dapat mengedit identitas sendiri, termasuk nomor KK, jenis kelamin, dan status pernikahan. Perubahan identitas memerlukan verifikasi ulang. Tanggal lahir dan modul keuangan/pengaduan belum termasuk fitur ini. RBAC surat tersedia melalui modul pengajuan surat.
+- Warga dapat mengedit identitas sendiri, termasuk nomor KK, jenis kelamin, dan status pernikahan. Perubahan identitas memerlukan verifikasi ulang. Tanggal lahir, kas lengkap dan pengaduan belum termasuk fitur ini. RBAC surat dan iuran tersedia melalui modul masing-masing.
 - Setelah migrasi autentikasi, terapkan migrasi manajemen warga dan deploy Edge Function `create-resident`. Panduan lengkap, bootstrap Ketua RT pertama, kontrak API, serta batas pengujian ada di [`docs/resident-management.md`](docs/resident-management.md).
 - Pendaftaran mandiri menyesuaikan permintaan terbaru pengguna. Login menggunakan **email** sesuai PRD; desain memakai HP/NIK. HP/NIK tetap dikumpulkan sebagai data profil dan bukan identitas login pada tahap ini.
 - Tombol “Lupa password?” membuka petunjuk menghubungi pengurus. Pemulihan mandiri belum tersedia.
@@ -103,6 +105,24 @@ kontrak API, catatan riwayat migrasi cloud yang sebelumnya diterapkan manual,
 serta batas pengujian ada di [`docs/letter-requests.md`](docs/letter-requests.md).
 Tidak ada migrasi cloud atau deployment hosting yang dilakukan pada tahap ini.
 
+## Iuran warga bulanan
+
+Setiap profil aktif mendapat satu tagihan per bulan, tarif awal **Rp50.000** dan
+jatuh tempo tanggal **10 bulan berjalan**. Warga mengonfirmasi Tunai/Cash tanpa
+lampiran atau Transfer dengan bukti JPG/PNG/PDF maksimal 5 MB. Kedua metode
+menunggu pengesahan Ketua RT/Pengurus RT sebelum menjadi Lunas dan masuk kas.
+Penolakan/pembatalan menyimpan alasan dan riwayat. Tarif dan jatuh tempo baru
+berlaku bulan berikutnya; rekening diatur pengurus untuk mengaktifkan transfer.
+
+Setelah tiga migrasi sebelumnya, terapkan
+[`20261104000200_monthly_dues.sql`](supabase/migrations/20261104000200_monthly_dues.sql),
+lalu pasang job otomatis dengan [`monthly-dues.sql`](supabase/cron/monthly-dues.sql)
+sebagai pemilik database. Scheduler terpisah dari migrasi inti. Panduan route,
+kontrak, privasi, perhitungan kas, serta batas pengujian ada di
+[`docs/monthly-dues.md`](docs/monthly-dues.md).
+Pemasukan lain, pengeluaran, saldo kas lengkap dan ekspor CSV belum termasuk tahap ini.
+Migrasi/Cron cloud dan deployment hosting belum dijalankan.
+
 ## Pengujian
 
 ```sh
@@ -121,6 +141,7 @@ Jika Chrome belum tersedia, instal Chrome atau ubah `channel` pada [`playwright.
 src/features/auth/       Formulir, validasi, session provider, dan pesan kesalahan
 src/features/residents/  Beranda, profil sendiri dan manajemen warga
 src/features/letters/    Pengajuan pribadi, pemrosesan pengurus dan lampiran
+src/features/dues/       Tagihan bulanan, pembayaran, verifikasi dan pengaturan
 src/components/          Komponen formulir dan umpan balik
 src/lib/                 Supabase client dan tipe database
 supabase/                Konfigurasi lokal dan migrasi PostgreSQL

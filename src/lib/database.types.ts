@@ -3,6 +3,15 @@ import type {
   MaritalStatus,
   ResidentRole,
 } from '../../supabase/functions/_shared/resident'
+import type {
+  DuesConfiguration,
+  DuesDetail,
+  DuesOverview,
+  DuesInvoice,
+  DuesPayment,
+  DuesEvent,
+  DuesRate,
+} from '../features/dues/types'
 export type {
   ResidentFields,
   ResidentRole,
@@ -119,9 +128,35 @@ export type LetterFilters = {
 export type LetterDirectory = { items: LetterRequest[]; total: number }
 export type LetterSummary = Record<LetterStatus | 'total', number>
 
+type ReadOnlyTable<Row> = {
+  Row: Row
+  Insert: never
+  Update: never
+  Relationships: []
+}
+
 export type Database = {
   public: {
     Tables: {
+      dues_settings: ReadOnlyTable<
+        Omit<DuesConfiguration, 'current_rate' | 'next_rate' | 'next_month'> & {
+          id: boolean
+        }
+      >
+      dues_rates: ReadOnlyTable<DuesRate>
+      dues_invoices: ReadOnlyTable<Omit<DuesInvoice, 'payment_date'>>
+      dues_payments: ReadOnlyTable<DuesPayment & { submitted_payload: Json }>
+      dues_events: ReadOnlyTable<DuesEvent>
+      dues_cash_entries: ReadOnlyTable<{
+        id: string
+        payment_id: string
+        invoice_id: string
+        amount: number
+        transaction_date: string
+        status: 'tercatat' | 'dibatalkan'
+        created_at: string
+        cancelled_at: string | null
+      }>
       profiles: {
         Row: ResidentProfile
         Insert: Omit<ResidentProfile, 'created_at' | 'updated_at'>
@@ -149,6 +184,53 @@ export type Database = {
     }
     Views: { [_ in never]: never }
     Functions: {
+      dues_configuration: {
+        Args: Record<string, never>
+        Returns: DuesConfiguration
+      }
+      update_dues_configuration: {
+        Args: {
+          p_amount: number
+          p_due_day: number
+          p_bank_name: string
+          p_bank_account: string
+          p_bank_holder: string
+          p_expected_updated_at: string
+        }
+        Returns: DuesConfiguration
+      }
+      dues_overview: {
+        Args: {
+          p_scope: string
+          p_period: string | null
+          p_status: string
+          p_method: string
+          p_search: string
+          p_page: number
+        }
+        Returns: DuesOverview
+      }
+      dues_detail: { Args: { p_id: string }; Returns: DuesDetail }
+      submit_dues_payment: {
+        Args: {
+          p_request_id: string
+          p_invoice_id: string
+          p_method: string
+          p_payment_date: string
+          p_notes: string
+          p_attachment: Json
+        }
+        Returns: DuesDetail
+      }
+      review_dues_payment: {
+        Args: {
+          p_payment_id: string
+          p_action: string
+          p_note: string
+          p_expected_updated_at: string
+        }
+        Returns: DuesDetail
+      }
       submit_letter_request: {
         Args: {
           p_request_id: string
