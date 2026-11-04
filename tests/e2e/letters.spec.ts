@@ -474,12 +474,21 @@ for (const role of ['ketua_rt', 'pengurus_rt'] as const)
     await expect(
       page.getByText('Menampilkan 5–5 dari 5 pengajuan', { exact: true }),
     ).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: 'Halaman berikutnya' }),
+    ).toBeDisabled()
+    await expect(
+      page.getByRole('navigation', { name: 'Halaman pengajuan surat' }),
+    ).toContainText('2 / 2')
     await page.getByLabel('Cari pengajuan', { exact: true }).fill('tidak-ada')
     await expect(
       page.getByRole('heading', {
         name: 'Pengajuan tidak ditemukan',
         exact: true,
       }),
+    ).toBeVisible()
+    await expect(
+      page.getByText('Menampilkan 0–0 dari 0 pengajuan'),
     ).toBeVisible()
     await page
       .getByRole('link', { name: 'Pengajuan saya', exact: true })

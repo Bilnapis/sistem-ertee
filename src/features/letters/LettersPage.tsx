@@ -1,20 +1,18 @@
 import { useEffect } from 'react'
-import {
-  ArrowLeft,
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  FileText,
-  MoveHorizontal,
-  Plus,
-  Search,
-} from 'lucide-react'
+import { ArrowLeft, ArrowRight, FileText, Plus, Search } from 'lucide-react'
 import { Link, Outlet, useLocation, useSearchParams } from 'react-router'
 import { TextInput } from '../../components/TextInput'
 import { Feedback } from '../../components/Feedback'
 import { PageIntro } from '../../components/PageIntro'
 import { SummaryCardView } from '../../components/SummaryCardView'
-import type { LetterFilters, LetterStatus } from '../../lib/database.types'
+import {
+  TableActionLink,
+  TableBadge,
+  TableCellText,
+  TablePagination,
+} from '../../components/TablePagination'
+import type { TablePaginationColumn } from '../../components/TablePagination'
+import type { LetterFilters, LetterRequest } from '../../lib/database.types'
 import { useAuth } from '../auth/AuthProvider'
 import { formatDate, isManager } from '../residents/data'
 import {
@@ -27,7 +25,6 @@ import {
   useLetters,
   useLetterSummary,
 } from './data'
-import { LetterStatusBadge } from './LetterStatusBadge'
 
 export default function LettersPage({ manage = false }: { manage?: boolean }) {
   const [params, setParams] = useSearchParams()
@@ -75,6 +72,82 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
         { replace: true },
       )
   }, [directory.isSuccess, filters.page, pageCount, setParams])
+  const columns: TablePaginationColumn<LetterRequest>[] = [
+    {
+      id: 'applicant',
+      header: manage ? 'Nama warga' : 'Nomor pengajuan',
+      width: waiting ? 23 : 25,
+      rowHeader: true,
+      render: (request) => (
+        <TableCellText>
+          {manage ? request.identity_snapshot.full_name : request.reference}
+        </TableCellText>
+      ),
+    },
+    {
+      id: 'type',
+      header: 'Jenis surat',
+      width: waiting ? 22 : 25,
+      render: (request) => request.letter_type_label,
+    },
+    {
+      id: 'date',
+      header: 'Tanggal',
+      width: waiting ? 18 : 22,
+      render: (request) => (
+        <time dateTime={request.created_at}>
+          {formatDate(request.created_at)}
+        </time>
+      ),
+    },
+    {
+      id: 'status',
+      header: 'Status',
+      width: waiting ? 13 : 16,
+      render: (request) => (
+        <TableBadge
+          tone={
+            request.status === 'selesai'
+              ? 'success'
+              : request.status === 'diproses'
+                ? 'info'
+                : 'warning'
+          }
+        >
+          {letterStatuses[request.status]}
+        </TableBadge>
+      ),
+    },
+    {
+      id: 'action',
+      header: 'Aksi',
+      width: waiting ? 11 : 12,
+      render: (request) => (
+        <TableActionLink
+          to={{ pathname: `${base}/${request.id}`, search: location.search }}
+          aria-label={`Lihat pengajuan ${request.reference}`}
+        >
+          Lihat
+        </TableActionLink>
+      ),
+    },
+  ]
+  if (waiting) {
+    columns.unshift({
+      id: 'number',
+      header: 'No.',
+      width: 6,
+      kind: 'number',
+      render: (_request, index) =>
+        String((filters.page - 1) * 4 + index + 1).padStart(2, '0'),
+    })
+    columns.splice(2, 0, {
+      id: 'block',
+      header: 'Blok',
+      width: 7,
+      render: (request) => request.identity_snapshot.house_block,
+    })
+  }
   return (
     <main
       className="@container/page min-w-0 flex-1 p-6 max-sm:px-4"
@@ -252,154 +325,42 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
               </select>
             </div>
           </div>
-          <div aria-live="polite" className="sr-only">
-            {directory.isFetching
-              ? 'Memuat pengajuan'
-              : `${total} pengajuan ditemukan`}
-          </div>
-          {directory.isPending ? (
-            <p
-              className="flex flex-col items-center gap-3 rounded-card border border-border bg-surface px-5 py-12 text-center leading-normal text-muted [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-ink"
-              role="status"
-            >
-              Memuat pengajuan surat…
-            </p>
-          ) : directory.isError ? (
-            <div className="flex flex-col gap-4 py-3 [&>button]:self-start">
-              <Feedback>{letterError(directory.error)}</Feedback>
-              <button
-                type="button"
-                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
-                onClick={() => void directory.refetch()}
-              >
-                Coba lagi pengajuan
-              </button>
-            </div>
-          ) : !directory.data.items.length ? (
-            <div className="flex flex-col items-center gap-3 rounded-card border border-border bg-surface px-5 py-12 text-center leading-normal text-muted [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-ink">
-              <FileText size={36} aria-hidden="true" />
-              <h2>
-                {filters.search ||
+          <TablePagination
+            caption={
+              manage
+                ? 'Pengajuan surat seluruh warga'
+                : 'Pengajuan surat milik sendiri'
+            }
+            columns={columns}
+            items={directory.data?.items ?? []}
+            getRowKey={(request) => request.id}
+            pagination={{
+              page: filters.page,
+              pageSize: 4,
+              total,
+              itemLabel: 'pengajuan',
+              label: 'Halaman pengajuan surat',
+              onPageChange: (page) => change('page', String(page)),
+            }}
+            isFetching={directory.isFetching}
+            isLoading={directory.isPending}
+            loadingMessage="Memuat pengajuan surat…"
+            error={directory.isError ? letterError(directory.error) : null}
+            onRetry={() => void directory.refetch()}
+            retryLabel="Coba lagi pengajuan"
+            emptyState={{
+              icon: FileText,
+              title:
+                filters.search ||
                 filters.status !== 'all' ||
                 filters.type !== 'all'
                   ? 'Pengajuan tidak ditemukan'
-                  : 'Belum ada pengajuan surat'}
-              </h2>
-              <p>
-                {manage
-                  ? 'Pengajuan warga akan muncul di sini.'
-                  : 'Ajukan surat pertama Anda melalui tombol Ajukan Surat.'}
-              </p>
-            </div>
-          ) : (
-            <>
-              <p className="hidden items-center gap-2 text-xs text-muted @max-[1000px]/page:flex">
-                <MoveHorizontal size={16} aria-hidden="true" />
-                Geser tabel untuk melihat seluruh informasi.
-              </p>
-              <div
-                className="overflow-x-auto overscroll-x-contain rounded-card border border-border bg-surface"
-                role="region"
-                aria-label="Tabel pengajuan surat, dapat digulir"
-                tabIndex={0}
-                aria-busy={directory.isFetching}
-              >
-                <table className="w-full min-w-[760px] border-collapse text-start text-sm leading-normal [&_tbody_th]:min-w-[170px] [&_tbody_th]:font-bold [&_tbody_tr:last-child>*]:border-b-0 [&_td]:border-b [&_td]:border-border [&_td]:px-6 [&_td]:py-5 [&_td]:text-start [&_td]:text-slate-700 [&_td_time]:whitespace-nowrap [&_td_time]:text-muted [&_td_time]:tabular-nums [&_td:last-child]:whitespace-nowrap [&_th]:border-b [&_th]:border-border [&_th]:px-6 [&_th]:py-5 [&_th]:text-start [&_thead]:bg-soft [&_thead]:text-muted [&_thead_th]:py-3 [&_thead_th]:text-xs [&_thead_th]:font-bold [&_thead_th]:whitespace-nowrap">
-                  <caption className="sr-only">
-                    {manage
-                      ? 'Pengajuan surat seluruh warga'
-                      : 'Pengajuan surat milik sendiri'}
-                  </caption>
-                  <thead>
-                    <tr>
-                      {waiting ? <th scope="col">NO.</th> : null}
-                      <th scope="col">
-                        {manage ? 'NAMA WARGA' : 'NOMOR PENGAJUAN'}
-                      </th>
-                      {waiting ? <th scope="col">BLOK</th> : null}
-                      <th scope="col">JENIS SURAT</th>
-                      <th scope="col">TANGGAL</th>
-                      <th scope="col">STATUS</th>
-                      <th scope="col">AKSI</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {directory.data.items.map((request, index) => (
-                      <tr key={request.id}>
-                        {waiting ? (
-                          <td>
-                            {String(
-                              (filters.page - 1) * 4 + index + 1,
-                            ).padStart(2, '0')}
-                          </td>
-                        ) : null}
-                        <th scope="row">
-                          {manage
-                            ? request.identity_snapshot.full_name
-                            : request.reference}
-                        </th>
-                        {waiting ? (
-                          <td>{request.identity_snapshot.house_block}</td>
-                        ) : null}
-                        <td>{request.letter_type_label}</td>
-                        <td>
-                          <time dateTime={request.created_at}>
-                            {formatDate(request.created_at)}
-                          </time>
-                        </td>
-                        <td>
-                          <LetterStatusBadge
-                            status={request.status as LetterStatus}
-                          />
-                        </td>
-                        <td>
-                          <Link
-                            className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
-                            to={{
-                              pathname: `${base}/${request.id}`,
-                              search: location.search,
-                            }}
-                            aria-label={`Lihat pengajuan ${request.reference}`}
-                          >
-                            Lihat <ArrowRight size={16} aria-hidden="true" />
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <footer className="flex flex-wrap items-center justify-between gap-4 text-sm leading-normal text-muted @max-[600px]/page:flex-col @max-[600px]/page:items-start [&>nav]:flex [&>nav]:shrink-0 [&>nav]:items-center [&>nav]:gap-2 [&>nav]:font-bold [&>nav]:text-ink [&>nav]:tabular-nums @max-[600px]/page:[&>nav]:self-end">
-                <p>
-                  Menampilkan {(filters.page - 1) * 4 + 1}–
-                  {Math.min(filters.page * 4, total)} dari {total} pengajuan
-                </p>
-                <nav aria-label="Halaman pengajuan surat">
-                  <button
-                    type="button"
-                    className="inline-flex size-11 shrink-0 items-center justify-center rounded-control border border-border bg-surface p-2 text-muted enabled:hover:bg-soft disabled:cursor-default disabled:opacity-40"
-                    disabled={filters.page <= 1}
-                    aria-label="Halaman sebelumnya"
-                    onClick={() => change('page', String(filters.page - 1))}
-                  >
-                    <ChevronLeft size={18} aria-hidden="true" />
-                  </button>
-                  <span aria-current="page">
-                    {filters.page} / {pageCount}
-                  </span>
-                  <button
-                    type="button"
-                    className="inline-flex size-11 shrink-0 items-center justify-center rounded-control border border-border bg-surface p-2 text-muted enabled:hover:bg-soft disabled:cursor-default disabled:opacity-40"
-                    disabled={filters.page >= pageCount}
-                    aria-label="Halaman berikutnya"
-                    onClick={() => change('page', String(filters.page + 1))}
-                  >
-                    <ChevronRight size={18} aria-hidden="true" />
-                  </button>
-                </nav>
-              </footer>
-            </>
-          )}
+                  : 'Belum ada pengajuan surat',
+              description: manage
+                ? 'Pengajuan warga akan muncul di sini.'
+                : 'Ajukan surat pertama Anda melalui tombol Ajukan Surat.',
+            }}
+          />
         </section>
       </div>
       <Outlet />

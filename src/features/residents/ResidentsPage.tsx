@@ -1,18 +1,14 @@
-import { cn } from '../../lib/cn'
-
-import {
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  MoveHorizontal,
-  Plus,
-  Search,
-  UsersRound,
-} from 'lucide-react'
+import { Plus, Search, UsersRound } from 'lucide-react'
 import { Link, Outlet, useLocation, useSearchParams } from 'react-router'
 import { Feedback } from '../../components/Feedback'
 import { PageIntro } from '../../components/PageIntro'
 import { SummaryCardView } from '../../components/SummaryCardView'
+import {
+  TableActionLink,
+  TableBadge,
+  TableCellText,
+  TablePagination,
+} from '../../components/TablePagination'
 import type { ResidentFilters, ResidentRole } from '../../lib/database.types'
 import {
   genderLabels,
@@ -61,7 +57,6 @@ export default function ResidentsPage() {
       { replace: true },
     )
   const total = directory.data?.total ?? 0
-  const pageCount = Math.max(1, Math.ceil(total / 10))
   const linkTo = (path: string) => ({
     pathname: `/admin/warga/${path}`,
     search: location.search,
@@ -189,171 +184,103 @@ export default function ResidentsPage() {
               </select>
             </label>
           </div>
-          {directory.isError ? (
-            <div className="flex flex-col items-center gap-4 px-5 py-10 text-center text-muted [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-ink">
-              <Feedback>{residentError(directory.error)}</Feedback>
-              <button
-                type="button"
-                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
-                onClick={() => void directory.refetch()}
-              >
-                Coba lagi
-              </button>
-            </div>
-          ) : directory.isPending ? (
-            <p
-              className="flex flex-col items-center gap-4 px-5 py-10 text-center text-muted [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-ink"
-              role="status"
-            >
-              Memuat data warga…
-            </p>
-          ) : !directory.data?.items.length ? (
-            <div className="flex flex-col items-center gap-4 px-5 py-10 text-center text-muted [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-ink">
-              <UsersRound size={32} aria-hidden="true" />
-              <h2>Belum ada warga yang ditampilkan</h2>
-              <p>
-                {filters.search ||
+          <TablePagination
+            caption="Data warga beserta role dan status akun"
+            items={directory.data?.items ?? []}
+            getRowKey={(profile) => profile.id}
+            columns={[
+              {
+                id: 'resident',
+                header: 'Warga',
+                width: 29,
+                rowHeader: true,
+                render: (profile) => (
+                  <TableCellText tag={roleLabels[profile.role]}>
+                    {profile.full_name}
+                  </TableCellText>
+                ),
+              },
+              {
+                id: 'nik',
+                header: 'NIK',
+                width: 23,
+                kind: 'identity',
+                render: (profile) => (
+                  <bdi dir="ltr">{maskIdentity(profile.nik)}</bdi>
+                ),
+              },
+              {
+                id: 'gender',
+                header: 'Jenis kelamin',
+                width: 18,
+                render: (profile) =>
+                  profile.gender ? genderLabels[profile.gender] : 'Belum diisi',
+              },
+              {
+                id: 'status',
+                header: 'Status',
+                width: 18,
+                render: (profile) => (
+                  <TableBadge
+                    tone={
+                      profile.is_active && !profile.archived_at
+                        ? 'success'
+                        : 'neutral'
+                    }
+                  >
+                    {profile.archived_at
+                      ? 'Diarsipkan'
+                      : profile.is_active
+                        ? 'Aktif'
+                        : 'Tidak Aktif'}
+                  </TableBadge>
+                ),
+              },
+              {
+                id: 'action',
+                header: 'Aksi',
+                width: 12,
+                render: (profile) => (
+                  <TableActionLink
+                    to={linkTo(profile.id)}
+                    aria-label={`Lihat ${profile.full_name}`}
+                  >
+                    Lihat
+                  </TableActionLink>
+                ),
+              },
+            ]}
+            pagination={{
+              page: filters.page,
+              pageSize: 10,
+              total,
+              itemLabel: 'warga',
+              label: 'Halaman warga',
+              onPageChange: (page) => change('page', String(page)),
+            }}
+            isFetching={directory.isFetching}
+            isLoading={directory.isPending}
+            loadingMessage="Memuat data warga…"
+            error={directory.isError ? residentError(directory.error) : null}
+            onRetry={() => void directory.refetch()}
+            emptyState={{
+              icon: UsersRound,
+              title: 'Belum ada warga yang ditampilkan',
+              description:
+                filters.search ||
                 filters.status !== 'all' ||
                 filters.role !== 'all'
                   ? 'Coba ubah kata pencarian atau filter.'
-                  : 'Tambahkan warga untuk memulai pendataan.'}
-              </p>
-              {filters.page > 1 ? (
-                <button
-                  type="button"
-                  className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
-                  onClick={() => change('page', '1')}
-                >
-                  Ke halaman pertama
-                </button>
-              ) : null}
-            </div>
-          ) : (
-            <div className="grid min-w-0 gap-2">
-              <p
-                className="hidden items-center gap-2 text-xs leading-normal text-muted @max-[47.125rem]/page:flex [&>span]:min-w-0 [&>span]:wrap-anywhere [&>svg]:shrink-0"
-                id="resident-table-hint"
-              >
-                <MoveHorizontal size={16} aria-hidden="true" />
-                <span>Geser tabel untuk melihat kolom lainnya</span>
-              </p>
-              <div
-                className="overflow-auto overscroll-x-contain rounded-lg border border-border bg-surface"
-                role="region"
-                aria-label="Tabel warga, geser untuk melihat seluruh kolom"
-                aria-describedby="resident-table-hint"
-                tabIndex={0}
-                aria-busy={directory.isFetching}
-              >
-                <table className="w-full min-w-[44rem] table-fixed border-collapse text-sm leading-normal [&_tbody_th]:font-semibold [&_tbody_tr]:border-t [&_tbody_tr]:border-border [&_td]:px-4 [&_td]:py-3 [&_td]:text-start [&_td]:align-middle [&_td]:wrap-anywhere [&_td:last-child]:text-end [&_th]:px-4 [&_th]:py-3 [&_th]:text-start [&_th]:align-middle [&_th]:wrap-anywhere [&_th:last-child]:text-end [&_thead]:bg-soft [&_thead]:text-xs [&_thead]:tracking-wider [&_thead]:text-slate-600 [&_thead]:uppercase [&_thead_th]:font-bold">
-                  <caption className="sr-only">
-                    Data warga beserta role dan status akun
-                  </caption>
-                  <colgroup>
-                    <col className="w-[29%]" />
-                    <col className="w-[23%]" />
-                    <col className="w-[18%]" />
-                    <col className="w-[18%]" />
-                    <col className="w-[12%]" />
-                  </colgroup>
-                  <thead>
-                    <tr>
-                      <th scope="col">Warga</th>
-                      <th scope="col">NIK</th>
-                      <th scope="col">Jenis kelamin</th>
-                      <th scope="col">Status</th>
-                      <th scope="col">Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {directory.data.items.map((profile) => (
-                      <tr key={profile.id}>
-                        <th scope="row">
-                          <span className="block wrap-anywhere">
-                            <bdi>{profile.full_name}</bdi>
-                          </span>
-                          <span className="mt-1 inline-block max-w-full rounded-md bg-soft px-2 py-0.5 text-xs leading-normal font-semibold wrap-anywhere text-slate-600 forced-colors:border forced-colors:border-current">
-                            {roleLabels[profile.role]}
-                          </span>
-                        </th>
-                        <td className="whitespace-nowrap text-muted tabular-nums">
-                          <bdi dir="ltr">{maskIdentity(profile.nik)}</bdi>
-                        </td>
-                        <td>
-                          {profile.gender
-                            ? genderLabels[profile.gender]
-                            : 'Belum diisi'}
-                        </td>
-                        <td>
-                          <span
-                            className={cn(
-                              'inline-flex w-fit max-w-full items-center rounded-full px-3 py-1 text-xs leading-normal font-semibold wrap-anywhere whitespace-normal forced-colors:border forced-colors:border-[CanvasText]',
-                              profile.is_active && !profile.archived_at
-                                ? 'bg-success-soft text-success'
-                                : 'bg-soft text-slate-600',
-                            )}
-                          >
-                            {profile.archived_at
-                              ? 'Diarsipkan'
-                              : profile.is_active
-                                ? 'Aktif'
-                                : 'Tidak Aktif'}
-                          </span>
-                        </td>
-                        <td>
-                          <Link
-                            to={linkTo(profile.id)}
-                            className="inline-flex min-h-11 max-w-full items-center justify-end gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-semibold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>span]:min-w-0 [&>span]:wrap-anywhere [&>svg]:shrink-0 rtl:[&>svg]:-scale-x-100"
-                            aria-label={`Lihat ${profile.full_name}`}
-                          >
-                            <span>Lihat</span>
-                            <ArrowRight size={16} aria-hidden="true" />
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-          {!directory.isPending && !directory.isError ? (
-            <footer className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 py-1 text-sm leading-normal text-muted [&>nav]:ms-auto [&>nav]:flex [&>nav]:max-w-full [&>nav]:flex-wrap [&>nav]:items-center [&>nav]:justify-end [&>nav]:gap-2 [&>nav]:text-ink [&>nav]:tabular-nums [&>p]:min-w-0 [&>p]:flex-[1_1_15rem] [&>p]:wrap-anywhere">
-              <p aria-live="polite">
-                Menampilkan {total ? (filters.page - 1) * 10 + 1 : 0}–
-                {Math.min(filters.page * 10, total)} dari{' '}
-                {total.toLocaleString('id-ID')} warga
-              </p>
-              <nav aria-label="Halaman warga">
-                <button
-                  type="button"
-                  className="inline-flex size-11 shrink-0 items-center justify-center rounded-control border border-border bg-surface p-2 text-muted enabled:hover:bg-soft disabled:cursor-default disabled:opacity-40 rtl:[&>svg]:-scale-x-100"
-                  disabled={filters.page <= 1}
-                  aria-label="Halaman sebelumnya"
-                  onClick={() => change('page', String(filters.page - 1))}
-                >
-                  <ChevronLeft size={18} />
-                </button>
-                <span
-                  className="min-w-0 px-1 wrap-anywhere"
-                  aria-current="page"
-                >
-                  <bdi>
-                    {filters.page} / {pageCount}
-                  </bdi>
-                </span>
-                <button
-                  type="button"
-                  className="inline-flex size-11 shrink-0 items-center justify-center rounded-control border border-border bg-surface p-2 text-muted enabled:hover:bg-soft disabled:cursor-default disabled:opacity-40 rtl:[&>svg]:-scale-x-100"
-                  disabled={filters.page >= pageCount}
-                  aria-label="Halaman berikutnya"
-                  onClick={() => change('page', String(filters.page + 1))}
-                >
-                  <ChevronRight size={18} />
-                </button>
-              </nav>
-            </footer>
-          ) : null}
+                  : 'Tambahkan warga untuk memulai pendataan.',
+              action:
+                filters.page > 1
+                  ? {
+                      label: 'Ke halaman pertama',
+                      onClick: () => change('page', '1'),
+                    }
+                  : undefined,
+            }}
+          />
         </section>
       </div>
       <Outlet />

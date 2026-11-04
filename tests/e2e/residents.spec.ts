@@ -372,10 +372,22 @@ test('search, role/status filters, ordering, pagination, and empty states use th
   await login(page)
   await openDirectory(page)
   await expect(page.getByText('Menampilkan 1–10 dari 14 warga')).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: 'Halaman sebelumnya' }),
+  ).toBeDisabled()
   await page.getByRole('button', { name: 'Halaman berikutnya' }).click()
   await expect(page.getByText('Menampilkan 11–14 dari 14 warga')).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: 'Halaman berikutnya' }),
+  ).toBeDisabled()
+  await expect(
+    page.getByRole('navigation', { name: 'Halaman warga' }),
+  ).toContainText('2 / 2')
   await page.getByLabel('Role warga', { exact: true }).selectOption('ketua_rt')
   await expect(page.getByText('Menampilkan 1–1 dari 1 warga')).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: 'Halaman sebelumnya' }),
+  ).toBeDisabled()
   await page.getByLabel('Role warga', { exact: true }).selectOption('all')
   await page.getByLabel('Urutkan warga', { exact: true }).selectOption('name')
   await expect(page.getByRole('row').nth(1)).toContainText('Warga Dummy 01')
@@ -385,6 +397,7 @@ test('search, role/status filters, ordering, pagination, and empty states use th
   await expect(
     page.getByRole('heading', { name: 'Belum ada warga yang ditampilkan' }),
   ).toBeVisible()
+  await expect(page.getByText('Menampilkan 0–0 dari 0 warga')).toBeVisible()
   await page.getByLabel('Cari warga', { exact: true }).fill('')
   await page.getByLabel('Status akun', { exact: true }).selectOption('inactive')
   await expect(

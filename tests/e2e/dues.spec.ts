@@ -568,8 +568,23 @@ test('admin filtering and pagination; settings retain current rate and schedule 
 }) => {
   const state = await mockDues(page, { role: 'ketua_rt' })
   await expect(page.getByRole('table').locator('tbody tr')).toHaveCount(10)
+  await expect(page.getByText('Menampilkan 1–10 dari 14 tagihan')).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: 'Halaman sebelumnya' }),
+  ).toBeDisabled()
   await page.getByRole('button', { name: 'Halaman berikutnya' }).click()
   await expect(page.getByRole('table').locator('tbody tr')).toHaveCount(4)
+  await expect(
+    page.getByText('Menampilkan 11–14 dari 14 tagihan'),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: 'Halaman berikutnya' }),
+  ).toBeDisabled()
+  await expect(
+    page.getByRole('navigation', { name: 'Halaman tagihan iuran' }),
+  ).toContainText('2 / 2')
+  await page.getByRole('button', { name: 'Halaman sebelumnya' }).click()
+  await expect(page.getByRole('table').locator('tbody tr')).toHaveCount(10)
   await page.getByRole('searchbox', { name: 'Cari warga' }).fill('Budi')
   await expect(page.getByRole('table').locator('tbody tr')).toHaveCount(1)
   await page.getByRole('link', { name: 'Pengaturan iuran' }).click()
@@ -607,6 +622,10 @@ test('list failure retries and an empty list is explicit', async ({ page }) => {
     page.getByText('Belum ada tagihan untuk bulan ini.'),
   ).toBeVisible()
   await expect(page.getByText('Tidak ada tagihan yang sesuai.')).toBeVisible()
+  await expect(page.getByText('Menampilkan 0–0 dari 0 tagihan')).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: 'Halaman berikutnya' }),
+  ).toBeDisabled()
 })
 for (const width of [320, 375, 768, 1280, 1648])
   test(`responsive design and keyboard dialog at ${width}px`, async ({

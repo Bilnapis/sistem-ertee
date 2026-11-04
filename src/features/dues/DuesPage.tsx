@@ -2,17 +2,20 @@ import { useEffect } from 'react'
 import {
   ArrowRight,
   CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
-  MoveHorizontal,
   Search,
   Settings2,
   Wallet,
 } from 'lucide-react'
 import { Link, Outlet, useLocation, useSearchParams } from 'react-router'
-import { Feedback } from '../../components/Feedback'
 import { PageIntro } from '../../components/PageIntro'
 import { SummaryCardView } from '../../components/SummaryCardView'
+import {
+  TableActionLink,
+  TableBadge,
+  TableCellText,
+  TablePagination,
+} from '../../components/TablePagination'
+import type { TablePaginationColumn } from '../../components/TablePagination'
 import { TextInput } from '../../components/TextInput'
 import { useAuth } from '../auth/AuthProvider'
 import { isManager } from '../residents/data'
@@ -154,6 +157,92 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
         { replace: true },
       )
   }, [query.isSuccess, filters.page, pages, setParams])
+  const columns: TablePaginationColumn<DuesInvoice>[] = [
+    {
+      id: 'period',
+      header: 'Bulan',
+      width: manage ? 16 : 20,
+      rowHeader: !manage,
+      render: (invoice) => monthLabel(invoice.period),
+    },
+    {
+      id: 'amount',
+      header: 'Nominal',
+      width: manage ? 12 : 16,
+      kind: 'number',
+      render: (invoice) => rupiah(invoice.amount),
+    },
+    {
+      id: 'paymentDate',
+      header: 'Tanggal pembayaran',
+      width: manage ? 15 : 20,
+      render: (invoice) =>
+        invoice.payment_date ? (
+          <time dateTime={invoice.payment_date}>
+            {dateOnly(invoice.payment_date)}
+          </time>
+        ) : (
+          '—'
+        ),
+    },
+    {
+      id: 'method',
+      header: 'Metode',
+      width: manage ? 11 : 13,
+      render: (invoice) =>
+        invoice.method ? paymentMethods[invoice.method] : '—',
+    },
+    {
+      id: 'status',
+      header: 'Status',
+      width: manage ? 14 : 18,
+      render: (invoice) => (
+        <TableBadge
+          tone={
+            invoice.status === 'lunas'
+              ? 'success'
+              : invoice.status === 'menunggu_verifikasi'
+                ? 'warning'
+                : 'danger'
+          }
+        >
+          {duesStatuses[invoice.status]}
+        </TableBadge>
+      ),
+    },
+    {
+      id: 'action',
+      header: 'Aksi',
+      width: manage ? 11 : 13,
+      render: (invoice) => (
+        <TableActionLink
+          to={{ pathname: `${base}/${invoice.id}`, search: location.search }}
+          aria-label={`Lihat detail ${monthLabel(invoice.period)}${manage ? `, ${invoice.identity_snapshot.full_name}` : ''}`}
+        >
+          Lihat Detail
+        </TableActionLink>
+      ),
+    },
+  ]
+  if (manage)
+    columns.unshift({
+      id: 'resident',
+      header: 'Warga',
+      width: 21,
+      rowHeader: true,
+      render: (invoice) => (
+        <TableCellText
+          secondary={[
+            invoice.identity_snapshot.house_block,
+            invoice.identity_snapshot.house_number,
+          ]
+            .filter(Boolean)
+            .join(' / ')}
+        >
+          {invoice.identity_snapshot.full_name}
+        </TableCellText>
+      ),
+    })
   return (
     <main
       className="@container/page min-w-0 flex-1 p-6 max-sm:px-4"
@@ -190,25 +279,7 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
           </Link>
         ) : null}
         <div className="flex flex-col gap-6" aria-busy={query.isPending}>
-          {query.isPending ? (
-            <p
-              className="block rounded-summary bg-amber-50 p-4 text-sm leading-relaxed wrap-anywhere text-warning forced-colors:border forced-colors:border-[CanvasText]"
-              role="status"
-            >
-              Memuat iuran warga…
-            </p>
-          ) : query.isError ? (
-            <div className="flex flex-col items-start gap-3">
-              <Feedback>{duesError(query.error)}</Feedback>
-              <button
-                type="button"
-                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
-                onClick={() => void query.refetch()}
-              >
-                Coba lagi
-              </button>
-            </div>
-          ) : data ? (
+          {!query.isError && data ? (
             <>
               {manage ? (
                 <SummaryCardView
@@ -271,10 +342,10 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
           ) : null}
         </div>
         <section
-          className="min-w-0 overflow-hidden rounded-card border border-border bg-surface"
+          className="flex min-w-0 flex-col gap-3"
           aria-labelledby="dues-history-title"
         >
-          <header className="px-5 pt-5 [&_h2]:text-2xl [&_h2]:leading-tight [&_h2]:font-bold [&_p]:mt-1 [&_p]:text-sm [&_p]:leading-relaxed [&_p]:text-muted">
+          <header className="[&_h2]:text-2xl [&_h2]:leading-tight [&_h2]:font-bold [&_p]:mt-1 [&_p]:text-sm [&_p]:leading-relaxed [&_p]:text-muted">
             <h2 id="dues-history-title">
               {manage ? 'Daftar tagihan warga' : 'Riwayat tagihan'}
             </h2>
@@ -284,7 +355,7 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
                 : 'Buka detail untuk melihat pembayaran atau membayar periode sebelumnya.'}
             </p>
           </header>
-          <div className="flex flex-wrap items-start gap-4 p-5 [&>*]:min-w-0 [&>*]:flex-[1_1_10rem]">
+          <div className="flex flex-wrap items-start gap-4 [&>*]:min-w-0 [&>*]:flex-[1_1_10rem]">
             {manage ? (
               <TextInput
                 label="Cari warga"
@@ -353,117 +424,26 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
               </select>
             </div>
           </div>
-          <p className="mx-5 mb-3 flex items-center gap-2 text-xs text-muted">
-            <MoveHorizontal size={16} aria-hidden="true" />
-            Geser tabel untuk melihat seluruh kolom.
-          </p>
-          <div
-            className="overflow-x-auto overscroll-x-contain [&_small]:block [&_small]:text-muted [&_table]:w-full [&_table]:min-w-[760px] [&_table]:border-collapse [&_table]:text-start [&_table]:text-sm [&_table]:leading-normal [&_tbody_th]:font-normal [&_td]:border-b [&_td]:border-border [&_td]:px-5 [&_td]:py-4 [&_td]:text-start [&_td]:text-slate-700 [&_th]:border-b [&_th]:border-border [&_th]:px-5 [&_th]:py-4 [&_th]:text-start [&_thead_th]:bg-page [&_thead_th]:text-xs [&_thead_th]:font-bold [&_thead_th]:text-muted [&_thead_th]:uppercase [&_tr:last-child>*]:border-b-0"
-            role="region"
-            aria-label="Tabel tagihan iuran"
-            tabIndex={0}
-            aria-busy={query.isFetching}
-          >
-            <table>
-              <caption className="sr-only">
-                {manage ? 'Tagihan seluruh warga' : 'Tagihan iuran pribadi'}
-              </caption>
-              <thead>
-                <tr>
-                  {manage ? <th scope="col">Warga</th> : null}
-                  <th scope="col">Bulan</th>
-                  <th scope="col">Nominal</th>
-                  <th scope="col">Tanggal pembayaran</th>
-                  <th scope="col">Metode</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data?.items.map((invoice) => (
-                  <tr key={invoice.id}>
-                    {manage ? (
-                      <td>
-                        <strong>{invoice.identity_snapshot.full_name}</strong>
-                        <small>
-                          {[
-                            invoice.identity_snapshot.house_block,
-                            invoice.identity_snapshot.house_number,
-                          ]
-                            .filter(Boolean)
-                            .join(' / ')}
-                        </small>
-                      </td>
-                    ) : null}
-                    <th scope="row">{monthLabel(invoice.period)}</th>
-                    <td>{rupiah(invoice.amount)}</td>
-                    <td>
-                      {invoice.payment_date
-                        ? dateOnly(invoice.payment_date)
-                        : '—'}
-                    </td>
-                    <td>
-                      {invoice.method ? paymentMethods[invoice.method] : '—'}
-                    </td>
-                    <td>
-                      <DuesStatusBadge status={invoice.status} />
-                    </td>
-                    <td>
-                      <Link
-                        className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
-                        aria-label={`Lihat detail ${monthLabel(invoice.period)}${manage ? `, ${invoice.identity_snapshot.full_name}` : ''}`}
-                        to={{
-                          pathname: `${base}/${invoice.id}`,
-                          search: location.search,
-                        }}
-                      >
-                        Lihat Detail
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-                {!data?.items.length ? (
-                  <tr>
-                    <td
-                      colSpan={manage ? 7 : 6}
-                      className="px-5! py-9! text-center!"
-                    >
-                      {query.isPending
-                        ? 'Memuat riwayat…'
-                        : query.isError
-                          ? 'Riwayat belum dapat dimuat.'
-                          : 'Tidak ada tagihan yang sesuai.'}
-                    </td>
-                  </tr>
-                ) : null}
-              </tbody>
-            </table>
-          </div>
-          <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-4 text-sm text-muted [&>div]:flex [&>div]:gap-2">
-            <span>
-              {data?.total ?? 0} tagihan · Halaman {filters.page} dari {pages}
-            </span>
-            <div>
-              <button
-                type="button"
-                className="inline-flex size-11 shrink-0 items-center justify-center rounded-control border border-border bg-surface p-2 text-muted enabled:hover:bg-soft disabled:cursor-default disabled:opacity-40"
-                aria-label="Halaman sebelumnya"
-                disabled={filters.page <= 1 || query.isFetching}
-                onClick={() => change('halaman', String(filters.page - 1))}
-              >
-                <ChevronLeft size={19} />
-              </button>
-              <button
-                type="button"
-                className="inline-flex size-11 shrink-0 items-center justify-center rounded-control border border-border bg-surface p-2 text-muted enabled:hover:bg-soft disabled:cursor-default disabled:opacity-40"
-                aria-label="Halaman berikutnya"
-                disabled={filters.page >= pages || query.isFetching}
-                onClick={() => change('halaman', String(filters.page + 1))}
-              >
-                <ChevronRight size={19} />
-              </button>
-            </div>
-          </footer>
+          <TablePagination
+            caption={manage ? 'Tagihan seluruh warga' : 'Tagihan iuran pribadi'}
+            columns={columns}
+            items={data?.items ?? []}
+            getRowKey={(invoice) => invoice.id}
+            pagination={{
+              page: filters.page,
+              pageSize: 10,
+              total: data?.total ?? 0,
+              itemLabel: 'tagihan',
+              label: 'Halaman tagihan iuran',
+              onPageChange: (page) => change('halaman', String(page)),
+            }}
+            isFetching={query.isFetching}
+            isLoading={query.isPending}
+            loadingMessage="Memuat iuran warga…"
+            error={query.isError ? duesError(query.error) : null}
+            onRetry={() => void query.refetch()}
+            emptyState={{ description: 'Tidak ada tagihan yang sesuai.' }}
+          />
         </section>
         <Outlet />
       </div>

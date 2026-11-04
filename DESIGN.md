@@ -111,6 +111,15 @@ berada di `src/components/PageIntro.tsx`: judul 32 px dengan bobot 700
 dan tracking -0.02em, deskripsi 14 px, serta jarak 6 px. Judul menjadi 28 px
 pada container di bawah 33rem.
 
+`TablePagination` menyamakan tabel Data Warga, Pengajuan Surat, dan Iuran
+Warga dengan acuan tabel Data Warga yang sudah diterapkan: radius 8 px,
+header `soft` 14 px semibold (600) dengan huruf kapital di awal judul saja,
+isi 14 px,
+padding sel 16 × 12 px, dan tombol pagination 44 px. Seluruh gaya tabel, badge, tautan aksi, status daftar,
+dan pagination berada di `src/components/TablePagination.tsx`. Komponen
+tidak menerima override `className` atau `style`; halaman hanya memasok
+data, konfigurasi kolom, dan callback. API ada di `docs/table-pagination.md`.
+
 Warna merek asli `#0ea546` dipertahankan. Tombol fitur dengan teks putih
 kecil memakai `#087e34`, dengan rasio kontras 5,19:1; warna merek asli
 memberikan 3,24:1. Penyesuaian ini mendukung teks normal WCAG AA.
