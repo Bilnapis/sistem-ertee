@@ -19,17 +19,6 @@
   gap: 16px;
   flex-wrap: wrap;
 }
-.pageHeader h1 {
-  font-size: clamp(1.75rem, 2.5vw, 2.5rem);
-  line-height: 1.25;
-  font-weight: 800;
-}
-.pageHeader p {
-  color: var(--color-muted);
-  font-size: 1.125rem;
-  line-height: 1.5;
-  margin-top: 6px;
-}
 .pageHeader > div {
   flex: 1 1 20rem;
   min-width: 0;

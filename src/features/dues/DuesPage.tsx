@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { Link, Outlet, useLocation, useSearchParams } from 'react-router'
 import { Feedback } from '../../components/Feedback'
+import { PageIntro } from '../../components/PageIntro'
 import { SummaryCardView } from '../../components/SummaryCardView'
 import { TextInput } from '../../components/TextInput'
 import { useAuth } from '../auth/AuthProvider'
@@ -149,14 +150,15 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
     <main className={styles.page} aria-labelledby="dues-page-title">
       <div className={styles.pageContent}>
         <header className={styles.pageHeader}>
-          <div>
-            <h1 id="dues-page-title">Iuran Warga</h1>
-            <p>
-              {manage
+          <PageIntro
+            id="dues-page-title"
+            title="Iuran Warga"
+            description={
+              manage
                 ? 'Kelola tagihan dan verifikasi pembayaran iuran bulanan warga.'
-                : 'Kelola dan pantau pembayaran iuran lingkungan Anda.'}
-            </p>
-          </div>
+                : 'Kelola dan pantau pembayaran iuran lingkungan Anda.'
+            }
+          />
           {manage ? (
             <Link
               className={styles.secondary}

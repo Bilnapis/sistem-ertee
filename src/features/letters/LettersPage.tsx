@@ -12,6 +12,7 @@ import {
 import { Link, Outlet, useLocation, useSearchParams } from 'react-router'
 import { TextInput } from '../../components/TextInput'
 import { Feedback } from '../../components/Feedback'
+import { PageIntro } from '../../components/PageIntro'
 import { SummaryCardView } from '../../components/SummaryCardView'
 import type { LetterFilters, LetterStatus } from '../../lib/database.types'
 import { useAuth } from '../auth/AuthProvider'
@@ -79,18 +80,17 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
     <main className={styles.page} aria-labelledby="letters-page-title">
       <div className={styles.pageContent}>
         <header className={styles.pageHeader}>
-          <div>
-            <h1 id="letters-page-title">
-              {waiting ? 'Pengajuan Belum Diproses' : 'Pengajuan Surat'}
-            </h1>
-            <p>
-              {manage
+          <PageIntro
+            id="letters-page-title"
+            title={waiting ? 'Pengajuan Belum Diproses' : 'Pengajuan Surat'}
+            description={
+              manage
                 ? waiting
                   ? 'Daftar pengajuan surat warga yang belum mulai diproses.'
                   : 'Kelola permohonan surat dari warga'
-                : 'Ajukan kebutuhan administrasi Anda dengan mudah melalui ErTee.'}
-            </p>
-          </div>
+                : 'Ajukan kebutuhan administrasi Anda dengan mudah melalui ErTee.'
+            }
+          />
           {manage ? (
             waiting ? (
               <Link className={styles.secondary} to="/admin/pengajuan-surat">

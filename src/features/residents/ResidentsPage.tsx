@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { Link, Outlet, useLocation, useSearchParams } from 'react-router'
 import { Feedback } from '../../components/Feedback'
+import { PageIntro } from '../../components/PageIntro'
 import { SummaryCardView } from '../../components/SummaryCardView'
 import type { ResidentFilters, ResidentRole } from '../../lib/database.types'
 import {
@@ -69,10 +70,11 @@ export default function ResidentsPage() {
     <main className={styles.page} aria-labelledby="resident-page-title">
       <div className={styles.pageContent}>
         <header className={styles.pageHeader}>
-          <div className={styles.pageIntro}>
-            <h1 id="resident-page-title">Data Warga</h1>
-            <p>Kelola data warga RT 04</p>
-          </div>
+          <PageIntro
+            id="resident-page-title"
+            title="Data Warga"
+            description="Kelola data warga RT 04"
+          />
           <Link className={styles.primary} to={linkTo('tambah')}>
             <Plus size={18} aria-hidden="true" />
             <span>Tambah warga</span>

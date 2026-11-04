@@ -28,25 +28,9 @@
   gap: 1rem;
 }
 
-.pageIntro {
+.pageHeader > div {
   flex: 1 1 18rem;
   min-inline-size: 0;
-}
-.pageHeader h1 {
-  font-size: 2rem;
-  line-height: 1.25;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  overflow-wrap: anywhere;
-}
-.pageHeader p {
-  max-inline-size: 65ch;
-  margin-block-start: 0.375rem;
-  color: var(--color-muted);
-  font-size: 0.875rem;
-  line-height: 1.5;
-  text-wrap: pretty;
-  overflow-wrap: anywhere;
 }
 .pageHeader .primary {
   max-inline-size: 100%;
@@ -680,9 +664,6 @@
   .pageContent {
     gap: 1.5rem;
     padding: 1.25rem 1rem 1.5rem;
-  }
-  .pageHeader h1 {
-    font-size: 1.75rem;
   }
   .pageHeader .primary {
     flex-basis: 100%;

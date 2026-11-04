@@ -105,6 +105,12 @@ Pengajuan Surat, dan Iuran Warga. Seluruh gaya kartu, warna nilai, grid,
 dan aturan responsif berada di `src/components/SummaryCardView.module.css`.
 API dan aturan penggunaannya ada di `docs/summary-card-view.md`.
 
+`PageIntro` menyamakan judul dan deskripsi halaman daftar Data Warga,
+Pengajuan Surat, dan Iuran Warga dengan acuan menu Warga. Gaya bersama
+berada di `src/components/PageIntro.module.css`: judul 32 px dengan bobot 700
+dan tracking -0.02em, deskripsi 14 px, serta jarak 6 px. Judul menjadi 28 px
+pada container di bawah 33rem.
+
 Warna merek asli `#0ea546` dipertahankan. Tombol fitur dengan teks putih
 kecil memakai `#087e34`, dengan rasio kontras 5,19:1; warna merek asli
 memberikan 3,24:1. Penyesuaian ini mendukung teks normal WCAG AA.
