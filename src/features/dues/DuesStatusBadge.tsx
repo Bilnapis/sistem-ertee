@@ -1,6 +1,6 @@
 import { duesStatuses } from './data'
 import type { DuesStatus } from './types'
-import styles from './Dues.module.css'
+import styles from './styles'
 export function DuesStatusBadge({ status }: { status: DuesStatus }) {
   return (
     <span className={styles.badge} data-status={status}>

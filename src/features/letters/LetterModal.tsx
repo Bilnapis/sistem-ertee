@@ -1,7 +1,8 @@
+import { cn } from '../../lib/cn'
 import { useEffect, useId, useRef } from 'react'
 import type { ReactNode } from 'react'
 import { X } from 'lucide-react'
-import styles from './Letters.module.css'
+import styles from './styles'
 
 export function LetterModal({
   title,
@@ -34,7 +35,7 @@ export function LetterModal({
   return (
     <dialog
       ref={ref}
-      className={`${styles.dialog} ${styles[kind]}`}
+      className={cn(styles.dialog, styles[kind])}
       aria-labelledby={titleId}
       aria-describedby={description ? descriptionId : undefined}
       closedby={pending ? 'none' : 'any'}

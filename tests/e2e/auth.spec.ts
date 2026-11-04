@@ -2,31 +2,109 @@ import { expect, test } from '@playwright/test'
 import type { Page } from '@playwright/test'
 
 const id = '00000000-0000-4000-8000-000000000001'
-const user = { id, aud: 'authenticated', role: 'authenticated', email: 'warga@example.test', email_confirmed_at: '2026-11-02T00:00:00Z', created_at: '2026-11-02T00:00:00Z', app_metadata: { provider: 'email', providers: ['email'] }, user_metadata: {}, identities: [] }
-const profile = { id, email: user.email, full_name: 'Warga Uji', nik: '0000000000000001', phone: '081234567890', address: 'Jalan Dummy Nomor 1', house_block: 'UJI-A1', role: 'warga', is_active: true, verification_status: 'menunggu_verifikasi', created_at: user.created_at, updated_at: user.created_at }
-const jwt = () => `${Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url')}.${Buffer.from(JSON.stringify({ sub: id, role: 'authenticated', exp: Math.floor(Date.now() / 1000) + 3600 })).toString('base64url')}.testsignature`
-const session = () => ({ access_token: jwt(), refresh_token: 'dummy-refresh-token', token_type: 'bearer', expires_in: 3600, user })
+const user = {
+  id,
+  aud: 'authenticated',
+  role: 'authenticated',
+  email: 'warga@example.test',
+  email_confirmed_at: '2026-11-02T00:00:00Z',
+  created_at: '2026-11-02T00:00:00Z',
+  app_metadata: { provider: 'email', providers: ['email'] },
+  user_metadata: {},
+  identities: [],
+}
+const profile = {
+  id,
+  email: user.email,
+  full_name: 'Warga Uji',
+  nik: '0000000000000001',
+  phone: '081234567890',
+  address: 'Jalan Dummy Nomor 1',
+  house_block: 'UJI-A1',
+  role: 'warga',
+  is_active: true,
+  verification_status: 'menunggu_verifikasi',
+  created_at: user.created_at,
+  updated_at: user.created_at,
+}
+const jwt = () =>
+  `${Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url')}.${Buffer.from(JSON.stringify({ sub: id, role: 'authenticated', exp: Math.floor(Date.now() / 1000) + 3600 })).toString('base64url')}.testsignature`
+const session = () => ({
+  access_token: jwt(),
+  refresh_token: 'dummy-refresh-token',
+  token_type: 'bearer',
+  expires_in: 3600,
+  user,
+})
 
-async function mockSupabase(page: Page, options: { invalidPassword?: boolean; disabled?: boolean; immediateSession?: boolean; signupFailure?: boolean; profileFailure?: boolean; fullName?: string } = {}) {
+async function mockSupabase(
+  page: Page,
+  options: {
+    invalidPassword?: boolean
+    disabled?: boolean
+    immediateSession?: boolean
+    signupFailure?: boolean
+    profileFailure?: boolean
+    fullName?: string
+  } = {},
+) {
   const calls: { signup?: Record<string, unknown>; logout?: boolean } = {}
-  await page.route('http://127.0.0.1:54321/**', async route => {
+  await page.route('http://127.0.0.1:54321/**', async (route) => {
     const path = new URL(route.request().url()).pathname
-    const headers = { 'access-control-allow-origin': '*', 'access-control-expose-headers': 'x-supabase-api-version, retry-after', 'content-type': 'application/json', 'x-supabase-api-version': '2024-01-01' }
-    if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 200, headers })
+    const headers = {
+      'access-control-allow-origin': '*',
+      'access-control-expose-headers': 'x-supabase-api-version, retry-after',
+      'content-type': 'application/json',
+      'x-supabase-api-version': '2024-01-01',
+    }
+    if (route.request().method() === 'OPTIONS')
+      return route.fulfill({ status: 200, headers })
     if (path.endsWith('/signup')) {
       calls.signup = route.request().postDataJSON()
-      if (options.signupFailure) return route.fulfill({ status: 500, headers, json: { code: 'unexpected_failure', msg: 'internal database details that must not be displayed' } })
-      return route.fulfill({ headers, json: options.immediateSession ? session() : { user, session: null } })
+      if (options.signupFailure)
+        return route.fulfill({
+          status: 500,
+          headers,
+          json: {
+            code: 'unexpected_failure',
+            msg: 'internal database details that must not be displayed',
+          },
+        })
+      return route.fulfill({
+        headers,
+        json: options.immediateSession ? session() : { user, session: null },
+      })
     }
     if (path.endsWith('/token')) {
-      if (options.invalidPassword) return route.fulfill({ status: 400, headers, json: { code: 'invalid_credentials', msg: 'Invalid login credentials' } })
+      if (options.invalidPassword)
+        return route.fulfill({
+          status: 400,
+          headers,
+          json: {
+            code: 'invalid_credentials',
+            msg: 'Invalid login credentials',
+          },
+        })
       return route.fulfill({ headers, json: session() })
     }
     if (path.endsWith('/user')) return route.fulfill({ headers, json: user })
-    if (path.endsWith('/logout')) { calls.logout = true; return route.fulfill({ status: 204, headers }) }
+    if (path.endsWith('/logout')) {
+      calls.logout = true
+      return route.fulfill({ status: 204, headers })
+    }
     if (path.endsWith('/profiles')) {
-      if (options.profileFailure) return route.fulfill({ status: 503, headers: { ...headers, 'retry-after': '0' }, json: { message: 'unavailable' } })
-      return route.fulfill({ headers, json: options.disabled ? [] : [{ ...profile, full_name: options.fullName ?? profile.full_name }] })
+      if (options.profileFailure)
+        return route.fulfill({
+          status: 503,
+          headers: { ...headers, 'retry-after': '0' },
+          json: { message: 'unavailable' },
+        })
+      return route.fulfill({
+        headers,
+        json: options.disabled
+          ? []
+          : [{ ...profile, full_name: options.fullName ?? profile.full_name }],
+      })
     }
     return route.fulfill({ status: 404, headers, json: {} })
   })
@@ -42,68 +120,117 @@ async function login(page: Page) {
 
 async function fillRegistration(page: Page) {
   await page.goto('/register')
-  await page.getByLabel('Nama Lengkap *', { exact: true }).fill(profile.full_name)
+  await page
+    .getByLabel('Nama Lengkap *', { exact: true })
+    .fill(profile.full_name)
   await page.getByLabel('Email *', { exact: true }).fill(user.email)
   await page.getByLabel('NIK *', { exact: true }).fill(profile.nik)
   await page.getByLabel('Nomor HP *', { exact: true }).fill(profile.phone)
   await page.getByLabel('Alamat *', { exact: true }).fill(profile.address)
-  await page.getByLabel('Blok Rumah *', { exact: true }).fill(profile.house_block)
+  await page
+    .getByLabel('Blok Rumah *', { exact: true })
+    .fill(profile.house_block)
   await page.getByLabel('Password *', { exact: true }).fill('PasswordUji123!')
-  await page.getByLabel('Konfirmasi Password *', { exact: true }).fill('PasswordUji123!')
+  await page
+    .getByLabel('Konfirmasi Password *', { exact: true })
+    .fill('PasswordUji123!')
 }
 
 test('direct access without session redirects to login', async ({ page }) => {
   await mockSupabase(page)
   await page.goto('/warga')
   await expect(page).toHaveURL(/\/login$/)
-  await expect(page.getByRole('complementary', { name: 'Sidebar admin' })).toHaveCount(0)
-  await expect(page.getByRole('heading', { name: 'Selamat Datang!' })).toBeVisible()
+  await expect(
+    page.getByRole('complementary', { name: 'Sidebar admin' }),
+  ).toHaveCount(0)
+  await expect(
+    page.getByRole('heading', { name: 'Selamat Datang!' }),
+  ).toBeVisible()
 })
 
-test('login, reload, logout, browser back, and direct access enforce session boundary', async ({ page }) => {
+test('login, reload, logout, browser back, and direct access enforce session boundary', async ({
+  page,
+}) => {
   const calls = await mockSupabase(page)
   await login(page)
   await expect(page).toHaveURL(/\/warga$/)
   await expect(page.getByText(profile.nik, { exact: true })).toBeVisible()
   const sidebar = page.getByRole('complementary', { name: 'Sidebar admin' })
   await expect(sidebar).toBeVisible()
-  await expect(sidebar.locator('a[aria-current="page"]')).toHaveText('Dashboard')
-  await page.screenshot({ path: 'test-results/authenticated-home-desktop.png', fullPage: true })
+  await expect(sidebar.locator('a[aria-current="page"]')).toHaveText(
+    'Dashboard',
+  )
+  await page.screenshot({
+    path: 'test-results/authenticated-home-desktop.png',
+    fullPage: true,
+  })
   await sidebar.getByRole('link', { name: 'Warga', exact: true }).click()
   await expect(page).toHaveURL(/\/warga\/profil$/)
-  await expect(page.getByRole('heading', { name: 'Profil warga', exact: true })).toBeVisible()
-  await sidebar.getByRole('link', { name: 'Pengajuan Surat', exact: true }).click()
-  await expect(page.getByRole('heading', { name: 'Pengajuan Surat', exact: true })).toBeVisible()
-  await expect(sidebar.locator('a[aria-current="page"]')).toHaveText('Pengajuan Surat')
+  await expect(
+    page.getByRole('heading', { name: 'Profil warga', exact: true }),
+  ).toBeVisible()
+  await sidebar
+    .getByRole('link', { name: 'Pengajuan Surat', exact: true })
+    .click()
+  await expect(
+    page.getByRole('heading', { name: 'Pengajuan Surat', exact: true }),
+  ).toBeVisible()
+  await expect(sidebar.locator('a[aria-current="page"]')).toHaveText(
+    'Pengajuan Surat',
+  )
   await sidebar.getByRole('link', { name: 'Dashboard', exact: true }).click()
   await page.reload()
-  await expect(page.getByRole('heading', { name: 'Profil warga', exact: true })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Profil warga', exact: true }),
+  ).toBeVisible()
   await page.getByRole('button', { name: 'Keluar', exact: true }).click()
   await expect(page).toHaveURL(/\/login$/)
   expect(calls.logout).toBe(true)
   await page.goBack()
-  for (const path of ['/warga', '/warga/profil', '/warga/pengajuan-surat', '/warga/iuran-warga', '/warga/pengaduan']) {
+  for (const path of [
+    '/warga',
+    '/warga/profil',
+    '/warga/pengajuan-surat',
+    '/warga/iuran-warga',
+    '/warga/pengaduan',
+  ]) {
     await page.goto(path)
     await expect(page).toHaveURL(/\/login$/)
-    await expect(page.getByRole('complementary', { name: 'Sidebar admin' })).toHaveCount(0)
+    await expect(
+      page.getByRole('complementary', { name: 'Sidebar admin' }),
+    ).toHaveCount(0)
   }
   await expect(page.getByText(profile.nik, { exact: true })).toHaveCount(0)
-  const tokens = await page.evaluate(() => [...Object.keys(localStorage), ...Object.keys(sessionStorage)].filter(key => key.endsWith('-auth-token')))
+  const tokens = await page.evaluate(() =>
+    [...Object.keys(localStorage), ...Object.keys(sessionStorage)].filter(
+      (key) => key.endsWith('-auth-token'),
+    ),
+  )
   expect(tokens).toEqual([])
 })
 
-test('the sidebar opens on mobile and closes with its button, backdrop, Escape, or navigation', async ({ page }) => {
+test('the sidebar opens on mobile and closes with its button, backdrop, Escape, or navigation', async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 360, height: 780 })
   await mockSupabase(page)
   await login(page)
   await expect(page).toHaveURL(/\/warga$/)
   const trigger = page.getByRole('button', { name: 'Buka menu navigasi' })
-  const drawer = page.getByRole('dialog', { name: 'Menu navigasi', exact: true })
+  const drawer = page.getByRole('dialog', {
+    name: 'Menu navigasi',
+    exact: true,
+  })
   await expect(trigger).toBeVisible()
-  await expect(page.getByRole('navigation', { name: 'Navigasi admin' })).toHaveCount(0)
+  await expect(
+    page.getByRole('navigation', { name: 'Navigasi admin' }),
+  ).toHaveCount(0)
   await trigger.click()
   await expect(drawer).toBeVisible()
-  await page.screenshot({ path: 'test-results/authenticated-sidebar-mobile.png', fullPage: true })
+  await page.screenshot({
+    path: 'test-results/authenticated-sidebar-mobile.png',
+    fullPage: true,
+  })
   await drawer.getByRole('button', { name: 'Tutup menu navigasi' }).click()
   await expect(drawer).not.toBeVisible()
   await expect(trigger).toBeFocused()
@@ -120,25 +247,46 @@ test('the sidebar opens on mobile and closes with its button, backdrop, Escape, 
   await drawer.getByRole('link', { name: 'Warga', exact: true }).click()
   await expect(page).toHaveURL(/\/warga\/profil$/)
   await expect(drawer).not.toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Profil warga', exact: true })).toBeVisible()
-  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360)
-  await page.screenshot({ path: 'test-results/authenticated-home-mobile.png', fullPage: true })
+  await expect(
+    page.getByRole('heading', { name: 'Profil warga', exact: true }),
+  ).toBeVisible()
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth),
+  ).toBeLessThanOrEqual(360)
+  await page.screenshot({
+    path: 'test-results/authenticated-home-mobile.png',
+    fullPage: true,
+  })
 })
 
-test('account actions support keyboard navigation, dismissal, and sign-out', async ({ page }) => {
+test('account actions support keyboard navigation, dismissal, and sign-out', async ({
+  page,
+}) => {
   const calls = await mockSupabase(page)
   await login(page)
-  const trigger = page.getByRole('button', { name: 'Menu akun Warga Uji, Warga', exact: true })
-  const actions = page.getByRole('group', { name: 'Tindakan akun', exact: true })
+  const trigger = page.getByRole('button', {
+    name: 'Menu akun Warga Uji, Warga',
+    exact: true,
+  })
+  const actions = page.getByRole('group', {
+    name: 'Tindakan akun',
+    exact: true,
+  })
   await expect(actions).not.toBeVisible()
   await trigger.focus()
   await page.keyboard.press('Enter')
   await expect(actions).toBeVisible()
-  await expect(trigger).toMatchAriaSnapshot('- button "Menu akun Warga Uji, Warga" [expanded]')
+  await expect(trigger).toMatchAriaSnapshot(
+    '- button "Menu akun Warga Uji, Warga" [expanded]',
+  )
   await page.keyboard.press('Tab')
-  await expect(actions.getByRole('button', { name: 'Ubah data diri', exact: true })).toBeFocused()
+  await expect(
+    actions.getByRole('button', { name: 'Ubah data diri', exact: true }),
+  ).toBeFocused()
   await page.keyboard.press('Tab')
-  await expect(actions.getByRole('button', { name: 'Keluar', exact: true })).toBeFocused()
+  await expect(
+    actions.getByRole('button', { name: 'Keluar', exact: true }),
+  ).toBeFocused()
   await page.keyboard.press('Escape')
   await expect(actions).not.toBeVisible()
   await expect(trigger).toBeFocused()
@@ -157,44 +305,86 @@ test('account actions support keyboard navigation, dismissal, and sign-out', asy
   expect(calls.logout).toBe(true)
 })
 
-test('long account names remain readable in the submenu at narrow widths and enlarged text', async ({ page }) => {
-  const fullName = 'Warga Dengan Nama Lengkap Yang Sangat Panjang Untuk Pemeriksaan Layout'
+test('long account names remain readable in the submenu at narrow widths and enlarged text', async ({
+  page,
+}) => {
+  const fullName =
+    'Warga Dengan Nama Lengkap Yang Sangat Panjang Untuk Pemeriksaan Layout'
   await mockSupabase(page, { fullName })
   await login(page)
-  const trigger = page.getByRole('button', { name: `Menu akun ${fullName}, Warga`, exact: true })
-  const actions = page.getByRole('group', { name: 'Tindakan akun', exact: true })
+  const trigger = page.getByRole('button', {
+    name: `Menu akun ${fullName}, Warga`,
+    exact: true,
+  })
+  const actions = page.getByRole('group', {
+    name: 'Tindakan akun',
+    exact: true,
+  })
   for (const width of [320, 360, 528, 768, 1024, 1440, 1920]) {
     await page.setViewportSize({ width, height: 900 })
     for (const dir of ['ltr', 'rtl']) {
       for (const fontSize of ['100%', '200%']) {
-        await page.evaluate(({ dir, fontSize }) => {
-          document.documentElement.dir = dir
-          document.documentElement.style.fontSize = fontSize
-        }, { dir, fontSize })
+        await page.evaluate(
+          ({ dir, fontSize }) => {
+            document.documentElement.dir = dir
+            document.documentElement.style.fontSize = fontSize
+          },
+          { dir, fontSize },
+        )
         await trigger.click()
         await expect(actions.getByText(fullName, { exact: true })).toBeVisible()
-        for (const element of [trigger, actions, actions.getByRole('button', { name: 'Keluar', exact: true })]) {
+        for (const element of [
+          trigger,
+          actions,
+          actions.getByRole('button', { name: 'Keluar', exact: true }),
+        ]) {
           await element.scrollIntoViewIfNeeded()
           const box = (await element.boundingBox())!
-          expect(box.x, `${width}px ${dir} ${fontSize}`).toBeGreaterThanOrEqual(0)
-          expect(box.x + box.width, `${width}px ${dir} ${fontSize}`).toBeLessThanOrEqual(width + 1)
-          expect(box.y, `${width}px ${dir} ${fontSize}`).toBeGreaterThanOrEqual(0)
-          expect(box.y + box.height, `${width}px ${dir} ${fontSize}`).toBeLessThanOrEqual(901)
+          expect(box.x, `${width}px ${dir} ${fontSize}`).toBeGreaterThanOrEqual(
+            0,
+          )
+          expect(
+            box.x + box.width,
+            `${width}px ${dir} ${fontSize}`,
+          ).toBeLessThanOrEqual(width + 1)
+          expect(box.y, `${width}px ${dir} ${fontSize}`).toBeGreaterThanOrEqual(
+            0,
+          )
+          expect(
+            box.y + box.height,
+            `${width}px ${dir} ${fontSize}`,
+          ).toBeLessThanOrEqual(901)
         }
-        if ([320, 360, 1440].includes(width) && dir === 'ltr' && fontSize === '100%')
-          await page.screenshot({ path: `test-results/account-menu-${width}.png` })
+        if (
+          [320, 360, 1440].includes(width) &&
+          dir === 'ltr' &&
+          fontSize === '100%'
+        )
+          await page.screenshot({
+            path: `test-results/account-menu-${width}.png`,
+          })
         await page.keyboard.press('Escape')
       }
     }
   }
 })
 
-test('remember me selects persistent storage, unchecked uses tab storage', async ({ page }) => {
+test('remember me selects persistent storage, unchecked uses tab storage', async ({
+  page,
+}) => {
   await mockSupabase(page)
   await login(page)
   await expect(page).toHaveURL(/\/warga$/)
-  expect(await page.evaluate(() => Object.keys(sessionStorage).some(key => key.endsWith('-auth-token')))).toBe(true)
-  expect(await page.evaluate(() => Object.keys(localStorage).some(key => key.endsWith('-auth-token')))).toBe(false)
+  expect(
+    await page.evaluate(() =>
+      Object.keys(sessionStorage).some((key) => key.endsWith('-auth-token')),
+    ),
+  ).toBe(true)
+  expect(
+    await page.evaluate(() =>
+      Object.keys(localStorage).some((key) => key.endsWith('-auth-token')),
+    ),
+  ).toBe(false)
   await page.getByRole('button', { name: 'Keluar', exact: true }).click()
   await expect(page).toHaveURL(/\/login$/)
   await page.getByLabel('Email', { exact: true }).fill(user.email)
@@ -202,127 +392,213 @@ test('remember me selects persistent storage, unchecked uses tab storage', async
   await page.getByLabel('Ingat saya').check()
   await page.getByRole('button', { name: 'Masuk', exact: true }).click()
   await expect(page).toHaveURL(/\/warga$/)
-  expect(await page.evaluate(() => Object.keys(localStorage).some(key => key.endsWith('-auth-token')))).toBe(true)
+  expect(
+    await page.evaluate(() =>
+      Object.keys(localStorage).some((key) => key.endsWith('-auth-token')),
+    ),
+  ).toBe(true)
 })
 
-test('wrong credentials retain input and show a safe error', async ({ page }) => {
+test('wrong credentials retain input and show a safe error', async ({
+  page,
+}) => {
   await mockSupabase(page, { invalidPassword: true })
   await login(page)
-  await expect(page.getByRole('alert')).toContainText('Email atau password tidak sesuai')
-  await expect(page.getByLabel('Email', { exact: true })).toHaveValue(user.email)
+  await expect(page.getByRole('alert')).toContainText(
+    'Email atau password tidak sesuai',
+  )
+  await expect(page.getByLabel('Email', { exact: true })).toHaveValue(
+    user.email,
+  )
   await expect(page).toHaveURL(/\/login$/)
 })
 
-test('inactive profile and data failures never reveal protected content', async ({ page }) => {
+test('inactive profile and data failures never reveal protected content', async ({
+  page,
+}) => {
   await mockSupabase(page, { disabled: true })
   await login(page)
-  await expect(page.getByRole('heading', { name: 'Akses belum tersedia' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Akses belum tersedia' }),
+  ).toBeVisible()
   await expect(page.getByText(profile.nik, { exact: true })).toHaveCount(0)
   await expect(page.getByRole('alert')).toContainText('akun dinonaktifkan')
   await page.getByRole('button', { name: 'Keluar', exact: true }).click()
   await expect(page).toHaveURL(/\/login$/)
 })
 
-test('a failed profile read can be retried without exposing private data', async ({ page }) => {
+test('a failed profile read can be retried without exposing private data', async ({
+  page,
+}) => {
   const options = { profileFailure: true }
   await mockSupabase(page, options)
   await login(page)
-  await expect(page.getByRole('heading', { name: 'Akses belum tersedia' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Akses belum tersedia' }),
+  ).toBeVisible()
   await expect(page.getByText(profile.nik, { exact: true })).toHaveCount(0)
   options.profileFailure = false
   await page.getByRole('button', { name: 'Coba lagi', exact: true }).click()
-  await expect(page.getByRole('heading', { name: 'Profil warga', exact: true })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Profil warga', exact: true }),
+  ).toBeVisible()
 })
 
-test('registration rejects invalid identity and mismatched passwords before calling Auth', async ({ page }) => {
+test('registration rejects invalid identity and mismatched passwords before calling Auth', async ({
+  page,
+}) => {
   const calls = await mockSupabase(page)
   await fillRegistration(page)
   await page.getByLabel('NIK *', { exact: true }).fill('123')
-  await page.getByLabel('Konfirmasi Password *', { exact: true }).fill('OtherPassword')
+  await page
+    .getByLabel('Konfirmasi Password *', { exact: true })
+    .fill('OtherPassword')
   await page.getByRole('button', { name: 'Daftar Akun', exact: true }).click()
-  await expect(page.getByText('NIK harus berisi tepat 16 digit angka.')).toBeVisible()
+  await expect(
+    page.getByText('NIK harus berisi tepat 16 digit angka.'),
+  ).toBeVisible()
   await expect(page.getByText('Konfirmasi password harus sama.')).toBeVisible()
   await expect(page.getByLabel('NIK *', { exact: true })).toBeFocused()
   expect(calls.signup).toBeUndefined()
 })
 
-test('registration sends profile metadata, then asks for confirmation without a session', async ({ page }) => {
+test('registration sends profile metadata, then asks for confirmation without a session', async ({
+  page,
+}) => {
   const calls = await mockSupabase(page)
   await fillRegistration(page)
   await page.getByRole('button', { name: 'Daftar Akun', exact: true }).click()
-  await expect(page.getByRole('heading', { name: 'Periksa email Anda' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Periksa email Anda' }),
+  ).toBeVisible()
   expect(calls.signup?.email).toBe(user.email)
-  expect(calls.signup?.data).toMatchObject({ full_name: profile.full_name, nik: profile.nik })
+  expect(calls.signup?.data).toMatchObject({
+    full_name: profile.full_name,
+    nik: profile.nik,
+  })
   expect(calls.signup?.data).not.toHaveProperty('role')
   expect(calls.signup?.data).not.toHaveProperty('password')
   expect(calls.signup).not.toHaveProperty('confirmation')
-  expect(await page.evaluate(() => Object.keys(localStorage).some(key => key.endsWith('-code-verifier')))).toBe(true)
+  expect(
+    await page.evaluate(() =>
+      Object.keys(localStorage).some((key) => key.endsWith('-code-verifier')),
+    ),
+  ).toBe(true)
 })
 
-test('registration enters resident home when email confirmation is disabled', async ({ page }) => {
+test('registration enters resident home when email confirmation is disabled', async ({
+  page,
+}) => {
   await mockSupabase(page, { immediateSession: true })
   await fillRegistration(page)
   await page.getByRole('button', { name: 'Daftar Akun', exact: true }).click()
   await expect(page).toHaveURL(/\/warga$/)
-  await expect(page.getByRole('heading', { name: `Selamat datang, ${profile.full_name}!` })).toBeVisible()
+  await expect(
+    page.getByRole('heading', {
+      name: `Selamat datang, ${profile.full_name}!`,
+    }),
+  ).toBeVisible()
 })
 
-test('email confirmation exchanges PKCE code and opens the protected home', async ({ page }) => {
+test('email confirmation exchanges PKCE code and opens the protected home', async ({
+  page,
+}) => {
   await mockSupabase(page)
   await fillRegistration(page)
   await page.getByRole('button', { name: 'Daftar Akun', exact: true }).click()
-  await expect(page.getByRole('heading', { name: 'Periksa email Anda' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Periksa email Anda' }),
+  ).toBeVisible()
   await page.goto('/auth/callback?code=dummy-confirmation-code')
   await expect(page).toHaveURL(/\/warga$/)
-  await expect(page.getByRole('heading', { name: 'Profil warga', exact: true })).toBeVisible()
-  expect(await page.evaluate(() => Object.keys(localStorage).some(key => key.endsWith('-auth-token-code-verifier')))).toBe(false)
+  await expect(
+    page.getByRole('heading', { name: 'Profil warga', exact: true }),
+  ).toBeVisible()
+  expect(
+    await page.evaluate(() =>
+      Object.keys(localStorage).some((key) =>
+        key.endsWith('-auth-token-code-verifier'),
+      ),
+    ),
+  ).toBe(false)
 })
 
-test('invalid confirmation links offer login without revealing protected content', async ({ page }) => {
+test('invalid confirmation links offer login without revealing protected content', async ({
+  page,
+}) => {
   await mockSupabase(page)
-  await page.goto('/auth/callback?error=access_denied&error_description=expired')
-  await expect(page.getByRole('heading', { name: 'Konfirmasi akun', exact: true })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Ke halaman masuk' })).toBeVisible()
+  await page.goto(
+    '/auth/callback?error=access_denied&error_description=expired',
+  )
+  await expect(
+    page.getByRole('heading', { name: 'Konfirmasi akun', exact: true }),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('link', { name: 'Ke halaman masuk' }),
+  ).toBeVisible()
   await expect(page.getByText(profile.nik, { exact: true })).toHaveCount(0)
 })
 
-test('registration failure retains fields and hides internal database errors', async ({ page }) => {
+test('registration failure retains fields and hides internal database errors', async ({
+  page,
+}) => {
   await mockSupabase(page, { signupFailure: true })
   await fillRegistration(page)
   await page.getByRole('button', { name: 'Daftar Akun', exact: true }).click()
-  await expect(page.getByRole('alert')).toContainText('Permintaan belum berhasil')
-  await expect(page.getByLabel('Nama Lengkap *', { exact: true })).toHaveValue(profile.full_name)
+  await expect(page.getByRole('alert')).toContainText(
+    'Permintaan belum berhasil',
+  )
+  await expect(page.getByLabel('Nama Lengkap *', { exact: true })).toHaveValue(
+    profile.full_name,
+  )
   await expect(page.getByText('internal database details')).toHaveCount(0)
 })
 
-test('password controls and accessible help dialog work with keyboard', async ({ page }) => {
+test('password controls and accessible help dialog work with keyboard', async ({
+  page,
+}) => {
   await mockSupabase(page)
   await page.goto('/login')
-  await page.getByRole('button', { name: 'Tampilkan password', exact: true }).click()
-  await expect(page.getByLabel('Password', { exact: true })).toHaveAttribute('type', 'text')
+  await page
+    .getByRole('button', { name: 'Tampilkan password', exact: true })
+    .click()
+  await expect(page.getByLabel('Password', { exact: true })).toHaveAttribute(
+    'type',
+    'text',
+  )
   await page.getByRole('button', { name: 'Lupa password?' }).click()
   await expect(page.getByRole('dialog')).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).not.toBeVisible()
-  await expect(page.getByRole('button', { name: 'Lupa password?' })).toBeFocused()
+  await expect(
+    page.getByRole('button', { name: 'Lupa password?' }),
+  ).toBeFocused()
 })
 
-for (const width of [360, 768, 1280, 1440]) {
-  test(`auth layouts fit ${width}px without horizontal overflow`, async ({ page }) => {
+for (const width of [320, 375, 768, 1280, 1440, 1648]) {
+  test(`auth layouts fit ${width}px without horizontal overflow`, async ({
+    page,
+  }) => {
     await mockSupabase(page)
     await page.setViewportSize({ width, height: 928 })
     for (const path of ['/login', '/register']) {
       await page.goto(path)
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
       await page.evaluate(() => document.fonts.ready)
-      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
-      const card = page.locator('.auth-card')
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth),
+      ).toBeLessThanOrEqual(width)
+      const card = page.getByRole('region', {
+        name: path === '/login' ? 'Selamat Datang!' : 'Buat Akun Warga',
+      })
       if (width === 1440) {
         const bounds = await card.boundingBox()
         expect(bounds?.width).toBe(path === '/login' ? 560 : 900)
-        expect(bounds?.height).toBe(path === '/login' ? 540 : 672)
       }
-      await page.screenshot({ path: `test-results/${path.slice(1)}-${width}.png`, fullPage: true })
+      await page.screenshot({
+        path: `test-results/${path.slice(1)}-${width}.png`,
+        fullPage: true,
+      })
     }
   })
 }

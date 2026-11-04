@@ -4,7 +4,7 @@ import type { LetterType } from '../../lib/database.types'
 import { TextInput } from '../../components/TextInput'
 import { LetterModal } from './LetterModal'
 import { letterTypes } from './data'
-import styles from './Letters.module.css'
+import styles from './styles'
 
 export function LetterTypePicker({
   value,

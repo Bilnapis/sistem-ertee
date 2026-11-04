@@ -21,7 +21,7 @@ import {
 import type { PaymentStatus } from './types'
 import { DuesStatusBadge } from './DuesStatusBadge'
 import { DuesModal } from './DuesModal'
-import styles from './Dues.module.css'
+import styles from './styles'
 
 export default function DuesDetails({ manage = false }: { manage?: boolean }) {
   const { profile } = useAuth()

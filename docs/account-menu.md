@@ -15,9 +15,9 @@ submenu akun, dan akses ke formulir profil sendiri.
 
 **Survive zoom and text resize / Plan for growth and clipping**
 
-| Severity      | Location                                                                                                                            | Before                                                                              | After                                                                                                                            | Why                                                                |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| HIGH, selesai | `src/components/AccountMenu.module.css:7`, `src/components/AuthenticatedLayout.module.css:247`, `src/components/AccountMenu.tsx:20` | Nama panjang dan teks 200% dapat mendorong pemicu atau submenu melewati tepi layar. | Lebar pemicu mengikuti ruang tersedia; header dapat membungkus; tinggi submenu mengikuti sisa tinggi viewport dan dapat digulir. | WCAG 1.4.4 / 1.4.10: informasi dan tindakan tetap dapat dijangkau. |
+| Severity      | Location                                                                                                        | Before                                                                              | After                                                                                                                            | Why                                                                |
+| ------------- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| HIGH, selesai | `src/components/AccountMenu.tsx`, `src/components/AuthenticatedLayout.tsx`, `src/components/AccountMenu.tsx:20` | Nama panjang dan teks 200% dapat mendorong pemicu atau submenu melewati tepi layar. | Lebar pemicu mengikuti ruang tersedia; header dapat membungkus; tinggi submenu mengikuti sisa tinggi viewport dan dapat digulir. | WCAG 1.4.4 / 1.4.10: informasi dan tindakan tetap dapat dijangkau. |
 
 **Native elements first / Trap and restore focus**
 
@@ -37,3 +37,5 @@ Not verified: pembaca layar manual, audit axe, Firefox/Safari, dan zoom browser
 native. Pengujian 200% di atas memakai pembesaran ukuran teks CSS.
 
 Approve untuk lingkup menu akun yang diperiksa.
+
+Catatan migrasi Tailwind: tabel pemeriksaan di atas merupakan riwayat perbaikan. Lokasi kode telah diperbarui ke implementasi Tailwind; pengukuran historis bukan baseline visual baru. Lihat `docs/tailwind-migration.md`.

@@ -697,7 +697,7 @@ test('responsive screens and stacked dialogs retain focus, readable controls, an
   page,
 }, testInfo) => {
   await mockLetters(page, { role: 'ketua_rt' })
-  for (const width of [375, 768, 1280, 1648]) {
+  for (const width of [320, 375, 768, 1280, 1648]) {
     await page.setViewportSize({ width, height: 1056 })
     await page.goto('/admin/pengajuan-surat')
     await expect(page.getByRole('table')).toBeVisible()

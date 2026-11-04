@@ -7,7 +7,7 @@ import { getSupabase } from '../../lib/supabase'
 import { duesError, monthLabel, rupiah, useDuesConfiguration } from './data'
 import type { DuesConfiguration } from './types'
 import { DuesModal } from './DuesModal'
-import styles from './Dues.module.css'
+import styles from './styles'
 
 function SettingsForm({
   config,

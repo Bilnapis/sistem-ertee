@@ -5,7 +5,7 @@ import { residentError, useResident } from './data'
 import { ResidentModal } from './ResidentModal'
 import { ResidentEditor } from './ResidentEditor'
 import { ResidentDetails } from './ResidentDetails'
-import styles from './Residents.module.css'
+import styles from './styles'
 
 export default function ResidentDialog({
   mode,

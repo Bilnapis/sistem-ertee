@@ -13,7 +13,7 @@ import {
 } from './data'
 import { LetterModal } from './LetterModal'
 import { LetterStatusBadge } from './LetterStatusBadge'
-import styles from './Letters.module.css'
+import styles from './styles'
 
 export default function LetterDetails({
   manage = false,

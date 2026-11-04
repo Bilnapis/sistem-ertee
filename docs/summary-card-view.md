@@ -2,11 +2,11 @@
 
 Komponen bersama di `src/components/SummaryCardView.tsx` dipakai oleh Data
 Warga, Pengajuan Surat, serta Iuran Warga untuk pengurus dan warga.
-Seluruh gaya kartu dan grid berada di `SummaryCardView.module.css`, dengan
-acuan kartu Data Warga: radius 14 px, padding 16 px, label 13 px, angka
+Seluruh gaya kartu dan grid berada di `src/components/SummaryCardView.tsx`, dengan
+acuan kartu Data Warga: radius 14 px, padding 16 px, label 14 px, angka
 24 px, dan gap 12 px. Halaman hanya memasok data dan mengatur jarak ke
 bagian halaman lainnya. Semua label, tautan, angka, dan nilai status
-menggunakan warna hitam dari CSS komponen.
+menggunakan token `ink` dari komponen.
 
 ```tsx
 <SummaryCardView
@@ -31,4 +31,4 @@ yang sudah tersedia: dua kolom di bawah 46rem dan satu kolom di bawah 20rem.
 Angka berpindah ke sisi akhir kartu di area sempit; nilai teks dan mata uang
 tetap di bawah label agar mudah dibaca. Padding menjadi 12 px di bawah
 33rem. Komponen tidak menerima prop `className` atau `style`, sehingga gaya
-kartu ditentukan oleh satu CSS Module.
+kartu ditentukan oleh utility pada satu komponen bersama.

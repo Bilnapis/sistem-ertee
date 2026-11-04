@@ -1,5 +1,3 @@
-import styles from './PageIntro.module.css'
-
 type PageIntroProps = {
   id: string
   title: string
@@ -8,11 +6,16 @@ type PageIntroProps = {
 
 export function PageIntro({ id, title, description }: PageIntroProps) {
   return (
-    <div className={styles.intro}>
-      <h1 id={id} className={styles.title}>
+    <div className="min-w-0">
+      <h1
+        id={id}
+        className="text-[2rem] leading-tight font-bold tracking-[-0.02em] wrap-anywhere @max-[33rem]/page:text-[1.75rem]"
+      >
         {title}
       </h1>
-      <p className={styles.description}>{description}</p>
+      <p className="mt-1.5 max-w-[65ch] text-sm leading-normal text-pretty wrap-anywhere text-muted">
+        {description}
+      </p>
     </div>
   )
 }

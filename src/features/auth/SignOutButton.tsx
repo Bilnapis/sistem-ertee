@@ -1,3 +1,4 @@
+import { buttons } from '../../components/ui'
 import { useState } from 'react'
 import { LogOut } from 'lucide-react'
 import { Feedback } from '../../components/Feedback'
@@ -5,7 +6,7 @@ import { getSupabase } from '../../lib/supabase'
 import { authErrorMessage } from './errors'
 
 export function SignOutButton({
-  className = 'secondary-button',
+  className = buttons.secondary,
 }: {
   className?: string
 }) {
@@ -24,7 +25,7 @@ export function SignOutButton({
     }
   }
   return (
-    <div className="signout-area">
+    <div className="flex min-w-0 flex-col gap-3">
       <button
         className={className}
         type="button"

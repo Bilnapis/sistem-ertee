@@ -1,3 +1,4 @@
+import { selectControl, formControl } from '../../components/ui'
 import { useEffect } from 'react'
 import {
   ArrowRight,
@@ -29,7 +30,7 @@ import {
 } from './data'
 import type { DuesFilters, DuesInvoice } from './types'
 import { DuesStatusBadge } from './DuesStatusBadge'
-import styles from './Dues.module.css'
+import styles from './styles'
 
 function CurrentBill({ invoice }: { invoice: DuesInvoice }) {
   const location = useLocation()
@@ -284,6 +285,7 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
               <input
                 id="dues-period"
                 type="month"
+                className={formControl}
                 min="2000-01"
                 max="9999-12"
                 value={
@@ -305,6 +307,7 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
             <div className={styles.field}>
               <label htmlFor="dues-status">Status</label>
               <select
+                className={selectControl}
                 id="dues-status"
                 value={filters.status}
                 onChange={(event) => change('status', event.target.value)}
@@ -320,6 +323,7 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
             <div className={styles.field}>
               <label htmlFor="dues-method">Metode</label>
               <select
+                className={selectControl}
                 id="dues-method"
                 value={filters.method}
                 onChange={(event) => change('metode', event.target.value)}

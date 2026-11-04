@@ -608,7 +608,7 @@ test('list failure retries and an empty list is explicit', async ({ page }) => {
   ).toBeVisible()
   await expect(page.getByText('Tidak ada tagihan yang sesuai.')).toBeVisible()
 })
-for (const width of [375, 768, 1648])
+for (const width of [320, 375, 768, 1280, 1648])
   test(`responsive design and keyboard dialog at ${width}px`, async ({
     page,
   }) => {

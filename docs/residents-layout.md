@@ -1,38 +1,38 @@
 # Pemeriksaan layout halaman warga
 
-Perbaikan mencakup `ResidentsPage` dan gaya halaman daftar dalam CSS Modules.
+Perbaikan mencakup `ResidentsPage` dan utility Tailwind halaman daftar di `src/features/residents/styles.ts`.
 Pemeriksaan menggunakan Chrome, akun dan respons Supabase dummy, font Inter
 yang sudah tersedia, serta skala jarak proyek 4/8/12/16/24/32 px.
 
 ## Hint at hidden content
 
-| Severity | Location | Before | After | Why |
-| --- | --- | --- | --- | --- |
-| HIGH, selesai | `src/features/residents/ResidentsPage.tsx:65`, `src/features/residents/Residents.module.css:136` | Pada 320 px, tabel 740 px berada dalam region 278 px; petunjuk gulir hanya tersedia melalui nama aksesibel. | Petunjuk dengan ikon dan teks terlihat pada area yang lebih sempit daripada tabel. Region tetap dapat digulir dengan keyboard atau sentuhan. | Hint at hidden content: pengguna mengetahui bahwa kolom status dan aksi tersedia di sisi berikutnya. |
+| Severity      | Location                                                                          | Before                                                                                                      | After                                                                                                                                        | Why                                                                                                  |
+| ------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| HIGH, selesai | `src/features/residents/ResidentsPage.tsx:65`, `src/features/residents/styles.ts` | Pada 320 px, tabel 740 px berada dalam region 278 px; petunjuk gulir hanya tersedia melalui nama aksesibel. | Petunjuk dengan ikon dan teks terlihat pada area yang lebih sempit daripada tabel. Region tetap dapat digulir dengan keyboard atau sentuhan. | Hint at hidden content: pengguna mengetahui bahwa kolom status dan aksi tersedia di sisi berikutnya. |
 
 ## Order by importance; Group with space, not lines
 
-| Severity | Location | Before | After | Why |
-| --- | --- | --- | --- | --- |
-| MEDIUM, selesai | `src/features/residents/Residents.module.css:12`, `src/features/residents/Residents.module.css:32`, `src/features/residents/Residents.module.css:46`, `src/features/residents/Residents.module.css:72` | Judul desktop 40 px, baris tabel sekitar 83 px. Pada 320 px tabel mulai pada y=799. | Judul desktop 32 px, area sempit 28 px; baris data normal sekitar 72 px. Tabel pada 320 px mulai pada y=713. Jarak antarbagian 24 px dan antarkontrol 12 px. | Order by importance: daftar lebih cepat terlihat. Group with space: identitas halaman, ringkasan, dan direktori mempunyai kelompok yang jelas. |
+| Severity        | Location                                                                                                                                       | Before                                                                              | After                                                                                                                                                        | Why                                                                                                                                            |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| MEDIUM, selesai | `src/features/residents/styles.ts`, `src/features/residents/styles.ts`, `src/features/residents/styles.ts`, `src/features/residents/styles.ts` | Judul desktop 40 px, baris tabel sekitar 83 px. Pada 320 px tabel mulai pada y=799. | Judul desktop 32 px, area sempit 28 px; baris data normal sekitar 72 px. Tabel pada 320 px mulai pada y=713. Jarak antarbagian 24 px dan antarkontrol 12 px. | Order by importance: daftar lebih cepat terlihat. Group with space: identitas halaman, ringkasan, dan direktori mempunyai kelompok yang jelas. |
 
 ## Hold structure until it breaks; Logical properties for anything that mirrors
 
-| Severity | Location | Before | After | Why |
-| --- | --- | --- | --- | --- |
-| MEDIUM, selesai | `src/features/residents/ResidentsPage.tsx:55`, `src/features/residents/Residents.module.css:50`, `src/features/residents/Residents.module.css:58`, `src/features/residents/Residents.module.css:89`, `src/features/residents/Residents.module.css:136` | Filter memakai flex-wrap dan breakpoint viewport; label disembunyikan. Padding select memakai sisi fisik dan ikon navigasi tetap menunjuk ke arah LTR. | Label filter terlihat; grid berpindah susunan menurut lebar container. Padding memakai inline-start/end, ikon arah tercermin pada RTL, angka/NIK diisolasi dengan bdi. | Hold structure: isi menyesuaikan ruang sesungguhnya setelah sidebar. Logical properties: urutan, arah aksi, dan ruang select tetap benar ketika dicerminkan. |
+| Severity        | Location                                                                                                                                                                                      | Before                                                                                                                                                 | After                                                                                                                                                                  | Why                                                                                                                                                          |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| MEDIUM, selesai | `src/features/residents/ResidentsPage.tsx:55`, `src/features/residents/styles.ts`, `src/features/residents/styles.ts`, `src/features/residents/styles.ts`, `src/features/residents/styles.ts` | Filter memakai flex-wrap dan breakpoint viewport; label disembunyikan. Padding select memakai sisi fisik dan ikon navigasi tetap menunjuk ke arah LTR. | Label filter terlihat; grid berpindah susunan menurut lebar container. Padding memakai inline-start/end, ikon arah tercermin pada RTL, angka/NIK diisolasi dengan bdi. | Hold structure: isi menyesuaikan ruang sesungguhnya setelah sidebar. Logical properties: urutan, arah aksi, dan ruang select tetap benar ketika dicerminkan. |
 
 ## Align to shared edges; Plan for growth and clipping
 
-| Severity | Location | Before | After | Why |
-| --- | --- | --- | --- | --- |
-| LOW, selesai | `src/features/residents/Residents.module.css:12`, `src/features/residents/Residents.module.css:66`, `src/features/residents/Residents.module.css:91` | Pada viewport 2560 px, tabel melebar sampai sekitar 2230 px; kolom mengikuti pembagian otomatis. | Konten dibatasi 96rem, tabel sekitar 1486 px pada viewport tersebut, dengan proporsi kolom tetap. Pagination dan teks panjang dapat membungkus. | Align to shared edges: hubungan judul, ringkasan, filter, tabel, dan pagination tetap jelas. Plan for growth: teks bertambah tinggi tanpa keluar dari area. |
+| Severity     | Location                                                                                                   | Before                                                                                           | After                                                                                                                                           | Why                                                                                                                                                         |
+| ------------ | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| LOW, selesai | `src/features/residents/styles.ts`, `src/features/residents/styles.ts`, `src/features/residents/styles.ts` | Pada viewport 2560 px, tabel melebar sampai sekitar 2230 px; kolom mengikuti pembagian otomatis. | Konten dibatasi 96rem, tabel sekitar 1486 px pada viewport tersebut, dengan proporsi kolom tetap. Pagination dan teks panjang dapat membungkus. | Align to shared edges: hubungan judul, ringkasan, filter, tabel, dan pagination tetap jelas. Plan for growth: teks bertambah tinggi tanpa keluar dari area. |
 
 ## Tipografi
 
-| Severity | Location | Before | After | Why |
-| --- | --- | --- | --- | --- |
-| MEDIUM, selesai | `src/features/residents/Residents.module.css:58` | Select filter memakai font 14 px termasuk pada area sempit. | Input/select memakai 1rem, terukur 16 px pada ukuran teks dasar. | Inputs at 16px on mobile: ukuran nilai filter konsisten dan lebih mudah dibaca. |
+| Severity        | Location                           | Before                                                      | After                                                            | Why                                                                             |
+| --------------- | ---------------------------------- | ----------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| MEDIUM, selesai | `src/features/residents/styles.ts` | Select filter memakai font 14 px termasuk pada area sempit. | Input/select memakai 1rem, terukur 16 px pada ukuran teks dasar. | Inputs at 16px on mobile: ukuran nilai filter konsisten dan lebih mudah dibaca. |
 
 Ukuran halaman memakai `rem` dan line-height unitless. Caption role yang
 sebelumnya 11 px menjadi 12 px; input dan select 16 px. Angka ringkasan
@@ -64,3 +64,5 @@ Not verified: perilaku layout/native select pada Safari dan Firefox, serta
 perangkat iOS fisik.
 
 Approve — cakupan halaman daftar dan pemeriksaan Chrome yang disebutkan di atas.
+
+Catatan migrasi Tailwind: tabel pemeriksaan di atas merupakan riwayat perbaikan. Lokasi kode telah diperbarui ke implementasi Tailwind; pengukuran historis bukan baseline visual baru. Lihat `docs/tailwind-migration.md`.

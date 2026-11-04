@@ -85,7 +85,7 @@ Playwright menggunakan API Auth/Database/Storage tiruan serta identitas dummy.
 Cakupan: tiga peran, kepemilikan, profile gate, pencarian/pagination, urutan status,
 konflik versi, percobaan ulang, lampiran invalid, kegagalan unggah/simpan dan dialog.
 
-Screenshot browser dihasilkan di `test-results/` pada 375, 768, 1280 dan 1648 px.
+Screenshot browser dihasilkan di `test-results/` pada 320, 375, 768, 1280 dan 1648 px.
 Referensi desktop diekspor langsung dari `design.fig` menggunakan OpenPencil.
 Tinggi dialog detail mengikuti isi agar informasi yang terpotong pada frame sumber
 tetap terbaca. Label filter, riwayat dan kontak/lampiran adalah tambahan fungsional;
@@ -102,3 +102,5 @@ tersedia, uji unggah JPG/PNG/PDF, penolakan berkas >5 MiB/MIME lain, unduh denga
 pemohon/kedua pengurus, penolakan warga lain/akun nonaktif/sesi dicabut, serta
 penolakan upsert/delete. Pengujian konkurensi dua koneksi PostgreSQL dan penerapan
 cloud juga belum diklaim; PGlite memverifikasi penolakan versi basi secara berurutan.
+
+Setelah migrasi Tailwind, utility surat berada di `src/features/letters/styles.ts`; form memakai gap 16 px, kontrol minimum 48 px dan dialog beradius 22 px. Batas lebar form/detail/pemilih tetap 1000/912/528 px. Hasil validasi bersama dicatat di `docs/tailwind-migration.md`.

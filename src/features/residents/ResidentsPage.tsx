@@ -1,3 +1,4 @@
+import { selectControl } from '../../components/ui'
 import {
   ArrowRight,
   ChevronLeft,
@@ -21,7 +22,7 @@ import {
   useDirectory,
   useResidentSummary,
 } from './data'
-import styles from './Residents.module.css'
+import styles from './styles'
 
 const roles = ['ketua_rt', 'pengurus_rt', 'warga']
 const statuses = ['all', 'active', 'inactive', 'archived']
@@ -130,6 +131,7 @@ export default function ResidentsPage() {
             <label className={styles.filterLabel}>
               <span className={styles.filterTitle}>Status akun</span>
               <select
+                className={selectControl}
                 aria-label="Status akun"
                 value={filters.status}
                 onChange={(event) => change('status', event.target.value)}
@@ -143,6 +145,7 @@ export default function ResidentsPage() {
             <label className={styles.filterLabel}>
               <span className={styles.filterTitle}>Role warga</span>
               <select
+                className={selectControl}
                 aria-label="Role warga"
                 value={filters.role}
                 onChange={(event) => change('role', event.target.value)}
@@ -158,6 +161,7 @@ export default function ResidentsPage() {
             <label className={`${styles.filterLabel} ${styles.sortField}`}>
               <span className={styles.filterTitle}>Urutkan warga</span>
               <select
+                className={selectControl}
                 aria-label="Urutkan warga"
                 value={filters.sort}
                 onChange={(event) => change('sort', event.target.value)}

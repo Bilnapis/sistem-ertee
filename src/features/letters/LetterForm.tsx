@@ -1,3 +1,4 @@
+import { textareaControl } from '../../components/ui'
 import { useRef, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ChevronDown, FileUp, Info, Paperclip } from 'lucide-react'
@@ -21,7 +22,7 @@ import {
 } from './data'
 import { LetterModal } from './LetterModal'
 import { LetterTypePicker } from './LetterTypePicker'
-import styles from './Letters.module.css'
+import styles from './styles'
 
 type Errors = Partial<
   Record<'type' | 'purpose' | 'phone' | 'notes' | 'file', string>
@@ -201,6 +202,7 @@ export default function LetterForm() {
             <div className={styles.field}>
               <label htmlFor="letter-notes">Keterangan Tambahan</label>
               <textarea
+                className={textareaControl}
                 id="letter-notes"
                 rows={3}
                 placeholder="Tambahkan keterangan jika diperlukan"

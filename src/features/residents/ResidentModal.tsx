@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef } from 'react'
 import type { ReactNode } from 'react'
 import { X } from 'lucide-react'
-import styles from './Residents.module.css'
+import styles from './styles'
 
 export function ResidentModal({
   title,

@@ -1,6 +1,6 @@
 # Sidebar admin
 
-Komponen [`AdminSidebar`](../src/components/AdminSidebar.tsx) diadaptasi dari komponen `Sidebar / ErTee / Admin` (`0:4332`) dalam `design.fig` dengan ukuran yang lebih ringkas untuk dashboard. Styling memakai CSS Modules sehingga tidak memengaruhi formulir autentikasi.
+Komponen [`AdminSidebar`](../src/components/AdminSidebar.tsx) diadaptasi dari komponen `Sidebar / ErTee / Admin` (`0:4332`) dalam `design.fig` dengan ukuran yang lebih ringkas untuk dashboard. Styling memakai utility Tailwind di komponen; warna dan radius berasal dari token bersama.
 
 Informasi akun telah dipindahkan ke [menu akun pada header](account-menu.md).
 Sidebar desktop maupun drawer mobile memuat identitas RT, navigasi, dan
@@ -44,7 +44,7 @@ Jalankan `npm run dev`, lalu buka `/preview/admin-sidebar`. Route ini hanya dise
 | Warna      | Latar `#0f172a`, aktif `#0ea546`                        | Token `--color-ink` dan `--color-brand`.                                                                                                                |
 | Menu       | Tinggi minimum 60 px, gap 12 px, radius 16 px           | Tinggi minimum 44 px, gap 4 px, radius 12 px. Padding vertikal 10 px memungkinkan label panjang membungkus.                                             |
 | Ikon       | Lucide, ukuran 24 px, stroke 2 px                       | Lucide, ukuran 20 px, stroke 2 px.                                                                                                                      |
-| Tipografi  | Inter; merek 32/800, menu 18/600, menu aktif 18/800     | Inter; merek 28/800, menu 14/600 termasuk menu aktif, label RT 12/600. Ukuran memakai `rem`, line-height unitless.                                   |
+| Tipografi  | Inter; merek 32/800, menu 18/600, menu aktif 18/800     | Inter; merek 28/800, menu 14/600 termasuk menu aktif, label RT 12/600. Ukuran memakai `rem`, line-height unitless.                                      |
 | Kartu akun | Ditampilkan pada bagian bawah sidebar                   | Dihapus dari sidebar; informasi dan tindakan akun tersedia pada header.                                                                                 |
 
 Nilai piksel di atas berlaku pada ukuran font root 16 px. Logo, label RT, dan ikon menu berbagi tepi awal 28 px. Jarak antarkelompok 32 px membedakan identitas dan navigasi; tinggi navigasi mengikuti isinya.
@@ -76,32 +76,34 @@ Label pseudo-localization, teks navigasi bahasa Jerman, nama panjang tanpa spasi
 
 ### Plan for growth and clipping
 
-| Severity      | Location                                     | Before                                                                                       | After                                                     | Why                                                                                    |
-| ------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| HIGH, selesai | `src/components/AdminSidebar.module.css:140` | Nama/peran satu baris terpotong dengan elipsis; nilai lengkap bergantung pada hover `title`. | Teks membungkus dan kartu bertambah tinggi mengikuti isi. | Plan for growth and clipping: nilai lengkap terbaca melalui keyboard dan layar sentuh. |
+| Severity      | Location                          | Before                                                                                       | After                                                     | Why                                                                                    |
+| ------------- | --------------------------------- | -------------------------------------------------------------------------------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| HIGH, selesai | `src/components/AdminSidebar.tsx` | Nama/peran satu baris terpotong dengan elipsis; nilai lengkap bergantung pada hover `title`. | Teks membungkus dan kartu bertambah tinggi mengikuti isi. | Plan for growth and clipping: nilai lengkap terbaca melalui keyboard dan layar sentuh. |
 
 ### Logical properties for anything that mirrors
 
-| Severity        | Location                                                                                                | Before                                                   | After                                                | Why                                                                  |
-| --------------- | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------- |
-| MEDIUM, selesai | `src/components/AuthenticatedLayout.module.css:44`, `src/components/AuthenticatedLayout.module.css:143` | Drawer dan tombol tutup memakai posisi fisik kiri/kanan. | Memakai `inset-inline-start` dan `inset-inline-end`. | Logical properties: posisi navigasi mengikuti arah dokumen pada RTL. |
+| Severity        | Location                                                                           | Before                                                   | After                                                | Why                                                                  |
+| --------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------- |
+| MEDIUM, selesai | `src/components/AuthenticatedLayout.tsx`, `src/components/AuthenticatedLayout.tsx` | Drawer dan tombol tutup memakai posisi fisik kiri/kanan. | Memakai `inset-inline-start` dan `inset-inline-end`. | Logical properties: posisi navigasi mengikuti arah dokumen pada RTL. |
 
 ### Align to shared edges
 
-| Severity     | Location                                                                                                                               | Before                                                          | After                   | Why                                                                                               |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------- |
-| LOW, selesai | `src/components/AdminSidebar.module.css:21`, `src/components/AdminSidebar.module.css:63`, `src/components/AdminSidebar.module.css:108` | Logo mulai pada 28 px, ikon menu pada 48 px, avatar pada 44 px. | Semua mulai pada 28 px. | Align to shared edges: identitas, navigasi, dan akun membentuk satu struktur yang mudah dipindai. |
+| Severity     | Location                                                                                                | Before                                                          | After                   | Why                                                                                               |
+| ------------ | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------- |
+| LOW, selesai | `src/components/AdminSidebar.tsx`, `src/components/AdminSidebar.tsx`, `src/components/AdminSidebar.tsx` | Logo mulai pada 28 px, ikon menu pada 48 px, avatar pada 44 px. | Semua mulai pada 28 px. | Align to shared edges: identitas, navigasi, dan akun membentuk satu struktur yang mudah dipindai. |
 
 ### Transitions for interactive state
 
-| Severity        | Location                                                                                               | Before                                               | After                                                                                                                        | Why                                                                                                        |
-| --------------- | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| MEDIUM, selesai | `src/components/AuthenticatedLayout.module.css:44`, `src/components/AuthenticatedLayout.module.css:74` | Drawer dan overlay muncul serta menghilang seketika. | Drawer bergeser, overlay memudar, dan transisi keluar selesai sebelum elemen disembunyikan. Reduced motion menggunakan fade. | Transitions for interactive state: perubahan posisi navigasi lebih mudah diikuti saat membuka dan menutup. |
+| Severity        | Location                                                                           | Before                                               | After                                                                                                                        | Why                                                                                                        |
+| --------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| MEDIUM, selesai | `src/components/AuthenticatedLayout.tsx`, `src/components/AuthenticatedLayout.tsx` | Drawer dan overlay muncul serta menghilang seketika. | Drawer bergeser, overlay memudar, dan transisi keluar selesai sebelum elemen disembunyikan. Reduced motion menggunakan fade. | Transitions for interactive state: perubahan posisi navigasi lebih mudah diikuti saat membuka dan menutup. |
 
 ### Contain scroll inside overlays
 
-| Severity        | Location                                                                                                | Before                                                               | After                                                                                         | Why                                                                                        |
-| --------------- | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| MEDIUM, selesai | `src/components/AuthenticatedLayout.module.css:94`, `src/components/AuthenticatedLayout.module.css:137` | Scroll drawer tidak dibatasi dan halaman latar masih dapat bergulir. | Scroll halaman dikunci saat drawer terbuka; sidebar memakai `overscroll-behavior-y: contain`. | Contain scroll inside overlays: menggulir navigasi tidak menggeser halaman di belakangnya. |
+| Severity        | Location                                                                           | Before                                                               | After                                                                                         | Why                                                                                        |
+| --------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| MEDIUM, selesai | `src/components/AuthenticatedLayout.tsx`, `src/components/AuthenticatedLayout.tsx` | Scroll drawer tidak dibatasi dan halaman latar masih dapat bergulir. | Scroll halaman dikunci saat drawer terbuka; sidebar memakai `overscroll-behavior-y: contain`. | Contain scroll inside overlays: menggulir navigasi tidak menggeser halaman di belakangnya. |
 
 Approve — cakupan sidebar dan drawer yang diperiksa di Chrome.
+
+Catatan migrasi Tailwind: tabel pemeriksaan di atas merupakan riwayat perbaikan. Lokasi kode telah diperbarui ke implementasi Tailwind; pengukuran historis bukan baseline visual baru. Lihat `docs/tailwind-migration.md`.

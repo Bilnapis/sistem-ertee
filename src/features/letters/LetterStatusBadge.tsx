@@ -1,6 +1,6 @@
 import type { LetterStatus } from '../../lib/database.types'
 import { letterStatuses } from './data'
-import styles from './Letters.module.css'
+import styles from './styles'
 
 export function LetterStatusBadge({ status }: { status: LetterStatus }) {
   return (

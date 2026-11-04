@@ -250,7 +250,7 @@ Warna tombol mengikuti token aksi aksesibel `#087e34`. Dua kartu ringkasan dipak
 konsisten pada semua status. Tambahan pilihan metode/tanggal, filter, pagination,
 detail dan kontrol pengurus melengkapi alur yang disetujui.
 
-Playwright menyimpan screenshot pada 375, 768 dan 1648 px ke `test-results/`.
+Playwright menyimpan screenshot pada 320, 375, 768, 1280 dan 1648 px ke `test-results/`.
 Perbandingan visual memeriksa kartu, warna, tipografi, dialog, overflow, dan adaptasi
 ponsel; tinggi dialog mengikuti isi tambahan. Tabel bergulir di region tersendiri.
 Dialog memakai native dialog dengan siklus Tab, Escape, dan pengembalian fokus.
@@ -288,3 +288,5 @@ lintas akun melalui Storage HTTP, sahkan dan batalkan satu pembayaran dummy
 sambil membandingkan rekap, serta uji konkurensi dua koneksi PostgreSQL nyata.
 Pengujian tersebut belum dijalankan pada proyek cloud ini agar tidak menambah
 akun, bukti, pembayaran, atau catatan kas fiktif ke data yang digunakan pemilik.
+
+Catatan migrasi Tailwind: catatan kegagalan tinggi kartu login di atas merupakan riwayat sebelum migrasi. Kontrol kini memakai standar bersama dan tes autentikasi memeriksa lebar serta overflow tanpa mengunci tinggi kartu. Hasil suite akhir dicatat di `docs/tailwind-migration.md`.

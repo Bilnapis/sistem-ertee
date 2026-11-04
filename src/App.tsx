@@ -1,3 +1,5 @@
+import { cn } from './lib/cn'
+import { buttons } from './components/ui'
 import { lazy, Suspense } from 'react'
 import {
   BrowserRouter,
@@ -46,12 +48,17 @@ function ProtectedLayout() {
   if (!session) return <Navigate to="/login" replace />
   if (error)
     return (
-      <main className="center-screen">
-        <section className="auth-card error-card">
+      <main className="grid min-h-svh place-items-center p-6">
+        <section
+          className={cn(
+            'w-full rounded-card bg-surface shadow-card',
+            'flex max-w-[560px] flex-col gap-6 p-8',
+          )}
+        >
           <h1>Akses belum tersedia</h1>
           <Feedback>{error}</Feedback>
-          <div className="error-actions">
-            <button className="primary-button" onClick={retry}>
+          <div className="flex flex-col gap-3">
+            <button className={cn(buttons.primary, 'w-full')} onClick={retry}>
               Coba lagi
             </button>
             <SignOutButton />
@@ -67,15 +74,20 @@ function AuthCallback() {
   if (loading) return <LoadingScreen />
   if (session) return <Navigate to="/warga" replace />
   return (
-    <main className="center-screen">
-      <section className="auth-card confirmation-card">
+    <main className="grid min-h-svh place-items-center p-6">
+      <section
+        className={cn(
+          'w-full rounded-card bg-surface shadow-card',
+          'flex max-w-[560px] flex-col gap-6 p-10 text-center max-sm:px-6 max-sm:py-7 [&>p]:text-sm [&>p]:leading-6 [&>p]:text-muted',
+        )}
+      >
         <h1>Konfirmasi akun</h1>
         <p>
           Tautan konfirmasi tidak valid, sudah digunakan, atau dibuka di browser
           berbeda. Jika email sudah dikonfirmasi, silakan masuk dengan email dan
           password Anda.
         </p>
-        <Link to="/login" className="primary-button">
+        <Link to="/login" className={cn(buttons.primary, 'w-full')}>
           Ke halaman masuk
         </Link>
       </section>
@@ -88,10 +100,10 @@ function ManagerOnly() {
   return isManager(profile?.role) ? (
     <Outlet />
   ) : (
-    <main className="resident-main">
+    <main className="@container/page mx-auto w-full max-w-[1088px] flex-1 px-6 py-12 max-sm:px-4 max-sm:py-8">
       <h1>Akses ditolak</h1>
       <p>Halaman pengelolaan hanya tersedia bagi Ketua RT dan Pengurus RT.</p>
-      <Link to="/warga/profil" className="text-link">
+      <Link to="/warga/profil" className={buttons.text}>
         Kembali ke profil
       </Link>
     </main>

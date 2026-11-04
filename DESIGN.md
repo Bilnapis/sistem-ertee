@@ -38,7 +38,7 @@ typography:
     lineHeight: 21px
 rounded:
   button: 12px
-  input: 14px
+  input: 12px
   card: 20px
   dialog: 22px
 spacing:
@@ -78,9 +78,9 @@ Acuan adalah `design.fig`, frame daftar `0:4505`, detail `0:4584`, edit
 `0:4697`, dan tambah `0:4798`, seluruhnya 1648 × 1056 px. File desain
 dibaca langsung menggunakan CLI OpenPencil tanpa mengubah sumbernya.
 
-Token global berada di `src/styles.css`; gaya fitur memakai CSS Modules.
+Token global berada di `src/styles.css`; gaya fitur memakai utility Tailwind dan kumpulan class statis di `styles.ts` masing-masing fitur.
 Font Inter dan ikon Lucide menggunakan dependensi yang sudah tersedia.
-Batas input dan tabel memakai token `--color-input-border: #dce4ee`.
+Batas input dan tabel memakai token `--color-border: #dce4ee`; border kontrol memakai `--color-control-border: #8592a3`.
 
 | Keputusan           | Implementasi                                                                                                                   |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
@@ -88,7 +88,7 @@ Batas input dan tabel memakai token `--color-input-border: #dce4ee`.
 | Tabel               | Header lembut, permukaan putih, radius 20 px, NIK tersamarkan.                                                                 |
 | Kepadatan daftar    | Judul 32 px desktop / 28 px area sempit; teks tabel 14 px, badge role 12 px, angka ringkasan 24 px. Ukuran teks memakai `rem`. |
 | Area konten         | Maksimal 96rem, gutter 24 px desktop / 16 px area sempit; kolom tabel memiliki proporsi tetap.                                 |
-| Filter daftar       | Label terlihat, input/select 16 px, tinggi minimum 44 px, susunan mengikuti container halaman.                                 |
+| Filter daftar       | Label terlihat, input/select 16 px, tinggi minimum 48 px, susunan mengikuti container halaman.                                 |
 | Dialog              | Maksimal 1000 px, radius 22 px, form dua kolom dengan gap 16 px.                                                               |
 | Ponsel              | Form satu kolom di bawah 640 px; tabel digulir di dalam region sendiri.                                                        |
 | Role dan verifikasi | Badge role di bawah nama; ringkasan verifikasi di atas pencarian.                                                              |
@@ -102,12 +102,12 @@ Kartu ringkasan bersifat informatif dan tidak dapat dipilih sebagai filter.
 
 `SummaryCardView` menjadi komponen bersama untuk ringkasan Data Warga,
 Pengajuan Surat, dan Iuran Warga. Seluruh gaya kartu, warna nilai, grid,
-dan aturan responsif berada di `src/components/SummaryCardView.module.css`.
+dan aturan responsif berada di `src/components/SummaryCardView.tsx`.
 API dan aturan penggunaannya ada di `docs/summary-card-view.md`.
 
 `PageIntro` menyamakan judul dan deskripsi halaman daftar Data Warga,
 Pengajuan Surat, dan Iuran Warga dengan acuan menu Warga. Gaya bersama
-berada di `src/components/PageIntro.module.css`: judul 32 px dengan bobot 700
+berada di `src/components/PageIntro.tsx`: judul 32 px dengan bobot 700
 dan tracking -0.02em, deskripsi 14 px, serta jarak 6 px. Judul menjadi 28 px
 pada container di bawah 33rem.
 
@@ -128,10 +128,10 @@ pemilih jenis `0:4062`, dan daftar tanpa ringkasan `0:5405`. File desain
 tetap utuh. Status Menunggu pada sumber diganti **Pengajuan** sesuai keputusan pengguna.
 
 - Formulir maksimal 1000 px, radius 22 px, padding 28 px, dua kolom dengan
-  gap 20 px. Pemilih jenis maksimal 528 px, radius 20 px, padding 24 px.
+  gap 16 px. Pemilih jenis maksimal 528 px, radius 22 px, padding 28 px.
   Detail maksimal 912 px, radius 22 px, dengan tinggi mengikuti isi.
 - Gunakan `TextInput`, sidebar 264 px, Inter dan Lucide yang sudah tersedia.
-  Gaya surat berada di CSS Modules dan tidak mengubah radius dialog warga.
+  Gaya surat memakai utility Tailwind; seluruh dialog memakai token radius 22 px.
 - Tombol memakai token aksi `#087e34`. Badge Pengajuan kuning, Diproses biru,
   Selesai hijau; seluruhnya menyertakan label teks.
 - Label filter terlihat, pagination empat baris, tanggal WIB, dan tabel
@@ -157,3 +157,23 @@ tanggal pembayaran, filter, pagination, detail/riwayat dan halaman pengurus
 melengkapi keputusan fitur. Form/detail menjadi satu kolom di bawah 640 px;
 tabel bergulir dalam region sendiri. Perbandingan pada 375, 768 dan 1648 px
 serta batas pengujian ada di `docs/monthly-dues.md`.
+
+## Styling Tailwind
+
+Seluruh komponen dan halaman, termasuk preview, memakai Tailwind v4. Token berada
+di `src/styles.css`; fondasi tombol, field, kartu, badge dan dialog berada di
+`src/components/ui.ts`. Fitur membagikan daftar utility statis lewat `styles.ts`,
+bukan stylesheet. Tidak ada CSS Modules atau `@apply`.
+
+Tombol utama/sekunder/destruktif minimal 48 px dengan teks 14 px; navigasi ringkas
+dan tombol ikon minimal 44 px. Semua input/select minimal 48 px dengan teks 16 px,
+label 14 px dan helper 12 px. Tombol dan input beradius 12 px, kartu utama 20 px,
+kartu ringkasan 14 px, serta dialog 22 px. Aksi utama memakai `#087e34` dan hover
+`#076b2c`; `#0ea546` tetap menjadi identitas merek. Gutter halaman 24 px atau
+16 px di area sempit; gap field 16 px.
+
+Container halaman diberi nama `page`; header dan menu akun menargetkan
+`authenticated-content`. Lebar sidebar, batas lebar konten/dialog dan ambang
+container tetap mengikuti layout sebelumnya. CSS khusus hanya mengatur dasar
+dokumen dan transisi native drawer. Catatan migrasi dan validasi berada di
+`docs/tailwind-migration.md`.

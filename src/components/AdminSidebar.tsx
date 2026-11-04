@@ -1,3 +1,4 @@
+import { cn } from '../lib/cn'
 import {
   ClipboardList,
   FileText,
@@ -6,7 +7,6 @@ import {
   Wallet,
 } from 'lucide-react'
 import { Link, NavLink } from 'react-router'
-import styles from './AdminSidebar.module.css'
 
 export type AdminSidebarProps = {
   communityLabel: string
@@ -50,49 +50,59 @@ export function AdminSidebar({
 
   return (
     <aside
-      className={[styles.sidebar, className].filter(Boolean).join(' ')}
+      className={cn(
+        'flex h-dvh w-sidebar max-w-full shrink-0 [scrollbar-width:thin] [scrollbar-color:#475569_transparent] flex-col gap-8 overflow-y-auto bg-ink px-4 py-6 text-start font-sans text-white',
+        className,
+      )}
       aria-label="Sidebar admin"
     >
-      <header className={styles.brand}>
+      <header className="flex min-w-0 flex-none flex-col gap-1 px-3 pe-[var(--sidebar-brand-padding-end,0.75rem)]">
         <Link
-          className={styles.brandName}
+          className="block text-[1.75rem] leading-tight font-extrabold tracking-[-0.02em] text-white"
           to={paths?.dashboard ?? rootPath}
           onClick={onNavigate}
           aria-label="ErTee — dashboard admin"
         >
           ErTee
         </Link>
-        <p className={styles.community}>{communityLabel}</p>
+        <p className="text-xs leading-normal font-semibold tracking-wider wrap-anywhere text-slate-400">
+          {communityLabel}
+        </p>
       </header>
 
-      <nav className={styles.navigation} aria-label="Navigasi admin">
-        <ul className={styles.menu}>
+      <nav className="min-w-0 flex-none" aria-label="Navigasi admin">
+        <ul className="m-0 flex list-none flex-col gap-1 p-0">
           {navigation.map(({ id, label, path, icon: Icon }) => (
             <li key={id}>
               <NavLink
                 to={paths?.[id] ?? destination(path)}
                 end={id === 'dashboard'}
                 onClick={onNavigate}
-                className={({ isActive }) =>
-                  `${styles.menuLink}${isActive ? ` ${styles.active}` : ''}`
-                }
+                className="group/nav flex min-h-11 items-center gap-3 rounded-control px-3 py-2.5 text-sm leading-normal font-semibold text-slate-300 hover:bg-slate-800 hover:text-white aria-[current=page]:bg-brand aria-[current=page]:text-white"
               >
                 <Icon
                   size={20}
                   strokeWidth={2}
-                  className={styles.menuIcon}
+                  className="shrink-0 text-slate-400 group-aria-[current=page]/nav:text-white"
                   aria-hidden="true"
                   focusable="false"
                 />
-                <span className={styles.menuLabel}>{label}</span>
+                <span className="min-w-0 wrap-anywhere">{label}</span>
               </NavLink>
             </li>
           ))}
         </ul>
       </nav>
-      <footer className={styles.productMark} aria-hidden="true">
-        <span className={styles.productName}>ErTee</span>
-        <span className={styles.productDescription}>Layanan Digital Warga</span>
+      <footer
+        className="mt-auto flex min-w-0 flex-none flex-col gap-0.5 px-3 text-start wrap-anywhere select-none"
+        aria-hidden="true"
+      >
+        <span className="text-xl leading-[1.2] font-extrabold tracking-[-0.02em] text-brand">
+          ErTee
+        </span>
+        <span className="text-xs leading-normal text-slate-400">
+          Layanan Digital Warga
+        </span>
       </footer>
     </aside>
   )

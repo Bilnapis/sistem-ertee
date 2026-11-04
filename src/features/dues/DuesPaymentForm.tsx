@@ -20,7 +20,7 @@ import {
 } from './data'
 import type { DuesProof, PaymentMethod } from './types'
 import { DuesModal } from './DuesModal'
-import styles from './Dues.module.css'
+import styles from './styles'
 
 export default function DuesPaymentForm() {
   const { id } = useParams(),

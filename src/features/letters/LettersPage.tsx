@@ -1,3 +1,4 @@
+import { selectControl } from '../../components/ui'
 import { useEffect } from 'react'
 import {
   ArrowLeft,
@@ -28,7 +29,7 @@ import {
   useLetterSummary,
 } from './data'
 import { LetterStatusBadge } from './LetterStatusBadge'
-import styles from './Letters.module.css'
+import styles from './styles'
 
 export default function LettersPage({ manage = false }: { manage?: boolean }) {
   const [params, setParams] = useSearchParams()
@@ -194,6 +195,7 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
             <div className={styles.field}>
               <label htmlFor="letter-status-filter">Status</label>
               <select
+                className={selectControl}
                 id="letter-status-filter"
                 value={filters.status}
                 onChange={(event) => change('status', event.target.value)}
@@ -210,6 +212,7 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
               <div className={styles.field}>
                 <label htmlFor="letter-type-filter">Jenis surat</label>
                 <select
+                  className={selectControl}
                   id="letter-type-filter"
                   value={filters.type}
                   onChange={(event) => change('type', event.target.value)}
@@ -226,6 +229,7 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
             <div className={styles.field}>
               <label htmlFor="letter-sort-filter">Urutan</label>
               <select
+                className={selectControl}
                 id="letter-sort-filter"
                 value={filters.sort}
                 onChange={(event) => change('sort', event.target.value)}
