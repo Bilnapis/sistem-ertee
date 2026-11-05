@@ -107,7 +107,7 @@ export default function ComplaintsPage({
     {
       id: 'title',
       header: 'Judul',
-      width: manage ? 20 : 27,
+      width: manage ? 17 : 24,
       render: (c) => <TableCellText>{c.title}</TableCellText>,
     },
     ...(manage
@@ -115,7 +115,7 @@ export default function ComplaintsPage({
           {
             id: 'applicant',
             header: 'Nama pengaju',
-            width: 16,
+            width: 15,
             render: (c: Complaint) => (
               <TableCellText secondary={c.identity_snapshot.house_block}>
                 {c.identity_snapshot.full_name}
@@ -127,13 +127,13 @@ export default function ComplaintsPage({
     {
       id: 'category',
       header: 'Kategori',
-      width: manage ? 17 : 22,
+      width: manage ? 16 : 19,
       render: (c) => complaintCategories[c.category],
     },
     {
       id: 'date',
       header: 'Tanggal',
-      width: manage ? 15 : 18,
+      width: manage ? 14 : 18,
       render: (c) => (
         <time dateTime={c.created_at}>{formatDate(c.created_at)}</time>
       ),
@@ -141,13 +141,13 @@ export default function ComplaintsPage({
     {
       id: 'status',
       header: 'Status',
-      width: 12,
+      width: manage ? 14 : 15,
       render: (c) => <ComplaintStatusBadge status={c.status} />,
     },
     {
       id: 'action',
       header: 'Aksi',
-      width: manage ? 7 : 8,
+      width: 11,
       render: (c) => (
         <TableActionLink
           to={{ pathname: `${base}/${c.id}`, search: location.search }}
@@ -213,89 +213,99 @@ export default function ComplaintsPage({
           </section>
         ) : null}
         <section
-          className="flex min-w-0 flex-col gap-4"
+          className="min-w-0"
           aria-label={
             manage ? 'Daftar pengaduan warga' : 'Daftar pengaduan saya'
           }
         >
-          <div className="grid grid-cols-3 items-start gap-4 @max-[800px]/page:grid-cols-2 @max-[500px]/page:grid-cols-1">
-            <TextInput
-              label="Cari pengaduan"
-              type="search"
-              placeholder={
-                manage
-                  ? 'Cari judul, nomor, atau nama pengaju'
-                  : 'Cari judul atau nomor pengaduan'
-              }
-              value={filters.search}
-              maxLength={200}
-              onChange={(e) => change('search', e.target.value)}
-              leadingIcon={<Search size={18} />}
-            />
-            <ComplaintSelect
-              label="Kategori"
-              value={filters.category}
-              onChange={(e) => change('category', e.target.value)}
-            >
-              <option value="all">Semua kategori</option>
-              {Object.entries(complaintCategories).map(([key, label]) => (
-                <option key={key} value={key}>
-                  {label}
-                </option>
-              ))}
-            </ComplaintSelect>
-            <ComplaintSelect
-              label="Status"
-              value={filters.status}
-              onChange={(e) => change('status', e.target.value)}
-            >
-              <option value="all">Semua status</option>
-              {Object.entries(complaintStatuses).map(([key, label]) => (
-                <option key={key} value={key}>
-                  {label}
-                </option>
-              ))}
-            </ComplaintSelect>
-            <TextInput
-              label="Dari tanggal"
-              type="date"
-              value={filters.from}
-              min="0001-01-01"
-              max="9999-12-31"
-              onChange={(e) => change('from', e.target.value)}
-            />
-            <TextInput
-              label="Sampai tanggal"
-              type="date"
-              value={filters.to}
-              min={filters.from || '0001-01-01'}
-              max="9999-12-31"
-              error={
-                invalidRange
-                  ? 'Tanggal akhir harus sama atau setelah tanggal awal.'
-                  : undefined
-              }
-              onChange={(e) => change('to', e.target.value)}
-            />
-            <ComplaintSelect
-              label="Urutan"
-              value={filters.sort}
-              onChange={(e) => change('sort', e.target.value)}
-            >
-              <option value="newest">Terbaru</option>
-              <option value="oldest">Terlama</option>
-            </ComplaintSelect>
-          </div>
-          {filtered ? (
-            <button
-              type="button"
-              className="min-h-12 self-start rounded-control border border-border bg-surface px-4 py-3 text-sm font-semibold text-action hover:bg-soft"
-              onClick={() => navigate(base, { replace: true })}
-            >
-              Hapus filter
-            </button>
-          ) : null}
           <TablePagination
+            toolbar={
+              <div className="grid min-w-0 gap-4">
+                <div className="grid grid-cols-[minmax(16rem,1fr)_minmax(11rem,12rem)_minmax(9rem,10.5rem)] items-start gap-3 @max-[40rem]/table-pagination:grid-cols-2 @max-[33rem]/table-pagination:grid-cols-1">
+                  <TextInput
+                    label="Cari pengaduan"
+                    hideLabel
+                    wrapperClassName="@max-[40rem]/table-pagination:col-span-full"
+                    type="search"
+                    placeholder={
+                      manage
+                        ? 'Cari judul, nomor, atau nama pengaju'
+                        : 'Cari judul atau nomor pengaduan'
+                    }
+                    value={filters.search}
+                    maxLength={200}
+                    onChange={(e) => change('search', e.target.value)}
+                    leadingIcon={<Search size={18} />}
+                  />
+                  <ComplaintSelect
+                    label="Kategori"
+                    hideLabel
+                    value={filters.category}
+                    onChange={(e) => change('category', e.target.value)}
+                  >
+                    <option value="all">Semua kategori</option>
+                    {Object.entries(complaintCategories).map(([key, label]) => (
+                      <option key={key} value={key}>
+                        {label}
+                      </option>
+                    ))}
+                  </ComplaintSelect>
+                  <ComplaintSelect
+                    label="Status"
+                    hideLabel
+                    value={filters.status}
+                    onChange={(e) => change('status', e.target.value)}
+                  >
+                    <option value="all">Semua status</option>
+                    {Object.entries(complaintStatuses).map(([key, label]) => (
+                      <option key={key} value={key}>
+                        {label}
+                      </option>
+                    ))}
+                  </ComplaintSelect>
+                </div>
+                <div className="grid grid-cols-3 items-start gap-3 @max-[33rem]/table-pagination:grid-cols-1">
+                  <TextInput
+                    label="Dari tanggal"
+                    type="date"
+                    value={filters.from}
+                    min="0001-01-01"
+                    max="9999-12-31"
+                    onChange={(e) => change('from', e.target.value)}
+                  />
+                  <TextInput
+                    label="Sampai tanggal"
+                    type="date"
+                    value={filters.to}
+                    min={filters.from || '0001-01-01'}
+                    max="9999-12-31"
+                    error={
+                      invalidRange
+                        ? 'Tanggal akhir harus sama atau setelah tanggal awal.'
+                        : undefined
+                    }
+                    onChange={(e) => change('to', e.target.value)}
+                  />
+                  <ComplaintSelect
+                    label="Urutan"
+                    value={filters.sort}
+                    onChange={(e) => change('sort', e.target.value)}
+                  >
+                    <option value="newest">Terbaru</option>
+                    <option value="oldest">Terlama</option>
+                  </ComplaintSelect>
+                </div>
+                {filtered ? (
+                  <button
+                    type="button"
+                    className="min-h-12 justify-self-start rounded-control border border-border bg-surface px-4 py-3 text-sm font-semibold text-action hover:bg-soft"
+                    onClick={() => navigate(base, { replace: true })}
+                  >
+                    Hapus filter
+                  </button>
+                ) : null}
+              </div>
+            }
             caption={
               manage ? 'Pengaduan seluruh warga' : 'Pengaduan milik sendiri'
             }

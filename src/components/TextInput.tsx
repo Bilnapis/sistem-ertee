@@ -5,6 +5,7 @@ import type { ComponentPropsWithRef, ReactNode } from 'react'
 
 export type TextInputProps = ComponentPropsWithRef<'input'> & {
   label: string
+  hideLabel?: boolean
   helperText?: string
   error?: string
   leadingIcon?: ReactNode
@@ -19,6 +20,7 @@ export type TextInputProps = ComponentPropsWithRef<'input'> & {
 /** Idle → active follows native focus; error and disabled take visual priority. */
 export function TextInput({
   label,
+  hideLabel = false,
   helperText,
   error,
   leadingIcon,
@@ -52,7 +54,12 @@ export function TextInput({
         wrapperClassName,
       )}
     >
-      <div className="text-sm leading-5 wrap-anywhere">
+      <div
+        className={cn(
+          'text-sm leading-5 wrap-anywhere',
+          hideLabel && 'sr-only',
+        )}
+      >
         <label
           className="text-sm leading-5 font-semibold wrap-anywhere text-slate-700 group-has-disabled/field:text-muted"
           htmlFor={inputId}

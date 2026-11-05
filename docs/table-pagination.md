@@ -1,7 +1,7 @@
 # TablePagination
 
 Komponen bersama di `src/components/TablePagination.tsx` dipakai oleh Data
-Warga, Pengajuan Surat, dan Iuran Warga, termasuk daftar pribadi dan pengurus.
+Warga, Pengajuan Surat, Iuran Warga, dan Pengaduan, termasuk daftar pribadi dan pengurus.
 Acuan tampilannya adalah tabel Data Warga: border dan radius 8 px, header
 `soft` dengan teks 14 px semibold (600) dan huruf kapital di awal judul saja,
 isi 14 px,
@@ -68,6 +68,14 @@ wrapper halaman atau CSS global.
   Total proporsi lebar 100. `rowHeader` menghasilkan `th scope="row"`.
   `kind: 'identity'` menjaga NIK satu baris dengan angka tabular dan warna
   muted; `kind: 'number'` memakai angka tabular.
+- `toolbar` menerima kontrol pencarian dan filter. Jika diberikan, toolbar,
+  tabel, status daftar, dan pagination berada dalam satu panel putih dengan
+  border, radius 8 px, padding 16 px, dan jarak 20 px. Tabel tetap memiliki
+  border di seluruh sisi dan radius 8 px. Data Warga, Pengajuan Surat, Iuran
+  Warga, dan Pengaduan menggunakan susunan ini, dengan toolbar responsif
+  terhadap container `table-pagination`. Label pencarian dan pilihan filter
+  serta label bulan tetap tersedia untuk pembaca layar; label rentang tanggal
+  tetap terlihat. Tombol reset filter berada di dalam toolbar.
 - `pagination` dikontrol halaman melalui URL. Komponen menghitung jumlah
   halaman dan rentang dari baris yang diterima, tanpa memotong ulang data
   server. Data Warga dan Iuran memakai 10 baris; Pengajuan Surat memakai 4.

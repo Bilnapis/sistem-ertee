@@ -27,7 +27,7 @@ import { TextInput } from './components/TextInput'
 
 | State    | Pemicu                                    | Tampilan dan perilaku                                                                |
 | -------- | ----------------------------------------- | ------------------------------------------------------------------------------------ |
-| Idle     | Belum menerima fokus                      | Permukaan putih, border netral, label terlihat.                                      |
+| Idle     | Belum menerima fokus                      | Permukaan putih, border `#e2e8f0`, label terlihat secara default.                    |
 | Active   | Input atau tombol mata menerima fokus     | Border hijau, halo lembut, outline tambahan untuk navigasi keyboard.                 |
 | Error    | `error="Pesan perbaikan"`                 | Border merah, ikon peringatan, pesan teks; fokus tidak menutupi error.               |
 | Disabled | `disabled` atau induk `fieldset disabled` | Permukaan abu-abu, tidak bisa diedit atau menerima fokus; tombol mata ikut nonaktif. |
@@ -42,6 +42,10 @@ input, dan `wrapperClassName` untuk pembungkus. `id` otomatis unik bila tidak
 diisi. Helper, pesan error, dan `aria-describedby` dari pemanggil digabungkan;
 pesan error memakai live region sopan. Label tetap ada saat placeholder
 hilang. `required` menambahkan tanda bintang jika label belum memilikinya.
+
+Gunakan `hideLabel` untuk pencarian pada toolbar tabel. Label tetap terhubung
+dengan input dan tersedia untuk pembaca layar; placeholder memberikan konteks
+visual. Label pada formulir dan kontrol tanggal tetap terlihat secara default.
 
 Untuk password, gunakan `type="password"`, `visible`, dan
 `onToggleVisibility`. Properti `hiddenIcon` dipertahankan untuk pemanggil lama.

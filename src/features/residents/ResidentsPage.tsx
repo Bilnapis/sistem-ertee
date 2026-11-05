@@ -111,80 +111,71 @@ export default function ResidentsPage() {
             </button>
           </div>
         ) : null}
-        <section
-          className="flex min-w-0 flex-col gap-3"
-          aria-label="Daftar warga"
-        >
-          <div className="grid grid-cols-[minmax(16rem,1fr)_repeat(3,minmax(9rem,10.5rem))] items-end gap-3 @max-[48.25rem]/page:grid-cols-3 @max-[33rem]/page:grid-cols-2">
-            <div className="grid min-w-0 gap-1.5 @max-[48.25rem]/page:col-span-full">
-              <label
-                className="text-sm leading-5 font-semibold wrap-anywhere text-slate-700"
-                htmlFor="resident-search"
-              >
-                Cari warga
-              </label>
-              <div className="flex min-w-0 items-center gap-2 rounded-control border border-control-border bg-surface px-3 text-muted focus-within:border-action focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-action [&>input]:min-h-[46px] [&>input]:w-full [&>input]:min-w-0 [&>input]:border-0 [&>input]:bg-transparent [&>input]:py-2 [&>input]:text-base [&>input]:leading-6 [&>input]:text-ink [&>input]:outline-offset-[-3px] [&>input]:placeholder:text-muted [&>svg]:shrink-0">
-                <Search size={18} aria-hidden="true" />
-                <input
-                  id="resident-search"
-                  type="search"
-                  maxLength={200}
-                  value={filters.search}
-                  onChange={(event) => change('search', event.target.value)}
-                  placeholder="Nama, NIK, atau rumah"
-                />
-              </div>
-            </div>
-            <label className="grid min-w-0 gap-1.5">
-              <span className="text-sm leading-5 font-semibold wrap-anywhere text-slate-700">
-                Status akun
-              </span>
-              <select
-                className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
-                aria-label="Status akun"
-                value={filters.status}
-                onChange={(event) => change('status', event.target.value)}
-              >
-                <option value="all">Semua</option>
-                <option value="active">Aktif</option>
-                <option value="inactive">Tidak Aktif</option>
-                <option value="archived">Diarsipkan</option>
-              </select>
-            </label>
-            <label className="grid min-w-0 gap-1.5">
-              <span className="text-sm leading-5 font-semibold wrap-anywhere text-slate-700">
-                Role warga
-              </span>
-              <select
-                className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
-                aria-label="Role warga"
-                value={filters.role}
-                onChange={(event) => change('role', event.target.value)}
-              >
-                <option value="all">Semua</option>
-                {Object.entries(roleLabels).map(([key, label]) => (
-                  <option value={key} key={key}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="grid min-w-0 gap-1.5 @max-[33rem]/page:col-span-full">
-              <span className="text-sm leading-5 font-semibold wrap-anywhere text-slate-700">
-                Urutkan warga
-              </span>
-              <select
-                className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
-                aria-label="Urutkan warga"
-                value={filters.sort}
-                onChange={(event) => change('sort', event.target.value)}
-              >
-                <option value="newest">Terbaru</option>
-                <option value="name">Nama A–Z</option>
-              </select>
-            </label>
-          </div>
+        <section className="min-w-0" aria-label="Daftar warga">
           <TablePagination
+            toolbar={
+              <div className="grid grid-cols-[minmax(16rem,1fr)_repeat(3,minmax(9rem,10.5rem))] items-center gap-3 @max-[48rem]/table-pagination:grid-cols-3 @max-[33rem]/table-pagination:grid-cols-1">
+                <div className="min-w-0 @max-[48rem]/table-pagination:col-span-full">
+                  <label className="sr-only" htmlFor="resident-search">
+                    Cari warga
+                  </label>
+                  <div className="flex min-w-0 items-center gap-2 rounded-control border border-control-border bg-surface px-3 text-muted focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-action [&>input]:min-h-[46px] [&>input]:w-full [&>input]:min-w-0 [&>input]:border-0 [&>input]:bg-transparent [&>input]:py-2 [&>input]:text-base [&>input]:leading-6 [&>input]:text-ink [&>input]:placeholder:text-muted [&>svg]:shrink-0">
+                    <Search size={18} aria-hidden="true" />
+                    <input
+                      id="resident-search"
+                      type="search"
+                      className="focus-visible:outline-none"
+                      maxLength={200}
+                      value={filters.search}
+                      onChange={(event) => change('search', event.target.value)}
+                      placeholder="Cari nama, NIK, atau rumah"
+                    />
+                  </div>
+                </div>
+                <label className="min-w-0">
+                  <span className="sr-only">Status akun</span>
+                  <select
+                    className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                    aria-label="Status akun"
+                    value={filters.status}
+                    onChange={(event) => change('status', event.target.value)}
+                  >
+                    <option value="all">Semua status</option>
+                    <option value="active">Aktif</option>
+                    <option value="inactive">Tidak Aktif</option>
+                    <option value="archived">Diarsipkan</option>
+                  </select>
+                </label>
+                <label className="min-w-0">
+                  <span className="sr-only">Role warga</span>
+                  <select
+                    className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                    aria-label="Role warga"
+                    value={filters.role}
+                    onChange={(event) => change('role', event.target.value)}
+                  >
+                    <option value="all">Semua role</option>
+                    {Object.entries(roleLabels).map(([key, label]) => (
+                      <option value={key} key={key}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="min-w-0">
+                  <span className="sr-only">Urutkan warga</span>
+                  <select
+                    className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                    aria-label="Urutkan warga"
+                    value={filters.sort}
+                    onChange={(event) => change('sort', event.target.value)}
+                  >
+                    <option value="newest">Terbaru</option>
+                    <option value="name">Nama A–Z</option>
+                  </select>
+                </label>
+              </div>
+            }
             caption="Data warga beserta role dan status akun"
             items={directory.data?.items ?? []}
             getRowKey={(profile) => profile.id}

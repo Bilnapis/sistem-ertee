@@ -13,6 +13,7 @@ import {
 } from '../../components/TablePagination'
 import type { TablePaginationColumn } from '../../components/TablePagination'
 import type { LetterFilters, LetterRequest } from '../../lib/database.types'
+import { cn } from '../../lib/cn'
 import { useAuth } from '../auth/AuthProvider'
 import { formatDate, isManager } from '../residents/data'
 import {
@@ -76,7 +77,7 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
     {
       id: 'applicant',
       header: manage ? 'Nama warga' : 'Nomor pengajuan',
-      width: waiting ? 23 : 25,
+      width: waiting ? 23 : 24,
       rowHeader: true,
       render: (request) => (
         <TableCellText>
@@ -87,7 +88,7 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
     {
       id: 'type',
       header: 'Jenis surat',
-      width: waiting ? 22 : 25,
+      width: waiting ? 22 : 24,
       render: (request) => request.letter_type_label,
     },
     {
@@ -121,7 +122,7 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
     {
       id: 'action',
       header: 'Aksi',
-      width: waiting ? 11 : 12,
+      width: waiting ? 11 : 14,
       render: (request) => (
         <TableActionLink
           to={{ pathname: `${base}/${request.id}`, search: location.search }}
@@ -259,73 +260,94 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
           </section>
         ) : null}
         <section
-          className="flex min-w-0 flex-col gap-4"
+          className="min-w-0"
           aria-label={
             manage ? 'Daftar pengajuan warga' : 'Daftar pengajuan saya'
           }
         >
-          <div className="grid grid-cols-[minmax(200px,1fr)_minmax(130px,0.3fr)_minmax(150px,0.4fr)_minmax(120px,0.25fr)] items-start gap-3 has-[>:nth-child(3):last-child]:grid-cols-[minmax(200px,1fr)_minmax(130px,0.3fr)_minmax(120px,0.25fr)] @max-[1000px]/page:grid-cols-3 @max-[1000px]/page:has-[>:nth-child(3):last-child]:grid-cols-2 @max-[600px]/page:grid-cols-2 @max-[1000px]/page:[&>:first-child]:col-span-full @max-[600px]/page:[&>div:has(select)]:col-span-full">
-            <TextInput
-              label="Cari pengajuan"
-              type="search"
-              placeholder={
-                manage
-                  ? 'Cari nama atau jenis surat'
-                  : 'Cari jenis atau nomor pengajuan'
-              }
-              value={filters.search}
-              maxLength={200}
-              onChange={(event) => change('search', event.target.value)}
-              leadingIcon={<Search size={18} />}
-            />
-            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-              <label htmlFor="letter-status-filter">Status</label>
-              <select
-                className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
-                id="letter-status-filter"
-                value={filters.status}
-                onChange={(event) => change('status', event.target.value)}
-              >
-                <option value="all">Semua status</option>
-                {Object.entries(letterStatuses).map(([key, label]) => (
-                  <option key={key} value={key}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {manage ? (
-              <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-                <label htmlFor="letter-type-filter">Jenis surat</label>
-                <select
-                  className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
-                  id="letter-type-filter"
-                  value={filters.type}
-                  onChange={(event) => change('type', event.target.value)}
-                >
-                  <option value="all">Semua jenis</option>
-                  {Object.entries(letterTypes).map(([key, label]) => (
-                    <option key={key} value={key}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ) : null}
-            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-              <label htmlFor="letter-sort-filter">Urutan</label>
-              <select
-                className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
-                id="letter-sort-filter"
-                value={filters.sort}
-                onChange={(event) => change('sort', event.target.value)}
-              >
-                <option value="newest">Terbaru</option>
-                <option value="oldest">Terlama</option>
-              </select>
-            </div>
-          </div>
           <TablePagination
+            toolbar={
+              <div
+                className={cn(
+                  'grid min-w-0 items-start gap-3 @max-[33rem]/table-pagination:grid-cols-1',
+                  manage
+                    ? 'grid-cols-[minmax(16rem,1fr)_repeat(3,minmax(9rem,10.5rem))] @max-[48rem]/table-pagination:grid-cols-3'
+                    : 'grid-cols-[minmax(16rem,1fr)_repeat(2,minmax(9rem,10.5rem))] @max-[40rem]/table-pagination:grid-cols-2',
+                )}
+              >
+                <TextInput
+                  label="Cari pengajuan"
+                  hideLabel
+                  wrapperClassName={
+                    manage
+                      ? '@max-[48rem]/table-pagination:col-span-full'
+                      : '@max-[40rem]/table-pagination:col-span-full'
+                  }
+                  type="search"
+                  placeholder={
+                    manage
+                      ? 'Cari nama atau jenis surat'
+                      : 'Cari jenis atau nomor pengajuan'
+                  }
+                  value={filters.search}
+                  maxLength={200}
+                  onChange={(event) => change('search', event.target.value)}
+                  leadingIcon={<Search size={18} />}
+                />
+                <div className="min-w-0">
+                  <label className="sr-only" htmlFor="letter-status-filter">
+                    Status
+                  </label>
+                  <select
+                    className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                    id="letter-status-filter"
+                    value={filters.status}
+                    onChange={(event) => change('status', event.target.value)}
+                  >
+                    <option value="all">Semua status</option>
+                    {Object.entries(letterStatuses).map(([key, label]) => (
+                      <option key={key} value={key}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {manage ? (
+                  <div className="min-w-0">
+                    <label className="sr-only" htmlFor="letter-type-filter">
+                      Jenis surat
+                    </label>
+                    <select
+                      className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                      id="letter-type-filter"
+                      value={filters.type}
+                      onChange={(event) => change('type', event.target.value)}
+                    >
+                      <option value="all">Semua jenis</option>
+                      {Object.entries(letterTypes).map(([key, label]) => (
+                        <option key={key} value={key}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ) : null}
+                <div className="min-w-0">
+                  <label className="sr-only" htmlFor="letter-sort-filter">
+                    Urutan
+                  </label>
+                  <select
+                    className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                    id="letter-sort-filter"
+                    value={filters.sort}
+                    onChange={(event) => change('sort', event.target.value)}
+                  >
+                    <option value="newest">Terbaru</option>
+                    <option value="oldest">Terlama</option>
+                  </select>
+                </div>
+              </div>
+            }
             caption={
               manage
                 ? 'Pengajuan surat seluruh warga'

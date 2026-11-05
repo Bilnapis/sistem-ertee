@@ -17,6 +17,7 @@ import {
 } from '../../components/TablePagination'
 import type { TablePaginationColumn } from '../../components/TablePagination'
 import { TextInput } from '../../components/TextInput'
+import { cn } from '../../lib/cn'
 import { useAuth } from '../auth/AuthProvider'
 import { isManager } from '../residents/data'
 import {
@@ -355,76 +356,95 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
                 : 'Buka detail untuk melihat pembayaran atau membayar periode sebelumnya.'}
             </p>
           </header>
-          <div className="flex flex-wrap items-start gap-4 [&>*]:min-w-0 [&>*]:flex-[1_1_10rem]">
-            {manage ? (
-              <TextInput
-                label="Cari warga"
-                type="search"
-                placeholder="Cari nama atau blok rumah"
-                maxLength={200}
-                value={filters.search}
-                leadingIcon={<Search size={18} />}
-                onChange={(event) => change('cari', event.target.value)}
-              />
-            ) : null}
-            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-              <label htmlFor="dues-period">Bulan</label>
-              <input
-                id="dues-period"
-                type="month"
-                className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
-                min="2000-01"
-                max="9999-12"
-                value={
-                  filters.period ||
-                  (manage ? (data?.period.slice(0, 7) ?? '') : '')
-                }
-                onChange={(event) => change('bulan', event.target.value)}
-              />
-              {!manage && filters.period ? (
-                <button
-                  type="button"
-                  className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
-                  onClick={() => change('bulan', '')}
-                >
-                  Semua bulan
-                </button>
-              ) : null}
-            </div>
-            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-              <label htmlFor="dues-status">Status</label>
-              <select
-                className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
-                id="dues-status"
-                value={filters.status}
-                onChange={(event) => change('status', event.target.value)}
-              >
-                <option value="all">Semua status</option>
-                {Object.entries(duesStatuses).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-              <label htmlFor="dues-method">Metode</label>
-              <select
-                className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
-                id="dues-method"
-                value={filters.method}
-                onChange={(event) => change('metode', event.target.value)}
-              >
-                <option value="all">Semua metode</option>
-                {Object.entries(paymentMethods).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
           <TablePagination
+            toolbar={
+              <div className="grid min-w-0 gap-3">
+                <div
+                  className={cn(
+                    'grid min-w-0 items-end gap-3 @max-[33rem]/table-pagination:grid-cols-1',
+                    manage
+                      ? 'grid-cols-[minmax(16rem,1fr)_minmax(11rem,12rem)_minmax(9rem,10.5rem)_minmax(11rem,12rem)] @max-[50rem]/table-pagination:grid-cols-3'
+                      : 'grid-cols-[minmax(11rem,1fr)_minmax(9rem,10.5rem)_minmax(11rem,12rem)]',
+                  )}
+                >
+                  {manage ? (
+                    <TextInput
+                      label="Cari warga"
+                      hideLabel
+                      wrapperClassName="@max-[50rem]/table-pagination:col-span-full"
+                      type="search"
+                      placeholder="Cari nama atau blok rumah"
+                      maxLength={200}
+                      value={filters.search}
+                      leadingIcon={<Search size={18} />}
+                      onChange={(event) => change('cari', event.target.value)}
+                    />
+                  ) : null}
+                  <div className="min-w-0">
+                    <label className="sr-only" htmlFor="dues-period">
+                      Bulan
+                    </label>
+                    <input
+                      id="dues-period"
+                      type="month"
+                      className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                      min="2000-01"
+                      max="9999-12"
+                      value={
+                        filters.period ||
+                        (manage ? (data?.period.slice(0, 7) ?? '') : '')
+                      }
+                      onChange={(event) => change('bulan', event.target.value)}
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <label className="sr-only" htmlFor="dues-status">
+                      Status
+                    </label>
+                    <select
+                      className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                      id="dues-status"
+                      value={filters.status}
+                      onChange={(event) => change('status', event.target.value)}
+                    >
+                      <option value="all">Semua status</option>
+                      {Object.entries(duesStatuses).map(([value, label]) => (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="min-w-0">
+                    <label className="sr-only" htmlFor="dues-method">
+                      Metode
+                    </label>
+                    <select
+                      className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                      id="dues-method"
+                      value={filters.method}
+                      onChange={(event) => change('metode', event.target.value)}
+                    >
+                      <option value="all">Semua metode</option>
+                      {Object.entries(paymentMethods).map(([value, label]) => (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                {!manage && filters.period ? (
+                  <button
+                    type="button"
+                    className="inline-flex min-h-11 max-w-full items-center gap-2 justify-self-start border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
+                    onClick={() => change('bulan', '')}
+                  >
+                    Semua bulan
+                  </button>
+                ) : null}
+              </div>
+            }
             caption={manage ? 'Tagihan seluruh warga' : 'Tagihan iuran pribadi'}
             columns={columns}
             items={data?.items ?? []}

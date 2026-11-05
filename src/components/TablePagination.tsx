@@ -23,6 +23,7 @@ export type TablePaginationColumn<T> = {
 
 export type TablePaginationProps<T> = {
   caption: string
+  toolbar?: ReactNode
   columns: readonly TablePaginationColumn<T>[]
   items: readonly T[]
   getRowKey: (item: T) => Key
@@ -50,6 +51,7 @@ export type TablePaginationProps<T> = {
 
 export function TablePagination<T>({
   caption,
+  toolbar,
   columns,
   items,
   getRowKey,
@@ -70,7 +72,13 @@ export function TablePagination<T>({
   const EmptyIcon = emptyState.icon
 
   return (
-    <div className="@container/table-pagination grid min-w-0 gap-2 font-sans text-sm leading-normal font-normal text-ink">
+    <div
+      className={cn(
+        '@container/table-pagination grid min-w-0 gap-2 font-sans text-sm leading-normal font-normal text-ink',
+        toolbar && 'gap-5 rounded-lg border border-border bg-surface p-4',
+      )}
+    >
+      {toolbar}
       {isLoading || error || !items.length ? (
         <div className="flex min-w-0 flex-col items-center gap-4 px-5 py-10 text-center wrap-anywhere text-muted [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-ink">
           {isLoading ? (

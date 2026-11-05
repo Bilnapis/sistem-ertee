@@ -1,16 +1,27 @@
 import { useId } from 'react'
 import type { ComponentProps } from 'react'
+import { cn } from '../../lib/cn'
 
 export function ComplaintSelect({
   label,
+  hideLabel = false,
   error,
   children,
   ...props
-}: ComponentProps<'select'> & { label: string; error?: string }) {
+}: ComponentProps<'select'> & {
+  label: string
+  hideLabel?: boolean
+  error?: string
+}) {
   const id = useId()
   return (
     <div className="flex min-w-0 flex-col gap-1.5">
-      <div className="text-sm leading-5 font-semibold text-slate-700">
+      <div
+        className={cn(
+          'text-sm leading-5 font-semibold text-slate-700',
+          hideLabel && 'sr-only',
+        )}
+      >
         <label htmlFor={id}>{label}</label>
         {props.required ? (
           <span aria-hidden="true" className="text-danger">
