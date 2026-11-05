@@ -18,6 +18,7 @@ const profile = {
   email: user.email,
   full_name: 'Warga Uji',
   nik: '0000000000000001',
+  family_card_number: '0000000000000099',
   phone: '081234567890',
   address: 'Jalan Dummy Nomor 1',
   role: 'warga',
@@ -134,6 +135,9 @@ async function fillRegistration(page: Page) {
     .fill(profile.full_name)
   await page.getByLabel('Email *', { exact: true }).fill(user.email)
   await page.getByLabel('NIK *', { exact: true }).fill(profile.nik)
+  await page
+    .getByLabel('Nomor Kartu Keluarga *', { exact: true })
+    .fill(profile.family_card_number)
   await page.getByLabel('Nomor HP *', { exact: true }).fill(profile.phone)
   await page.getByLabel('Alamat *', { exact: true }).fill(profile.address)
   await expect(page.getByLabel(/Blok Rumah/i)).toHaveCount(0)
@@ -190,6 +194,7 @@ test('login, reload, logout, browser back, and direct access enforce session bou
   await expect(
     page.getByRole('heading', { name: 'Profil warga', exact: true }),
   ).toBeVisible()
+  await page.getByRole('button', { name: /^Menu akun / }).click()
   await page.getByRole('button', { name: 'Keluar', exact: true }).click()
   await expect(page).toHaveURL(/\/login$/)
   expect(calls.logout).toBe(true)
@@ -234,11 +239,11 @@ test('desktop sidebar toggles with the keyboard and keeps icon navigation access
   })
   const labels = [
     'Dashboard',
-    'Pengumuman',
     'Warga',
     'Pengajuan Surat',
     'Iuran Warga',
     'Pengaduan',
+    'Pengumuman',
   ]
 
   for (const width of [1024, 1280]) {
@@ -522,6 +527,7 @@ test('remember me selects persistent storage, unchecked uses tab storage', async
       Object.keys(localStorage).some((key) => key.endsWith('-auth-token')),
     ),
   ).toBe(false)
+  await page.getByRole('button', { name: /^Menu akun / }).click()
   await page.getByRole('button', { name: 'Keluar', exact: true }).click()
   await expect(page).toHaveURL(/\/login$/)
   await page.getByLabel('Email', { exact: true }).fill(user.email)
@@ -587,12 +593,16 @@ test('registration rejects invalid identity and mismatched passwords before call
   const calls = await mockSupabase(page)
   await fillRegistration(page)
   await page.getByLabel('NIK *', { exact: true }).fill('123')
+  await page.getByLabel('Nomor Kartu Keluarga *', { exact: true }).fill('123')
   await page
     .getByLabel('Konfirmasi Password *', { exact: true })
     .fill('OtherPassword')
   await page.getByRole('button', { name: 'Daftar Akun', exact: true }).click()
   await expect(
     page.getByText('NIK harus berisi tepat 16 digit angka.'),
+  ).toBeVisible()
+  await expect(
+    page.getByText('Nomor KK harus berisi tepat 16 digit angka.'),
   ).toBeVisible()
   await expect(page.getByText('Konfirmasi password harus sama.')).toBeVisible()
   await expect(page.getByLabel('NIK *', { exact: true })).toBeFocused()
@@ -612,6 +622,7 @@ test('registration sends profile metadata, then asks for confirmation without a 
   expect(calls.signup?.data).toMatchObject({
     full_name: profile.full_name,
     nik: profile.nik,
+    family_card_number: profile.family_card_number,
   })
   expect(calls.signup?.data).not.toHaveProperty('role')
   expect(calls.signup?.data).not.toHaveProperty('house_block')
@@ -689,6 +700,9 @@ test('registration failure retains fields and hides internal database errors', a
   await expect(page.getByLabel('Nama Lengkap *', { exact: true })).toHaveValue(
     profile.full_name,
   )
+  await expect(
+    page.getByLabel('Nomor Kartu Keluarga *', { exact: true }),
+  ).toHaveValue(profile.family_card_number)
   await expect(page.getByText('internal database details')).toHaveCount(0)
 })
 

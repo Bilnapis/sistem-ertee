@@ -144,13 +144,6 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
       render: (_request, index) =>
         String((filters.page - 1) * 4 + index + 1).padStart(2, '0'),
     })
-    columns.splice(2, 0, {
-      id: 'house-number',
-      header: 'Nomor Rumah',
-      width: 10,
-      render: (request) =>
-        request.identity_snapshot.house_number ?? 'Belum diisi',
-    })
   }
   return (
     <main

@@ -16,7 +16,6 @@ const makeProfile = (n: number): ResidentProfile => ({
   family_card_number: '0000000000000099',
   gender: n % 2 ? 'laki_laki' : 'perempuan',
   marital_status: 'menikah',
-  house_number: String(n),
   phone: '081234567890',
   address: `Jalan Dummy Nomor ${n}`,
   role: n === 1 ? 'ketua_rt' : n === 2 ? 'pengurus_rt' : 'warga',
@@ -146,8 +145,8 @@ async function mockResidents(page: Page, options: Options = {}) {
           (body.p_role === 'all' || body.p_role === profile.role) &&
           (body.p_verification === 'all' ||
             body.p_verification === profile.verification_status) &&
-          [profile.full_name, profile.nik, profile.house_number ?? ''].some(
-            (value) => value.toLowerCase().includes(search),
+          [profile.full_name, profile.nik].some((value) =>
+            value.toLowerCase().includes(search),
           ),
       )
       rows.sort((a, b) =>
@@ -366,7 +365,7 @@ for (const role of ['ketua_rt', 'pengurus_rt'] as const)
       request.path.endsWith('/create-resident'),
     )!.body
     expect(creation.phone).toBe('081234567890')
-    expect(creation.house_number).toBe('')
+    expect(creation).not.toHaveProperty('house_number')
     expect(creation).not.toHaveProperty('house_block')
     expect(creation).not.toHaveProperty('rt')
     expect(creation).not.toHaveProperty('rw')
@@ -481,6 +480,7 @@ test('warga can update only their own profile and cannot open management routes'
     await expect(page.getByRole('table')).toHaveCount(0)
   }
   await page.goto('/warga/profil')
+  await expect(page.getByText(/^Nomor rumah$/i)).toHaveCount(0)
   await page.getByRole('button', { name: 'Edit profil sendiri' }).click()
   const dialog = page.getByRole('dialog', { name: 'Edit Profil Saya' })
   await expect(dialog.getByLabel('Role *', { exact: true })).toHaveCount(0)
@@ -498,8 +498,8 @@ test('warga can update only their own profile and cannot open management routes'
   )!
   expect(change.body.p_id).toBe(uid(3))
   expect(change.body.p_data).not.toHaveProperty('role')
-  expect(change.body.p_data).toHaveProperty('house_number', '3')
-  expect(state.profiles.get(uid(3))!.house_number).toBe('3')
+  expect(change.body.p_data).not.toHaveProperty('house_number')
+  expect(state.profiles.get(uid(3))!).not.toHaveProperty('house_number')
   expect(state.profiles.get(uid(3))!.verification_status).toBe(
     'menunggu_verifikasi',
   )
@@ -700,6 +700,7 @@ test('logout clears directory data before another user logs in', async ({
   await login(page)
   await openDirectory(page)
   await expect(page.getByText('Warga Dummy 14', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: /^Menu akun / }).click()
   await page.getByRole('button', { name: 'Keluar', exact: true }).click()
   await expect(page).toHaveURL(/\/login$/)
   await mockResidents(page, { role: 'warga' })

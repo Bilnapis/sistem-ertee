@@ -130,8 +130,11 @@ before(async () => {
     '20261104000100_letter_requests.sql',
     '20261104000200_monthly_dues.sql',
     '20261105000300_letters_without_house_block.sql',
+    '20261105000700_letters_without_house_number.sql',
     '20261105000400_dues_without_house_block.sql',
+    '20261105000800_dues_without_house_number.sql',
     '20261105000600_remove_resident_house_block.sql',
+    '20261105001000_remove_resident_house_number.sql',
   ])
     await db.exec(
       await readFile(
@@ -180,7 +183,7 @@ test('activation creates one invoice per active profile, including managers and 
   )
   assert.equal(rows.length, 8)
   assert.ok(
-    rows.every((row) => !Object.hasOwn(row.identity_snapshot, 'house_block')),
+    rows.every((row) => !Object.hasOwn(row.identity_snapshot, 'house_block') && !Object.hasOwn(row.identity_snapshot, 'house_number')),
   )
   assert.ok(
     rows.every(
@@ -452,8 +455,7 @@ test('numeric/date/proof validation and filtering run in the trusted database', 
     'all',
     'R-003',
   )
-  assert.equal(byHouseNumber.total, 1)
-  assert.equal(byHouseNumber.items[0].resident_id, alice)
+  assert.equal(byHouseNumber.total, 0)
   assert.equal(
     (await overview(chair, 'all', month, 'all', 'all', '%')).total,
     0,

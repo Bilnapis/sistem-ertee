@@ -112,15 +112,7 @@ export default function ComplaintsPage({
             header: 'Nama pengaju',
             width: 15,
             render: (c: Complaint) => (
-              <TableCellText
-                secondary={
-                  c.identity_snapshot.house_number
-                    ? `Nomor rumah ${c.identity_snapshot.house_number}`
-                    : undefined
-                }
-              >
-                {c.identity_snapshot.full_name}
-              </TableCellText>
+              <TableCellText>{c.identity_snapshot.full_name}</TableCellText>
             ),
           },
         ]

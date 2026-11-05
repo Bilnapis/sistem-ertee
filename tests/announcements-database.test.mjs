@@ -93,6 +93,10 @@ before(async () => {
     '20261105000400_dues_without_house_block.sql',
     '20261105000500_complaints_without_house_block.sql',
     '20261105000600_remove_resident_house_block.sql',
+    '20261105000700_letters_without_house_number.sql',
+    '20261105000800_dues_without_house_number.sql',
+    '20261105000900_complaints_without_house_number.sql',
+    '20261105001000_remove_resident_house_number.sql',
   ]) {
     await db.exec(
       await readFile(

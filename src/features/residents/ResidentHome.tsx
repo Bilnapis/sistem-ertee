@@ -73,7 +73,6 @@ export function ResidentHome({
                 ? maritalLabels[profile.marital_status]
                 : 'Belum diisi',
             ],
-            ['Nomor rumah', profile.house_number ?? 'Belum diisi'],
           ].map(([label, value]) => (
             <div key={label}>
               <dt>{label}</dt>

@@ -3,7 +3,6 @@ import { Menu, Sidebar } from 'lucide-react'
 import { Outlet } from 'react-router'
 import { Button } from './Button'
 import { useAuth } from '../features/auth/AuthProvider'
-import { SignOutButton } from '../features/auth/SignOutButton'
 import { AdminSidebar } from './AdminSidebar'
 import { AccountMenu } from './AccountMenu'
 import { Modal } from './Modal'
@@ -48,7 +47,7 @@ export function AuthenticatedLayout() {
         <header className="border-b border-border bg-surface">
           <div className="mx-auto flex min-h-19 w-full max-w-[96rem] flex-wrap items-center justify-between gap-x-6 gap-y-4 px-6 py-4 @max-[33rem]/authenticated-content:min-h-17 @max-[33rem]/authenticated-content:gap-x-4 @max-[33rem]/authenticated-content:gap-y-3 @max-[33rem]/authenticated-content:px-4 @max-[33rem]/authenticated-content:py-3">
             <div className="flex shrink-0 items-center">
-              <div className="max-lg:hidden">
+              <div className="max-lg:hidden [&>button[aria-expanded=true]]:bg-transparent">
                 <Button
                   type="button"
                   aria-label={
@@ -61,7 +60,13 @@ export function AuthenticatedLayout() {
                   aria-expanded={!sidebarCollapsed}
                   onClick={() => setSidebarCollapsed((previous) => !previous)}
                   variant="ghost"
-                  leadingIcon={<Sidebar size={20} aria-hidden="true" />}
+                  leadingIcon={
+                    <Sidebar
+                      size={20}
+                      className="text-slate-700"
+                      aria-hidden="true"
+                    />
+                  }
                   size="icon"
                 />
               </div>
@@ -88,7 +93,6 @@ export function AuthenticatedLayout() {
         <Outlet />
         <footer className="flex flex-wrap items-center justify-between gap-4 p-6 text-center text-xs text-muted">
           <span>© ErTee • Layanan Digital Warga</span>
-          <SignOutButton />
         </footer>
       </div>
       {drawerOpen ? (

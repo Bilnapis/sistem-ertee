@@ -42,7 +42,7 @@ function buttonClassName({
     variant === 'outline' &&
       'border-border bg-surface text-slate-700 enabled:hover:bg-page [&:is(a):not([aria-disabled=true])]:hover:bg-page',
     variant === 'ghost' &&
-      'border-transparent bg-transparent text-action enabled:hover:bg-focus-soft aria-expanded:bg-focus-soft [&:is(a):not([aria-disabled=true])]:hover:bg-focus-soft',
+      'border-transparent bg-transparent text-action aria-expanded:bg-focus-soft',
     variant === 'danger' &&
       'border-danger bg-danger text-white enabled:hover:bg-red-800 [&:is(a):not([aria-disabled=true])]:hover:bg-red-800',
     tone === 'inverse' &&

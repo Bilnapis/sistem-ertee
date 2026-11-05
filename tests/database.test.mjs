@@ -35,7 +35,7 @@ before(async () => {
       $$ select nullif(current_setting('request.jwt.claims', true), '')::jsonb $$;
     grant usage on schema auth, public to anon, authenticated, service_role;
     grant execute on function auth.uid() to authenticated;`)
-  for (const migration of ['20261102000100_resident_auth.sql', '20261103000100_resident_management.sql', '20261105000600_remove_resident_house_block.sql']) {
+  for (const migration of ['20261102000100_resident_auth.sql', '20261103000100_resident_management.sql', '20261105000600_remove_resident_house_block.sql', '20261105001000_remove_resident_house_number.sql']) {
     await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'))
   }
   await addUser(alice, '0000000000000001', { role: 'ketua_rt', is_active: false, verification_status: 'terverifikasi' })

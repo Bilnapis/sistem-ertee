@@ -132,7 +132,7 @@ export default function ResidentsPage() {
                       maxLength={200}
                       value={filters.search}
                       onChange={(event) => change('search', event.target.value)}
-                      placeholder="Cari nama, NIK, atau rumah"
+                      placeholder="Cari nama atau NIK"
                     />
                   </div>
                 </div>

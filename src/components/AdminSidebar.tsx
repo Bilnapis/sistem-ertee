@@ -25,12 +25,6 @@ export type AdminSidebarProps = {
 
 const navigation = [
   { id: 'dashboard', label: 'Dashboard', path: '', icon: LayoutDashboard },
-  {
-    id: 'pengumuman',
-    label: 'Pengumuman',
-    path: '/pengumuman',
-    icon: Megaphone,
-  },
   { id: 'warga', label: 'Warga', path: '/warga', icon: UsersRound },
   {
     id: 'surat',
@@ -44,6 +38,12 @@ const navigation = [
     label: 'Pengaduan',
     path: '/pengaduan',
     icon: ClipboardList,
+  },
+  {
+    id: 'pengumuman',
+    label: 'Pengumuman',
+    path: '/pengumuman',
+    icon: Megaphone,
   },
 ] as const
 

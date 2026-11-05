@@ -114,7 +114,7 @@ export function RegisterPage() {
             <FormField
               {...bind('full_name')}
               label="Nama Lengkap *"
-              placeholder="Masukkan nama lengkap"
+              placeholder="Contoh: Budi"
               autoComplete="name"
               maxLength={150}
             />
@@ -122,14 +122,22 @@ export function RegisterPage() {
               {...bind('email')}
               label="Email *"
               type="email"
-              placeholder="contoh@email.com"
+              placeholder="Contoh: budi@email.com"
               autoComplete="email"
               maxLength={254}
             />
             <FormField
               {...bind('nik')}
               label="NIK *"
-              placeholder="Masukkan 16 digit NIK"
+              placeholder="Contoh: 3173010101900001"
+              inputMode="numeric"
+              maxLength={16}
+              autoComplete="off"
+            />
+            <FormField
+              {...bind('family_card_number')}
+              label="Nomor Kartu Keluarga *"
+              placeholder="Contoh: 3173010101200001"
               inputMode="numeric"
               maxLength={16}
               autoComplete="off"
@@ -138,50 +146,37 @@ export function RegisterPage() {
               {...bind('phone')}
               label="Nomor HP *"
               type="tel"
-              placeholder="08xxxxxxxxxx"
+              placeholder="Contoh: 081234567890"
               autoComplete="tel"
               maxLength={16}
             />
             <FormField
               {...bind('address')}
               label="Alamat *"
-              placeholder="Masukkan alamat lengkap"
+              placeholder="Contoh: Jl. Melati No. 10"
               autoComplete="street-address"
               maxLength={500}
-              wrapperClassName="col-span-full"
             />
             <FormField
               {...bind('password')}
               label="Password *"
               type="password"
-              placeholder="••••••••"
+              placeholder="Minimal 8 karakter"
               autoComplete="new-password"
               maxLength={128}
               visible={!hidden}
               onToggleVisibility={() => setHidden((value) => !value)}
-              aria-describedby="password-requirement"
             />
             <FormField
               {...bind('confirmation')}
               label="Konfirmasi Password *"
               type="password"
-              placeholder="••••••••"
+              placeholder="Minimal 8 karakter"
               autoComplete="new-password"
               maxLength={128}
               visible={!hidden}
               onToggleVisibility={() => setHidden((value) => !value)}
             />
-          </div>
-          <div className="mt-3 flex min-h-6 flex-wrap items-center justify-between gap-3 text-sm leading-5 max-sm:mt-4 max-sm:flex-col max-sm:items-start max-sm:gap-2 [&>span]:text-muted">
-            <label className="flex cursor-pointer items-center gap-2 text-slate-600 [&>input]:m-0 [&>input]:size-5 [&>input]:shrink-0 [&>input]:cursor-pointer [&>input]:accent-action">
-              <input
-                type="checkbox"
-                checked={hidden}
-                onChange={(event) => setHidden(event.target.checked)}
-              />
-              Sembunyikan Password
-            </label>
-            <span id="password-requirement">Minimal 8 karakter</span>
           </div>
           <div className="flex min-h-12 items-center py-2 max-sm:min-h-8 [&>div]:w-full">
             {error ? <Feedback>{error}</Feedback> : null}

@@ -109,13 +109,6 @@ export default function DuesDetails({ manage = false }: { manage?: boolean }) {
                 <dd>{detail.invoice.identity_snapshot.full_name}</dd>
               </div>
               <div>
-                <dt>Nomor Rumah</dt>
-                <dd>
-                  {detail.invoice.identity_snapshot.house_number ??
-                    'Belum diisi'}
-                </dd>
-              </div>
-              <div>
                 <dt>Nominal</dt>
                 <dd>{rupiah(detail.invoice.amount)}</dd>
               </div>

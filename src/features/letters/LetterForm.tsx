@@ -185,11 +185,6 @@ export default function LetterForm() {
                 ) : null}
               </div>
               <TextInput
-                label="Nomor Rumah"
-                value={profile.house_number ?? 'Belum diisi'}
-                readOnly
-              />
-              <TextInput
                 label="Keperluan Surat"
                 placeholder="Contoh: Administrasi pekerjaan"
                 required

@@ -130,7 +130,9 @@ export function Modal({
             disabled={pending}
             onClick={onClose}
             variant="ghost"
-            leadingIcon={<X size={22} aria-hidden="true" />}
+            leadingIcon={
+              <X size={22} className="text-muted" aria-hidden="true" />
+            }
             size="icon"
           />
         </header>

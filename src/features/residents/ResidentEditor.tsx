@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { Info } from 'lucide-react'
 import { Button } from '../../components/Button'
 import { FormField } from '../../components/FormField'
 import { Feedback } from '../../components/Feedback'
@@ -288,12 +287,6 @@ export function ResidentEditor({
             </>
           ) : null}
         </fieldset>
-        <p className="flex items-start gap-3 rounded-control bg-blue-50 p-4 text-sm leading-relaxed text-info [&>svg]:mt-0.5 [&>svg]:shrink-0">
-          <Info size={18} aria-hidden="true" />
-          {original
-            ? 'Perubahan identitas akan diperiksa ulang oleh pengurus RT.'
-            : 'NIK dan Nomor KK wajib 16 digit. Akun aktif dapat langsung digunakan untuk masuk.'}
-        </p>
         {mutation.isError ? (
           <Feedback>{residentError(mutation.error)}</Feedback>
         ) : null}

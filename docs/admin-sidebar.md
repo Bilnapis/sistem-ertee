@@ -47,11 +47,11 @@ pembaca layar dan audit aksesibilitas menyeluruh belum dilakukan.
 | Menu            | Tujuan default           |
 | --------------- | ------------------------ |
 | Dashboard       | `/admin`                 |
-| Pengumuman      | `/admin/pengumuman`      |
 | Warga           | `/admin/warga`           |
 | Pengajuan Surat | `/admin/pengajuan-surat` |
 | Iuran Warga     | `/admin/iuran-warga`     |
 | Pengaduan       | `/admin/pengaduan`       |
+| Pengumuman      | `/admin/pengumuman`      |
 
 Penanda menu aktif memakai `NavLink` dan mengikuti URL, termasuk halaman detail di bawah masing-masing modul. Dashboard cocok tepat pada route dasarnya. Link aktif mendapat `aria-current="page"`; ikon dekoratif tidak dibacakan screen reader.
 

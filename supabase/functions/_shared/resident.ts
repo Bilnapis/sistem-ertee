@@ -7,7 +7,6 @@ export type ResidentFields = {
   family_card_number: string
   gender: Gender | ''
   marital_status: MaritalStatus | ''
-  house_number: string
   phone: string
   address: string
 }
@@ -24,7 +23,6 @@ export const emptyResident: ResidentFields = {
   family_card_number: '',
   gender: '',
   marital_status: '',
-  house_number: '',
   phone: '',
   address: '',
 }
@@ -40,7 +38,6 @@ export function normalizeResident(
     family_card_number: text('family_card_number'),
     gender: text('gender') as ResidentFields['gender'],
     marital_status: text('marital_status') as ResidentFields['marital_status'],
-    house_number: text('house_number'),
     phone: text('phone').replace(/[\s().-]/g, ''),
     address: text('address'),
   }
@@ -58,8 +55,6 @@ export function validateResident(values: ResidentFields): FieldErrors {
     errors.gender = 'Pilih jenis kelamin.'
   if (!['belum_menikah', 'menikah'].includes(values.marital_status))
     errors.marital_status = 'Pilih status pernikahan.'
-  if (values.house_number.length > 30)
-    errors.house_number = 'Nomor rumah maksimal 30 karakter.'
   if (!/^(?:0|\+?62)8\d{7,12}$/.test(values.phone))
     errors.phone = 'Gunakan nomor HP Indonesia, misalnya 081234567890.'
   if (values.address.length < 5 || values.address.length > 500)

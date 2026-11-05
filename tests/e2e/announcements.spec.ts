@@ -31,7 +31,6 @@ async function mockAnnouncements(page: Page, options: Options = {}) {
     family_card_number: null,
     gender: null,
     marital_status: null,
-    house_number: null,
     phone: '081234567890',
     address: 'Jalan Dummy Nomor 3',
     is_active: true,

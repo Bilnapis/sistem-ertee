@@ -36,7 +36,6 @@ async function mockDues(page: Page, options: Options = {}) {
     nik: '0000000000000003',
     phone: '081234567890',
     address: 'Jalan Dummy Nomor 1',
-    house_number: '12',
     family_card_number: null,
     gender: null,
     marital_status: null,
@@ -92,7 +91,6 @@ async function mockDues(page: Page, options: Options = {}) {
         resident_id: manager ? uid(3 + i) : actor,
         identity_snapshot: {
           full_name: i === 0 ? 'Budi Dummy' : `Warga Dummy ${i + 3}`,
-          house_number: String(12 + i),
         },
         period: manager
           ? '2026-11-01'
@@ -231,7 +229,7 @@ async function mockDues(page: Page, options: Options = {}) {
           (!body.p_period || invoice.period === body.p_period) &&
           (body.p_status === 'all' || invoice.status === body.p_status) &&
           (body.p_method === 'all' || invoice.method === body.p_method) &&
-          `${invoice.identity_snapshot.full_name} ${invoice.identity_snapshot.house_number ?? ''}`
+          invoice.identity_snapshot.full_name
             .toLowerCase()
             .includes(String(body.p_search).toLowerCase()),
       )

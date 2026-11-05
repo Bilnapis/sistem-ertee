@@ -37,8 +37,8 @@ Migrasi mempertahankan data profil lama. Nomor KK, jenis kelamin, dan status
 pernikahan awal boleh kosong untuk kompatibilitas; lengkapi melalui editor
 sebelum melakukan verifikasi. Instalasi ini memakai RT 04 yang sudah ditentukan,
 tanpa RW. Form tambah/edit warga dan edit profil sendiri tidak menampilkan
-input nomor rumah, RT, atau RW. Nomor rumah bersifat opsional di penyimpanan;
-data lama tetap dipertahankan saat profil diedit.
+input nomor rumah, RT, atau RW. Nomor rumah juga dihapus dari profil,
+payload, pencarian, dan kolom penyimpanan melalui migrasi lanjutan di bawah.
 Tidak ada data warga contoh yang otomatis ditambahkan ke aplikasi.
 
 Untuk pengembangan lokal dengan CLI dan Docker tersedia, jalankan
@@ -75,10 +75,62 @@ dijalankan; hasil penerapan cloud berikut dicatat terpisah.
 
 CLI v3 sudah login dan tertaut ke proyek `vzdkaqvrzsjrmnsbbkaz`. Riwayat lama
 yang sebelumnya dipasang melalui SQL Editor sudah disinkronkan saat penerapan
-pengumuman pada 5 November 2026. Setelah penghapusan blok rumah, seluruh sebelas
+pengumuman pada 5 November 2026. Setelah penghapusan blok dan nomor rumah, seluruh lima belas
 versi migrasi lokal dan cloud sinkron. Gunakan target eksplisit
 `--remote=vzdkaqvrzsjrmnsbbkaz`; jangan menjalankan ulang migrasi CREATE TABLE
 yang sudah ada.
+
+## Penghapusan nomor rumah
+
+Nomor rumah tidak lagi disimpan pada `profiles`, dikirim pada pendaftaran atau
+pembuatan/edit warga, maupun ditampilkan pada profil, surat, iuran, dan pengaduan.
+Pencarian warga memakai nama atau NIK; pencarian iuran memakai nama warga.
+Alamat lengkap tetap tersedia.
+
+Empat migrasi baru disiapkan untuk diterapkan sesuai urutan:
+
+1. `20261105000700_letters_without_house_number.sql`
+2. `20261105000800_dues_without_house_number.sql`
+3. `20261105000900_complaints_without_house_number.sql`
+4. `20261105001000_remove_resident_house_number.sql`
+
+Tiga migrasi pertama menghentikan pembacaan nomor rumah pada layanan terkait.
+Migrasi terakhir memperbarui trigger registrasi, audit, dan RPC warga, lalu
+menghapus kolom `profiles.house_number`, termasuk nilai yang sudah tersimpan.
+Field lama ditolak oleh RPC edit warga dan diabaikan saat normalisasi pendaftaran.
+Kolom lain, waktu pembaruan, verifikasi, dan riwayat warga tetap dipertahankan.
+Salinan identitas historis layanan lama tetap tersimpan; pengajuan dan tagihan
+baru tidak lagi menyertakan nomor rumah. Deploy ulang `create-resident` dan
+frontend bersama perubahan ini.
+
+### Penerapan nomor rumah ke cloud — 5 November 2026
+
+Keempat migrasi nomor rumah sudah diterapkan ke proyek **Sistem ErTee**
+(`vzdkaqvrzsjrmnsbbkaz`) melalui CLI v3 dengan
+`db push --remote=vzdkaqvrzsjrmnsbbkaz --skip-vault --yes`. Dry run memastikan
+hanya empat migrasi tersebut yang tertunda; sepuluh fungsi SQL cloud cocok
+dengan baseline lokal sebelum penerapan. Seluruh 15 versi migrasi lokal dan
+cloud kini sinkron.
+
+Pembacaan ulang memastikan `profiles.house_number` sudah tidak ada dan tidak
+ada fungsi SQL aplikasi yang masih merujuknya. Sepuluh fungsi yang diperbarui
+cocok dengan sumber migrasi lokal; signature, hak akses, `search_path`, dan
+kebijakan RLS tetap sama. Sidik data kedua profil setelah mengecualikan nomor
+rumah identik sebelum dan sesudah migrasi. Ketiga event riwayat serta satu
+surat, dua tagihan iuran, dan satu pengaduan yang sudah tersimpan juga identik.
+
+Edge Function `create-resident` dideploy ulang melalui API dan aktif pada
+versi **3**, dengan `verify_jwt = false` sesuai konfigurasi. Pemeriksaan sesi
+dan role tetap dijalankan handler serta database. Ketiga berkas sumber yang
+diunduh ulang identik dengan sumber lokal; normalisasi profil tidak lagi
+menyertakan nomor rumah. Uji HTTP nyata menghasilkan GET `405 METHOD_NOT_ALLOWED`,
+OPTIONS `204`, serta POST tanpa sesi dan dengan bearer tidak valid
+`401 SESSION_REQUIRED`.
+
+Pemeriksaan ini tidak membuat akun atau data warga tambahan. Pembuatan akun
+dengan sesi pengelola nyata belum diuji pada penerapan ini. Hosting frontend
+tidak diubah. Catatan blok rumah berikut adalah riwayat sebelum migrasi nomor
+rumah.
 
 ## Penghapusan blok rumah
 

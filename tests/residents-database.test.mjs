@@ -6,10 +6,10 @@ import { PGlite } from '@electric-sql/pglite'
 const db = new PGlite()
 const uid = n => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`
 const chair = uid(1), staff = uid(2), alice = uid(3), bob = uid(4), legacy = uid(5)
-let legacyBeforeMigration
+let legacyBeforeMigration, legacyEventsBeforeMigration
 const session = id => id.replace('8000', '9000')
 const identity = n => ({ full_name: `Warga Dummy ${n}`, nik: String(n).padStart(16, '0'), family_card_number: '0000000000000099',
-  gender: 'laki_laki', marital_status: 'belum_menikah', house_number: String(n), phone: '081234567890', address: 'Jalan Dummy Nomor 1' })
+  gender: 'laki_laki', marital_status: 'belum_menikah', phone: '081234567890', address: 'Jalan Dummy Nomor 1' })
 async function addUser(n, metadata = identity(n), app = {}) {
   await db.query('insert into auth.users(id, email, raw_user_meta_data, raw_app_meta_data) values ($1,$2,$3,$4)', [uid(n), `warga${n}@example.test`, JSON.stringify(metadata), JSON.stringify(app)])
   await db.query('insert into auth.sessions(id,user_id) values ($1,$2)', [session(uid(n)), uid(n)])
@@ -46,22 +46,28 @@ before(async () => {
     await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'))
   }
   const old = identity(5); delete old.family_card_number; delete old.gender; delete old.marital_status
-  await addUser(5, { ...old, house_block: 'DUMMY-LEGACY' })
+  await addUser(5, { ...old, house_block: 'DUMMY-LEGACY', house_number: 'DUMMY-REMOVED' })
+  await db.query("update public.profiles set verification_status='terverifikasi' where id=$1", [legacy])
   legacyBeforeMigration = await get(legacy)
+  legacyEventsBeforeMigration = (await db.query('select * from public.resident_events where profile_id=$1 order by id', [legacy])).rows
   await db.exec(await readFile(new URL('../supabase/migrations/20261105000600_remove_resident_house_block.sql', import.meta.url), 'utf8'))
+  await db.exec(await readFile(new URL('../supabase/migrations/20261105001000_remove_resident_house_number.sql', import.meta.url), 'utf8'))
   for (let i = 1; i <= 4; i++) await addUser(i)
   await db.query("update public.profiles set role='ketua_rt' where id=$1", [chair])
   await db.query("update public.profiles set role='pengurus_rt' where id=$1", [staff])
 })
 after(() => db.close())
 
-test('removing house blocks preserves existing resident data and supports signup without the field', async () => {
-  const { house_block, ...expected } = legacyBeforeMigration
+test('removing house blocks and numbers preserves other resident data and supports signup without the fields', async () => {
+  const { house_block, house_number, ...expected } = legacyBeforeMigration
   assert.equal(house_block, 'DUMMY-LEGACY')
   assert.deepEqual(await get(legacy), expected)
+  assert.deepEqual((await db.query('select * from public.resident_events where profile_id=$1 order by id', [legacy])).rows, legacyEventsBeforeMigration)
   assert.equal((await db.query("select 1 from information_schema.columns where table_schema='public' and table_name='profiles' and column_name='house_block'")).rows.length, 0)
   assert.equal((await get(alice)).house_block, undefined)
-  assert.equal((await get(alice)).house_number, '3')
+  assert.equal(house_number, 'DUMMY-REMOVED')
+  assert.equal((await db.query("select 1 from information_schema.columns where table_schema='public' and table_name='profiles' and column_name='house_number'")).rows.length, 0)
+  assert.equal(Object.hasOwn(await get(alice), 'house_number'), false)
 })
 
 test('both manager roles can read directory and update any resident equally', async () => {
@@ -86,7 +92,7 @@ test('residents cannot read another household member or call manager RPCs', asyn
 
 test('self updates use a field allowlist and reset identity verification', async () => {
   await review(chair, alice, 'terverifikasi')
-  for (const extra of [{ role: 'ketua_rt' }, { is_active: true }, { verification_status: 'terverifikasi' }, { reviewed_by: alice }, { email: 'fake@example.test' }, { archived_at: null }, { house_block: 'DUMMY-A' }]) {
+  for (const extra of [{ role: 'ketua_rt' }, { is_active: true }, { verification_status: 'terverifikasi' }, { reviewed_by: alice }, { email: 'fake@example.test' }, { archived_at: null }, { house_block: 'DUMMY-A' }, { house_number: 'DUMMY-REMOVED' }]) {
     await assert.rejects(update(alice, alice, { ...identity(3), ...extra }, (await get(alice)).updated_at), /ACCESS_DENIED/)
   }
   await update(alice, alice, { ...identity(3), address: 'Alamat Dummy Berubah' }, (await get(alice)).updated_at)
@@ -193,7 +199,7 @@ test('directory filters and stable pagination return real counts without wildcar
   assert.ok(second.items.every(item => !first.items.find(previous => previous.id === item.id)))
   assert.equal((await list('Warga Dummy 21')).items[0].id, uid(21))
   assert.equal((await list(identity(3).nik)).items[0].id, alice)
-  assert.equal((await list('21')).items.some(item => item.house_number === '21'), true)
+  assert.equal((await list('DUMMY-REMOVED')).total, 0)
   assert.equal((await list('%')).total, 0)
   assert.equal((await list('', 'inactive')).items[0].id, uid(7))
   assert.equal((await list('', 'all', 'ketua_rt')).items[0].id, chair)

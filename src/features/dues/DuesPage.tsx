@@ -51,14 +51,10 @@ function CurrentBill({ invoice }: { invoice: DuesInvoice }) {
         <h2 id="dues-bill-title">Tagihan Iuran</h2>
         <DuesStatusBadge status={invoice.status} />
       </div>
-      <dl className="m-0 grid grid-cols-5 gap-6 @max-[1000px]/page:grid-cols-3 @max-[580px]/page:grid-cols-2 @max-[580px]/page:gap-4 [&_dd]:m-0 [&_dd]:mt-1 [&_dd]:text-lg [&_dd]:leading-normal [&_dd]:font-bold [&_dd]:wrap-anywhere @max-[580px]/page:[&_dd]:text-base [&_dt]:text-sm [&_dt]:leading-normal [&_dt]:font-semibold [&_dt]:text-muted">
+      <dl className="m-0 grid grid-cols-4 gap-6 @max-[1000px]/page:grid-cols-3 @max-[580px]/page:grid-cols-2 @max-[580px]/page:gap-4 [&_dd]:m-0 [&_dd]:mt-1 [&_dd]:text-lg [&_dd]:leading-normal [&_dd]:font-bold [&_dd]:wrap-anywhere @max-[580px]/page:[&_dd]:text-base [&_dt]:text-sm [&_dt]:leading-normal [&_dt]:font-semibold [&_dt]:text-muted">
         <div>
           <dt>Nama Warga</dt>
           <dd>{invoice.identity_snapshot.full_name}</dd>
-        </div>
-        <div>
-          <dt>Nomor Rumah</dt>
-          <dd>{invoice.identity_snapshot.house_number ?? 'Belum diisi'}</dd>
         </div>
         <div>
           <dt>Periode</dt>
@@ -230,15 +226,7 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
       width: 21,
       rowHeader: true,
       render: (invoice) => (
-        <TableCellText
-          secondary={
-            invoice.identity_snapshot.house_number
-              ? `Nomor rumah ${invoice.identity_snapshot.house_number}`
-              : undefined
-          }
-        >
-          {invoice.identity_snapshot.full_name}
-        </TableCellText>
+        <TableCellText>{invoice.identity_snapshot.full_name}</TableCellText>
       ),
     })
   return (
@@ -372,7 +360,7 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
                       hideLabel
                       wrapperClassName="@max-[50rem]/table-pagination:col-span-full"
                       type="search"
-                      placeholder="Cari nama atau nomor rumah"
+                      placeholder="Cari nama warga"
                       maxLength={200}
                       value={filters.search}
                       leadingIcon={<Search size={18} />}

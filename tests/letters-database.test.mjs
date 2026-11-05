@@ -126,6 +126,8 @@ before(async () => {
     '20261104000100_letter_requests.sql',
     '20261105000300_letters_without_house_block.sql',
     '20261105000600_remove_resident_house_block.sql',
+    '20261105000700_letters_without_house_number.sql',
+    '20261105001000_remove_resident_house_number.sql',
   ])
     await db.exec(
       await readFile(
@@ -165,6 +167,7 @@ test('submission uses current owner and a frozen identity snapshot; retries prod
   assert.equal(request.status, 'pengajuan')
   assert.equal(request.identity_snapshot.full_name, fields(3).full_name)
   assert.equal(Object.hasOwn(request.identity_snapshot, 'house_block'), false)
+  assert.equal(Object.hasOwn(request.identity_snapshot, 'house_number'), false)
   assert.equal((await submit(alice, 101)).id, request.id)
   assert.equal(
     (

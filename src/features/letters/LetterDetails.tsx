@@ -94,10 +94,6 @@ export default function LetterDetails({
                 ['Nama Pemohon', data.identity_snapshot.full_name],
                 ['Tanggal Pengajuan', formatDate(data.created_at)],
                 ['Keperluan Surat', data.purpose],
-                [
-                  'Nomor Rumah',
-                  data.identity_snapshot.house_number ?? 'Belum diisi',
-                ],
                 ['Keterangan Tambahan', data.additional_notes || '—'],
                 ['Jenis Surat', data.letter_type_label],
                 ['Status Pengajuan', letterStatuses[data.status]],

@@ -191,7 +191,6 @@ export function ResidentDetails({
         ? maritalLabels[profile.marital_status]
         : 'Belum diisi',
     ],
-    ['Nomor Rumah', profile.house_number ?? 'Belum diisi'],
     ['Nomor HP', profile.phone],
     ['Alamat Lengkap', profile.address],
     ['RT', '04'],

@@ -207,7 +207,7 @@ tetap ada. Ketua RT dan Pengurus RT memiliki kewenangan sama.
 - `dues_overview(p_scope,p_period,p_status,p_method,p_search,p_page)` mengembalikan
   tagihan bulan ini, `{items,total}`, ringkasan, periode WIB server dan konfigurasi.
   Scope `mine` selalu mengikuti sesi; `all` khusus pengurus. Pencarian literal
-  nama dan nomor rumah. `dues_detail(p_id)` mengembalikan invoice, payments, events.
+  nama warga. `dues_detail(p_id)` mengembalikan invoice, payments, events.
 - `submit_dues_payment(p_request_id,p_invoice_id,p_method,p_payment_date,p_notes,
 p_attachment)` memakai UUID tetap per formulir. Pengiriman identik mengembalikan
   hasil sebelumnya; UUID sama dengan payload berbeda ditolak. Lock UUID dan

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { createResidentHandler } from '../supabase/functions/create-resident/handler.ts'
 
 const actor = '00000000-0000-4000-8000-000000000001'
-const body = { request_id: '00000000-0000-4000-8000-000000000010', full_name: 'Warga Dummy', nik: '0000000000000010', family_card_number: '0000000000000099', gender: 'perempuan', marital_status: 'menikah', house_number: '10', phone: '0812-3456-7890', address: 'Jalan Dummy Nomor 10', email: 'dummy10@example.test', password: 'DummyPassword123!', role: 'pengurus_rt', is_active: true }
+const body = { request_id: '00000000-0000-4000-8000-000000000010', full_name: 'Warga Dummy', nik: '0000000000000010', family_card_number: '0000000000000099', gender: 'perempuan', marital_status: 'menikah', phone: '0812-3456-7890', address: 'Jalan Dummy Nomor 10', email: 'dummy10@example.test', password: 'DummyPassword123!', role: 'pengurus_rt', is_active: true }
 function setup(overrides = {}) {
   const users = new Map(), calls = []
   const gateway = {
@@ -24,11 +24,17 @@ test('creates a confirmed account with trusted role metadata and a normalized pr
   assert.equal(calls[0].email_confirm, true)
   assert.equal(calls[0].user_metadata.phone, '081234567890')
   assert.equal(calls[0].user_metadata.house_block, undefined)
+  assert.equal(Object.hasOwn(calls[0].user_metadata, 'house_number'), false)
   assert.equal(calls[0].user_metadata.role, undefined)
   assert.equal(calls[0].user_metadata.password, undefined)
   assert.equal(calls[0].app_metadata.ertee_creation.actor_id, actor)
   assert.equal(calls[0].app_metadata.ertee_creation.role, 'pengurus_rt')
   assert.ok(!JSON.stringify(calls[0].app_metadata).includes(body.password))
+})
+test('legacy house numbers are discarded before creating account metadata', async () => {
+  const { send, calls } = setup()
+  assert.equal((await send({ ...body, house_number: 'DUMMY-LEGACY' })).status, 201)
+  assert.equal(Object.hasOwn(calls[0].user_metadata, 'house_number'), false)
 })
 test('a retry recovers exactly one account and rejects changed inputs or a different actor', async () => {
   const { send, calls, gateway } = setup()

@@ -94,7 +94,7 @@ export function TextInput({
           id={inputId}
           type={type === 'password' && visible ? 'text' : type}
           className={cn(
-            'block min-h-[calc(var(--text-input-min-height,3rem)-2px)] w-full min-w-0 flex-1 rounded-[inherit] border-0 bg-transparent px-0 py-px text-start font-sans text-base leading-6 text-ink placeholder:text-muted placeholder:opacity-100 focus-visible:outline-none disabled:cursor-not-allowed disabled:text-muted disabled:opacity-100 disabled:[-webkit-text-fill-color:currentColor]',
+            'block min-h-[calc(var(--text-input-min-height,3rem)-2px)] w-full min-w-0 flex-1 rounded-[inherit] border-0 bg-transparent px-0 py-px text-start font-sans text-base leading-6 text-ink placeholder:text-placeholder placeholder:opacity-100 focus-visible:outline-none disabled:cursor-not-allowed disabled:text-muted disabled:opacity-100 disabled:[-webkit-text-fill-color:currentColor]',
             className,
           )}
           disabled={disabled}
