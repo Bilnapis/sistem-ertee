@@ -10,6 +10,11 @@ import type {
   ComplaintDetail,
 } from '../features/complaints/types'
 import type {
+  Announcement,
+  AnnouncementOverview,
+  AnnouncementDetail,
+} from '../features/announcements/types'
+import type {
   DuesConfiguration,
   DuesDetail,
   DuesOverview,
@@ -144,6 +149,7 @@ type ReadOnlyTable<Row> = {
 export type Database = {
   public: {
     Tables: {
+      announcements: ReadOnlyTable<Announcement>
       complaints: ReadOnlyTable<Complaint & { submitted_payload: Json }>
       complaint_events: ReadOnlyTable<ComplaintEvent>
       dues_settings: ReadOnlyTable<
@@ -192,6 +198,46 @@ export type Database = {
     }
     Views: { [_ in never]: never }
     Functions: {
+      announcements_overview: {
+        Args: {
+          p_scope: string
+          p_search: string
+          p_status: string
+          p_page: number
+          p_page_size: number
+        }
+        Returns: AnnouncementOverview
+      }
+      announcement_detail: {
+        Args: { p_id: string; p_scope: string }
+        Returns: AnnouncementDetail
+      }
+      create_announcement: {
+        Args: {
+          p_request_id: string
+          p_title: string
+          p_description: string
+          p_starts_at: string
+          p_ends_at: string
+        }
+        Returns: Announcement
+      }
+      update_announcement: {
+        Args: {
+          p_id: string
+          p_title: string
+          p_description: string
+          p_starts_at: string
+          p_ends_at: string
+          p_expected_updated_at: string
+          p_republish: boolean
+        }
+        Returns: Announcement
+      }
+      archive_announcement: {
+        Args: { p_id: string; p_expected_updated_at: string }
+        Returns: Announcement
+      }
       complaints_overview: {
         Args: {
           p_scope: string

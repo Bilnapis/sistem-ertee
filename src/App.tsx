@@ -17,6 +17,15 @@ import { Feedback, LoadingScreen } from './components/Feedback'
 import { isManager, ResidentQueryProvider } from './features/residents/data'
 
 const ResidentsPage = lazy(() => import('./features/residents/ResidentsPage'))
+const AnnouncementsPage = lazy(
+  () => import('./features/announcements/AnnouncementsPage'),
+)
+const AnnouncementForm = lazy(
+  () => import('./features/announcements/AnnouncementForm'),
+)
+const AnnouncementDetails = lazy(
+  () => import('./features/announcements/AnnouncementDetails'),
+)
 const ResidentDialog = lazy(() => import('./features/residents/ResidentDialog'))
 const LettersPage = lazy(() => import('./features/letters/LettersPage'))
 const LetterForm = lazy(() => import('./features/letters/LetterForm'))
@@ -144,6 +153,27 @@ export function App() {
               <Route element={<ProtectedLayout />}>
                 <Route element={<ManagerOnly />}>
                   <Route
+                    path="/admin/pengumuman"
+                    element={<AnnouncementsPage manage />}
+                  >
+                    <Route
+                      path="tambah"
+                      element={<AnnouncementForm mode="create" />}
+                    />
+                    <Route
+                      path=":id"
+                      element={<AnnouncementDetails manage />}
+                    />
+                    <Route
+                      path=":id/edit"
+                      element={<AnnouncementForm mode="edit" />}
+                    />
+                    <Route
+                      path=":id/tayangkan-ulang"
+                      element={<AnnouncementForm mode="republish" />}
+                    />
+                  </Route>
+                  <Route
                     path="/admin/pengaduan"
                     element={<ComplaintsPage manage />}
                   >
@@ -181,7 +211,13 @@ export function App() {
                     <Route path=":id" element={<LetterDetails manage />} />
                   </Route>
                 </Route>
-                <Route path="/warga" element={<ResidentHome />} />
+                <Route
+                  path="/warga"
+                  element={<ResidentHome showAnnouncements />}
+                />
+                <Route path="/warga/pengumuman" element={<AnnouncementsPage />}>
+                  <Route path=":id" element={<AnnouncementDetails />} />
+                </Route>
                 <Route path="/warga/profil" element={<ResidentHome />} />
                 <Route path="/warga/pengajuan-surat" element={<LettersPage />}>
                   <Route path="tambah" element={<LetterForm />} />

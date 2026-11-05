@@ -47,6 +47,7 @@ pembaca layar dan audit aksesibilitas menyeluruh belum dilakukan.
 | Menu            | Tujuan default           |
 | --------------- | ------------------------ |
 | Dashboard       | `/admin`                 |
+| Pengumuman      | `/admin/pengumuman`      |
 | Warga           | `/admin/warga`           |
 | Pengajuan Surat | `/admin/pengajuan-surat` |
 | Iuran Warga     | `/admin/iuran-warga`     |
@@ -129,3 +130,5 @@ Label pseudo-localization, teks navigasi bahasa Jerman, nama panjang tanpa spasi
 Approve — cakupan sidebar dan drawer yang diperiksa di Chrome.
 
 Catatan migrasi Tailwind: tabel pemeriksaan di atas merupakan riwayat perbaikan. Lokasi kode telah diperbarui ke implementasi Tailwind; pengukuran historis bukan baseline visual baru. Lihat `docs/tailwind-migration.md`.
+
+Menu Pengumuman membuka `/admin/pengumuman` bagi pengelola dan `/warga/pengumuman` bagi warga. Semua role tetap dapat membaca pengumuman aktif dari Beranda.

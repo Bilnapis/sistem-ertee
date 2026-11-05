@@ -218,3 +218,18 @@ Konfirmasi penolakan memakai dialog bertingkat maksimal 528 px dan menyebut judu
 pengaduan. Riwayat, alasan penolakan, hasil penanganan dan keadaan gagal/memuat/kosong
 melengkapi kebutuhan PRD. Screenshot responsif dan batas pengujian dijelaskan di
 `docs/pengaduan.md`.
+
+## Pengumuman terjadwal
+
+Halaman pengumuman mengikuti pola komponen dan token aplikasi yang sudah ada.
+Pengelolaan memakai PageIntro, TablePagination dan TextInput; pembaca memakai
+kartu putih beradius 20 px. Beranda memuat tiga kartu di atas profil dan tautan
+Lihat semua; halaman profil tetap berfokus pada profil. Kartu memuat judul,
+cuplikan maksimal tiga baris, jadwal WIB dan tautan detail. Teks lengkap pada
+detail mempertahankan baris baru tanpa menafsirkan HTML.
+
+Dialog formulir maksimal 1000 px, detail 912 px, konfirmasi 528 px, radius 22 px,
+padding desktop 28 px dan gap field 16 px. Field jadwal dua kolom di desktop dan
+satu kolom di bawah 640 px. Status Terjadwal/Sedang tayang/Selesai/Diarsipkan
+memakai token info/success/soft/warning beserta label. Semua tombol utama 48 px,
+navigasi ringkas 44 px. Lihat `docs/pengumuman.md` untuk pengujian dan pemasangan.

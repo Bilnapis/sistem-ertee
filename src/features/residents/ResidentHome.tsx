@@ -5,6 +5,7 @@ import { ResidentModal } from './ResidentModal'
 import { ResidentEditor } from './ResidentEditor'
 import { ResidentHistory, VerificationNote } from './ResidentDetails'
 import { genderLabels, maritalLabels } from './data'
+import { HomeAnnouncements } from '../announcements/AnnouncementParts'
 
 const roleLabels = {
   warga: 'Warga',
@@ -17,7 +18,11 @@ const statusLabels = {
   perlu_perbaikan: 'Perlu Perbaikan',
 }
 
-export function ResidentHome() {
+export function ResidentHome({
+  showAnnouncements = false,
+}: {
+  showAnnouncements?: boolean
+}) {
   const { profile } = useAuth()
   const [editing, setEditing] = useState(false)
   const [pending, setPending] = useState(false)
@@ -31,6 +36,7 @@ export function ResidentHome() {
         <h1>Selamat datang, {profile.full_name}!</h1>
         <p>Informasi akun dan profil warga Anda tersedia di sini.</p>
       </div>
+      {showAnnouncements ? <HomeAnnouncements /> : null}
       <section
         className="rounded-card border border-border bg-surface p-8 max-sm:p-6"
         aria-labelledby="profile-title"

@@ -209,6 +209,16 @@ async function mockDues(page: Page, options: Options = {}) {
     requests.push({ path, body })
     if (path.endsWith('/token')) return respond(session)
     if (path.endsWith('/user')) return respond(user)
+    if (path.endsWith('/announcements_overview'))
+      return route.fulfill({
+        headers,
+        json: {
+          items: [],
+          total: 0,
+          server_now: new Date().toISOString(),
+          next_change_at: null,
+        },
+      })
     if (path.endsWith('/profiles')) return respond([profile])
     if (path.endsWith('/resident_events')) return respond([])
     if (path.endsWith('/logout')) return route.fulfill({ status: 204, headers })

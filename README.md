@@ -147,6 +147,25 @@ Panduan pemasangan, kontrak RPC, privasi, desain, dan batas pengujian tersedia d
 pagination. Notifikasi dan ekspor CSV ditunda; migrasi cloud dan deployment
 hosting belum dijalankan.
 
+## Pengumuman terjadwal
+
+Ketua RT dan Pengurus RT mengelola pengumuman teks dengan judul, deskripsi,
+serta waktu mulai/selesai dalam WIB. Pengumuman otomatis tampil untuk semua role
+aktif sesuai waktu server. Beranda menampilkan tiga terbaru di atas profil;
+**Lihat semua** membuka daftar aktif. Admin dapat mengedit, mengarsipkan, dan
+menayangkan ulang tanpa menghapus data.
+
+Terapkan migrasi tambahan
+[`20261105000100_announcements.sql`](supabase/migrations/20261105000100_announcements.sql)
+dan [`20261105000200_announcement_conflicts.sql`](supabase/migrations/20261105000200_announcement_conflicts.sql)
+setelah lima migrasi sebelumnya, sebelum memasang frontend. Tidak membutuhkan
+cron, bucket, atau variabel lingkungan baru. Route pengelolaan adalah
+`/admin/pengumuman`; pembaca memakai `/warga/pengumuman` beserta detailnya.
+Panduan kontrak, pemasangan dan smoke test ada di
+[`docs/pengumuman.md`](docs/pengumuman.md). Migrasi pengumuman sudah diterapkan ke cloud pada 5 November 2026; tujuh
+versi migrasi lokal/remote kini sinkron. Sembilan pemeriksaan smoke test API/browser nyata lulus dan seluruh data dummy
+sudah dibersihkan; bukti dicatat dalam panduan fitur tersebut. Deployment hosting terpisah dari pemasangan database.
+
 ## Pengujian
 
 ```sh
@@ -167,6 +186,7 @@ src/features/residents/  Beranda, profil sendiri dan manajemen warga
 src/features/letters/    Pengajuan pribadi, pemrosesan pengurus dan lampiran
 src/features/dues/       Tagihan bulanan, pembayaran, verifikasi dan pengaturan
 src/features/complaints/ Pengaduan pribadi, penanganan pengurus dan rekap
+src/features/announcements/ Pengelolaan, jadwal otomatis dan pembacaan pengumuman
 src/components/          Komponen formulir dan umpan balik
 src/lib/                 Supabase client dan tipe database
 supabase/                Konfigurasi lokal dan migrasi PostgreSQL

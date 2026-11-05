@@ -18,6 +18,9 @@ export function AuthenticatedLayout() {
     communityLabel: `${profile.role === 'warga' ? 'WARGA' : 'ADMIN'} RT 04`,
     basePath: '/warga',
     paths: {
+      pengumuman: isManager(profile.role)
+        ? '/admin/pengumuman'
+        : '/warga/pengumuman',
       pengaduan: isManager(profile.role)
         ? '/admin/pengaduan'
         : '/warga/pengaduan',

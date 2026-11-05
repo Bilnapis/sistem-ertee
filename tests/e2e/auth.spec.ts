@@ -92,6 +92,16 @@ async function mockSupabase(
       calls.logout = true
       return route.fulfill({ status: 204, headers })
     }
+    if (path.endsWith('/announcements_overview'))
+      return route.fulfill({
+        headers,
+        json: {
+          items: [],
+          total: 0,
+          server_now: new Date().toISOString(),
+          next_change_at: null,
+        },
+      })
     if (path.endsWith('/profiles')) {
       if (options.profileFailure)
         return route.fulfill({
@@ -190,6 +200,8 @@ test('login, reload, logout, browser back, and direct access enforce session bou
   for (const path of [
     '/warga',
     '/warga/profil',
+    '/warga/pengumuman',
+    '/admin/pengumuman',
     '/warga/pengajuan-surat',
     '/warga/iuran-warga',
     '/warga/pengaduan',
@@ -225,6 +237,7 @@ test('desktop sidebar toggles with the keyboard and keeps icon navigation access
   })
   const labels = [
     'Dashboard',
+    'Pengumuman',
     'Warga',
     'Pengajuan Surat',
     'Iuran Warga',
@@ -249,7 +262,7 @@ test('desktop sidebar toggles with the keyboard and keeps icon navigation access
       await expect(expand).toBeFocused()
       await expect(expand).toHaveAttribute('aria-expanded', 'false')
       expect((await sidebar.boundingBox())!.width).toBe(80)
-      await expect(sidebar.getByRole('link')).toHaveCount(5)
+      await expect(sidebar.getByRole('link')).toHaveCount(6)
       for (const label of labels) {
         const link = sidebar.getByRole('link', { name: label, exact: true })
         await expect(link).toBeVisible()

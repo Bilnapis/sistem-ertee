@@ -4,6 +4,7 @@ import { AdminSidebar } from '../components/AdminSidebar'
 const basePath = '/preview/admin-sidebar'
 const pageLabels: Record<string, string> = {
   '': 'Dashboard',
+  pengumuman: 'Pengumuman',
   warga: 'Warga',
   'pengajuan-surat': 'Pengajuan Surat',
   'iuran-warga': 'Iuran Warga',

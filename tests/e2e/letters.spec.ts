@@ -195,6 +195,16 @@ async function mockLetters(page: Page, options: Options = {}) {
     if (path.endsWith('/token')) return respond(session)
     if (path.endsWith('/user')) return respond(user)
     if (path.endsWith('/logout')) return route.fulfill({ status: 204, headers })
+    if (path.endsWith('/announcements_overview'))
+      return route.fulfill({
+        headers,
+        json: {
+          items: [],
+          total: 0,
+          server_now: new Date().toISOString(),
+          next_change_at: null,
+        },
+      })
     if (path.endsWith('/profiles')) return respond([profile])
     if (path.endsWith('/resident_events')) return respond([])
     if (path.endsWith('/letter_requests')) {

@@ -99,6 +99,16 @@ async function mockResidents(page: Page, options: Options = {}) {
     const current = profiles.get(currentId)!
     const manager =
       current.is_active && !current.archived_at && current.role !== 'warga'
+    if (path.endsWith('/announcements_overview'))
+      return route.fulfill({
+        headers,
+        json: {
+          items: [],
+          total: 0,
+          server_now: new Date().toISOString(),
+          next_change_at: null,
+        },
+      })
     if (path.endsWith('/profiles')) {
       const id = url.searchParams.get('id')?.replace(/^eq\./, '')
       const profile = profiles.get(id ?? '')

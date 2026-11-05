@@ -3,6 +3,7 @@ import {
   ClipboardList,
   FileText,
   LayoutDashboard,
+  Megaphone,
   UsersRound,
   Wallet,
 } from 'lucide-react'
@@ -14,13 +15,22 @@ export type AdminSidebarProps = {
   collapsed?: boolean
   className?: string
   paths?: Partial<
-    Record<'dashboard' | 'warga' | 'surat' | 'iuran' | 'pengaduan', string>
+    Record<
+      'dashboard' | 'warga' | 'surat' | 'iuran' | 'pengaduan' | 'pengumuman',
+      string
+    >
   >
   onNavigate?: () => void
 }
 
 const navigation = [
   { id: 'dashboard', label: 'Dashboard', path: '', icon: LayoutDashboard },
+  {
+    id: 'pengumuman',
+    label: 'Pengumuman',
+    path: '/pengumuman',
+    icon: Megaphone,
+  },
   { id: 'warga', label: 'Warga', path: '/warga', icon: UsersRound },
   {
     id: 'surat',
