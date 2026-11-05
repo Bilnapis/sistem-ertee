@@ -1,14 +1,10 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link } from 'react-router'
+import { Button } from '../../components/Button'
 import { FormField } from '../../components/FormField'
 import { Feedback } from '../../components/Feedback'
-import {
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalButton,
-} from '../../components/Modal'
+import { Modal, ModalBody, ModalFooter } from '../../components/Modal'
 import {
   getSupabase,
   isSupabaseConfigured,
@@ -92,22 +88,25 @@ export function LoginPage() {
                 />
                 Ingat saya
               </label>
-              <button
-                className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
+              <Button
                 type="button"
                 onClick={() => setHelpOpen(true)}
+                variant="ghost"
+                size="text"
+                align="start"
               >
                 Lupa password?
-              </button>
+              </Button>
             </div>
             {error ? <Feedback>{error}</Feedback> : null}
-            <button
-              className="inline-flex min-h-12 w-full max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
+            <Button
               type="submit"
               disabled={pending}
+              variant="solid"
+              width="full"
             >
               {pending ? 'Sedang masuk…' : 'Masuk'}
-            </button>
+            </Button>
           </div>
         </form>
         <div className="flex flex-col gap-4">
@@ -136,13 +135,13 @@ export function LoginPage() {
             </p>
           </ModalBody>
           <ModalFooter>
-            <ModalButton
+            <Button
               type="button"
-              variant="primary"
+              variant="solid"
               onClick={() => setHelpOpen(false)}
             >
               Mengerti
-            </ModalButton>
+            </Button>
           </ModalFooter>
         </Modal>
       ) : null}

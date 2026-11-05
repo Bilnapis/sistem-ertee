@@ -1,13 +1,9 @@
 import { useState } from 'react'
 import { FileText, Search } from 'lucide-react'
+import { Button } from '../../components/Button'
 import type { LetterType } from '../../lib/database.types'
 import { TextInput } from '../../components/TextInput'
-import {
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalButton,
-} from '../../components/Modal'
+import { Modal, ModalBody, ModalFooter } from '../../components/Modal'
 import { letterTypes } from './data'
 
 export function LetterTypePicker({
@@ -69,19 +65,19 @@ export function LetterTypePicker({
         </fieldset>
       </ModalBody>
       <ModalFooter>
-        <ModalButton type="button" variant="secondary" onClick={onClose}>
+        <Button type="button" variant="outline" onClick={onClose}>
           Batal
-        </ModalButton>
-        <ModalButton
+        </Button>
+        <Button
           type="button"
-          variant="primary"
+          variant="solid"
           disabled={!selected}
           onClick={() => {
             if (selected) onSelect(selected)
           }}
         >
           Pilih Surat
-        </ModalButton>
+        </Button>
       </ModalFooter>
     </Modal>
   )

@@ -62,13 +62,6 @@
   a {
     touch-action: manipulation;
   }
-  button {
-    cursor: pointer;
-  }
-  button:disabled {
-    cursor: wait;
-    opacity: 0.65;
-  }
   h1 {
     font-size: 2rem;
     font-weight: 700;

@@ -1,14 +1,10 @@
 import { useRef, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { Info } from 'lucide-react'
+import { Button } from '../../components/Button'
 import { FormField } from '../../components/FormField'
 import { Feedback } from '../../components/Feedback'
-import {
-  ModalBody,
-  ModalFooter,
-  ModalForm,
-  ModalButton,
-} from '../../components/Modal'
+import { ModalBody, ModalFooter, ModalForm } from '../../components/Modal'
 import { getSupabase } from '../../lib/supabase'
 import type {
   ResidentFields,
@@ -320,19 +316,15 @@ export function ResidentEditor({
       </ModalBody>
       <ModalFooter>
         <div>
-          <ModalButton
+          <Button
             type="button"
-            variant="secondary"
+            variant="outline"
             disabled={mutation.isPending}
             onClick={onCancel}
           >
             Batal
-          </ModalButton>
-          <ModalButton
-            type="submit"
-            variant="primary"
-            disabled={mutation.isPending}
-          >
+          </Button>
+          <Button type="submit" variant="solid" disabled={mutation.isPending}>
             {mutation.isPending
               ? 'Menyimpan…'
               : confirmDisable
@@ -340,7 +332,7 @@ export function ResidentEditor({
                 : original
                   ? 'Simpan Perubahan'
                   : 'Simpan Warga'}
-          </ModalButton>
+          </Button>
         </div>
       </ModalFooter>
     </ModalForm>

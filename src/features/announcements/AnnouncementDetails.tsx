@@ -1,14 +1,9 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useLocation, useNavigate, useParams } from 'react-router'
+import { Button, ButtonLink } from '../../components/Button'
 import { Feedback } from '../../components/Feedback'
-import {
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalButton,
-  ModalLink,
-} from '../../components/Modal'
+import { Modal, ModalBody, ModalFooter } from '../../components/Modal'
 import {
   AnnouncementPeriod,
   AnnouncementStatusBadge,
@@ -55,14 +50,14 @@ export default function AnnouncementDetails({
         ) : query.isError ? (
           <div className="flex flex-col gap-3">
             <Feedback>{announcementError(query.error)}</Feedback>
-            <button
+            <Button
               type="button"
               disabled={query.isFetching}
               onClick={() => void query.refetch()}
-              className="min-h-12 self-start rounded-control border border-border px-4 py-3 text-sm font-bold text-action"
+              variant="outline"
             >
               Coba lagi detail
-            </button>
+            </Button>
           </div>
         ) : !data ? (
           <p role="status" className="text-sm text-muted">
@@ -101,9 +96,8 @@ export default function AnnouncementDetails({
             {archive.isError ? (
               <div className="flex flex-col gap-3">
                 <Feedback>{announcementError(archive.error)}</Feedback>
-                <button
+                <Button
                   type="button"
-                  className="min-h-12 self-start rounded-control border border-border px-4 py-3 text-sm font-bold text-action"
                   onClick={async () => {
                     const result = await query.refetch()
                     if (result.isSuccess) {
@@ -111,9 +105,10 @@ export default function AnnouncementDetails({
                       archive.reset()
                     }
                   }}
+                  variant="outline"
                 >
                   Muat ulang detail
-                </button>
+                </Button>
               </div>
             ) : null}
 
@@ -137,22 +132,22 @@ export default function AnnouncementDetails({
                   ) : null}
                 </ModalBody>
                 <ModalFooter>
-                  <ModalButton
+                  <Button
                     type="button"
                     disabled={archive.isPending}
                     onClick={() => setConfirming(false)}
-                    variant="secondary"
+                    variant="outline"
                   >
                     Batal
-                  </ModalButton>
-                  <ModalButton
+                  </Button>
+                  <Button
                     type="button"
                     disabled={archive.isPending || stale}
                     onClick={() => archive.mutate(data)}
                     variant="danger"
                   >
                     {archive.isPending ? 'Mengarsipkan…' : 'Ya, arsipkan'}
-                  </ModalButton>
+                  </Button>
                 </ModalFooter>
               </Modal>
             ) : null}
@@ -163,46 +158,46 @@ export default function AnnouncementDetails({
         {manage && data ? (
           <>
             {data.archived_at ? (
-              <ModalLink
-                variant="primary"
+              <ButtonLink
+                variant="solid"
                 to={{
                   pathname: `${base}/${data.id}/tayangkan-ulang`,
                   search: location.search,
                 }}
               >
                 Tayangkan ulang
-              </ModalLink>
+              </ButtonLink>
             ) : (
               <>
-                <ModalButton
+                <Button
                   type="button"
                   disabled={archive.isPending || stale}
                   onClick={() => setConfirming(true)}
                   variant="danger"
                 >
                   Arsipkan
-                </ModalButton>
-                <ModalLink
+                </Button>
+                <ButtonLink
                   to={{
                     pathname: `${base}/${data.id}/edit`,
                     search: location.search,
                   }}
-                  variant="primary"
+                  variant="solid"
                 >
                   Edit Pengumuman
-                </ModalLink>
+                </ButtonLink>
               </>
             )}
           </>
         ) : null}
-        <ModalButton
+        <Button
           type="button"
           disabled={archive.isPending}
           onClick={close}
-          variant="secondary"
+          variant="outline"
         >
           Tutup
-        </ModalButton>
+        </Button>
       </ModalFooter>
     </Modal>
   )

@@ -1,14 +1,10 @@
 import { useRef, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useLocation, useNavigate, useParams } from 'react-router'
+import { Button } from '../../components/Button'
 import { Feedback } from '../../components/Feedback'
 import { formatDate, roleLabels } from '../residents/data'
-import {
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalButton,
-} from '../../components/Modal'
+import { Modal, ModalBody, ModalFooter } from '../../components/Modal'
 import { ComplaintSelect, ComplaintTextarea } from './ComplaintFields'
 import { ComplaintStatusBadge } from './ComplaintStatusBadge'
 import {
@@ -90,14 +86,14 @@ function ComplaintReview({
                 </option>
               ))}
             </ComplaintSelect>
-            <button
+            <Button
               type="button"
               disabled={category === complaint.category}
               onClick={() => action('recategorize')}
-              className="min-h-12 rounded-control border border-border bg-surface px-4 py-3 text-sm font-bold text-action hover:bg-page disabled:cursor-default disabled:opacity-50"
+              variant="outline"
             >
               Simpan kategori
-            </button>
+            </Button>
           </div>
           <ComplaintTextarea
             label="Catatan penanganan"
@@ -111,26 +107,26 @@ function ComplaintReview({
             helperText="Opsional saat mulai proses. Wajib diisi sebagai hasil penyelesaian atau alasan penolakan. Maksimal 2.000 karakter."
           />
           <div className="flex justify-end gap-3 max-sm:flex-col">
-            <button
+            <Button
               type="button"
               onClick={() => action('reject')}
-              className="min-h-12 rounded-control border border-danger bg-surface px-5 py-3 text-sm font-bold text-danger hover:bg-danger-soft"
+              variant="danger"
             >
               Tolak Pengaduan
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               onClick={() =>
                 action(complaint.status === 'diajukan' ? 'start' : 'complete')
               }
-              className="min-h-12 rounded-control border border-transparent bg-action px-5 py-3 text-sm font-bold text-white hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 forced-colors:border-[ButtonText]"
+              variant="solid"
             >
               {pending
                 ? 'Menyimpan…'
                 : complaint.status === 'diajukan'
                   ? 'Mulai Proses'
                   : 'Selesaikan'}
-            </button>
+            </Button>
           </div>
         </fieldset>
       </form>
@@ -152,15 +148,15 @@ function ComplaintReview({
             </p>
           </ModalBody>
           <ModalFooter>
-            <ModalButton
+            <Button
               type="button"
               disabled={pending}
               onClick={() => setRejecting(false)}
-              variant="secondary"
+              variant="outline"
             >
               Kembali
-            </ModalButton>
-            <ModalButton
+            </Button>
+            <Button
               type="button"
               disabled={pending}
               onClick={() => {
@@ -170,7 +166,7 @@ function ComplaintReview({
               variant="danger"
             >
               Ya, Tolak Pengaduan
-            </ModalButton>
+            </Button>
           </ModalFooter>
         </Modal>
       ) : null}
@@ -219,13 +215,13 @@ export default function ComplaintDetails({
         ) : detail.isError ? (
           <div className="flex flex-col gap-4">
             <Feedback>{complaintError(detail.error)}</Feedback>
-            <button
+            <Button
               type="button"
               onClick={() => void detail.refetch()}
-              className="min-h-12 rounded-control border border-border px-5 py-3 text-sm font-bold text-action"
+              variant="outline"
             >
               Coba lagi detail
-            </button>
+            </Button>
           </div>
         ) : null}
         {data && !detail.isError ? (
@@ -338,7 +334,7 @@ export default function ComplaintDetails({
             {change.isError ? (
               <div className="flex flex-col gap-3">
                 <Feedback>{complaintError(change.error)}</Feedback>
-                <button
+                <Button
                   type="button"
                   onClick={async () => {
                     await detail.refetch()
@@ -347,10 +343,10 @@ export default function ComplaintDetails({
                     })
                     change.reset()
                   }}
-                  className="min-h-12 self-start rounded-control border border-border px-4 py-3 text-sm font-bold text-action"
+                  variant="outline"
                 >
                   Muat ulang detail
-                </button>
+                </Button>
               </div>
             ) : null}
             {manage &&
@@ -368,14 +364,14 @@ export default function ComplaintDetails({
         ) : null}
       </ModalBody>
       <ModalFooter>
-        <ModalButton
+        <Button
           type="button"
           disabled={change.isPending}
           onClick={close}
-          variant="secondary"
+          variant="outline"
         >
           Tutup
-        </ModalButton>
+        </Button>
       </ModalFooter>
     </Modal>
   )

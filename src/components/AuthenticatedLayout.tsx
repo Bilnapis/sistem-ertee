@@ -1,6 +1,7 @@
 import { useId, useState } from 'react'
 import { Menu, Sidebar } from 'lucide-react'
 import { Outlet } from 'react-router'
+import { Button } from './Button'
 import { useAuth } from '../features/auth/AuthProvider'
 import { SignOutButton } from '../features/auth/SignOutButton'
 import { AdminSidebar } from './AdminSidebar'
@@ -47,34 +48,36 @@ export function AuthenticatedLayout() {
         <header className="border-b border-border bg-surface">
           <div className="mx-auto flex min-h-19 w-full max-w-[96rem] flex-wrap items-center justify-between gap-x-6 gap-y-4 px-6 py-4 @max-[33rem]/authenticated-content:min-h-17 @max-[33rem]/authenticated-content:gap-x-4 @max-[33rem]/authenticated-content:gap-y-3 @max-[33rem]/authenticated-content:px-4 @max-[33rem]/authenticated-content:py-3">
             <div className="flex shrink-0 items-center">
-              <button
-                type="button"
-                className="grid size-11 shrink-0 place-items-center rounded-control bg-surface p-0 text-ink hover:bg-soft max-lg:hidden"
-                aria-label={
-                  sidebarCollapsed ? 'Perluas sidebar' : 'Ciutkan sidebar'
-                }
-                title={sidebarCollapsed ? 'Perluas sidebar' : 'Ciutkan sidebar'}
-                aria-controls={sidebarId}
-                aria-expanded={!sidebarCollapsed}
-                onClick={() => setSidebarCollapsed((previous) => !previous)}
-              >
-                {sidebarCollapsed ? (
-                  <Sidebar size={20} aria-hidden="true" />
-                ) : (
-                  <Sidebar size={20} aria-hidden="true" />
-                )}
-              </button>
-              <button
-                type="button"
-                className="hidden min-h-11 w-11 shrink-0 place-items-center rounded-control border border-border bg-surface p-0 text-ink hover:bg-soft max-lg:grid"
-                aria-label="Buka menu navigasi"
-                aria-haspopup="dialog"
-                aria-controls={drawerId}
-                aria-expanded={drawerOpen}
-                onClick={() => setDrawerOpen(true)}
-              >
-                <Menu size={20} aria-hidden="true" />
-              </button>
+              <div className="max-lg:hidden">
+                <Button
+                  type="button"
+                  aria-label={
+                    sidebarCollapsed ? 'Perluas sidebar' : 'Ciutkan sidebar'
+                  }
+                  title={
+                    sidebarCollapsed ? 'Perluas sidebar' : 'Ciutkan sidebar'
+                  }
+                  aria-controls={sidebarId}
+                  aria-expanded={!sidebarCollapsed}
+                  onClick={() => setSidebarCollapsed((previous) => !previous)}
+                  variant="ghost"
+                  leadingIcon={<Sidebar size={20} aria-hidden="true" />}
+                  size="icon"
+                />
+              </div>
+              <div className="lg:hidden">
+                <Button
+                  type="button"
+                  aria-label="Buka menu navigasi"
+                  aria-haspopup="dialog"
+                  aria-controls={drawerId}
+                  aria-expanded={drawerOpen}
+                  onClick={() => setDrawerOpen(true)}
+                  variant="outline"
+                  leadingIcon={<Menu size={20} aria-hidden="true" />}
+                  size="icon"
+                />
+              </div>
             </div>
             <div className="ms-auto max-w-full min-w-0 flex-[0_1_auto] wrap-anywhere @max-[33rem]/authenticated-content:max-w-80 @max-[33rem]/authenticated-content:min-w-[min(100%,10rem)] @max-[33rem]/authenticated-content:flex-[1_1_0]">
               <AccountMenu profile={profile} />

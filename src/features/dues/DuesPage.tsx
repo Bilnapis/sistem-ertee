@@ -6,7 +6,8 @@ import {
   Settings2,
   Wallet,
 } from 'lucide-react'
-import { Link, Outlet, useLocation, useSearchParams } from 'react-router'
+import { Outlet, useLocation, useSearchParams } from 'react-router'
+import { ButtonLink, Button } from '../../components/Button'
 import { PageIntro } from '../../components/PageIntro'
 import { SummaryCardView } from '../../components/SummaryCardView'
 import {
@@ -89,22 +90,25 @@ function CurrentBill({ invoice }: { invoice: DuesInvoice }) {
           pembayaran Anda.
         </p>
       ) : null}
-      <div className="flex flex-wrap items-center gap-4 [&>a:first-child]:min-w-60 @max-[580px]/page:[&>a:first-child]:w-full @max-[580px]/page:[&>a:first-child]:min-w-0">
+      <div className="flex flex-wrap items-center gap-4">
         {invoice.status === 'belum_bayar' ? (
-          <Link
-            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
+          <ButtonLink
             to={destination('/bayar')}
+            variant="solid"
+            leadingIcon={<Wallet size={19} aria-hidden="true" />}
           >
-            <Wallet size={19} aria-hidden="true" />
             Bayar Iuran
-          </Link>
+          </ButtonLink>
         ) : null}
-        <Link
-          className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
+        <ButtonLink
           to={destination()}
+          variant="ghost"
+          trailingIcon={<ArrowRight size={16} aria-hidden="true" />}
+          size="text"
+          align="start"
         >
-          Lihat detail <ArrowRight size={16} aria-hidden="true" />
-        </Link>
+          Lihat detail
+        </ButtonLink>
       </div>
     </section>
   )
@@ -261,23 +265,25 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
             }
           />
           {manage ? (
-            <Link
-              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
+            <ButtonLink
               to={{ pathname: `${base}/pengaturan`, search: location.search }}
+              variant="outline"
+              leadingIcon={<Settings2 size={18} aria-hidden="true" />}
             >
-              <Settings2 size={18} aria-hidden="true" />
               Pengaturan iuran
-            </Link>
+            </ButtonLink>
           ) : null}
         </header>
         {isManager(profile?.role) ? (
-          <Link
-            className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
+          <ButtonLink
             to={manage ? '/warga/iuran-warga' : '/admin/iuran-warga'}
+            variant="ghost"
+            trailingIcon={<ArrowRight size={16} aria-hidden="true" />}
+            size="text"
+            align="start"
           >
             {manage ? 'Iuran saya' : 'Kelola iuran warga'}
-            <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          </ButtonLink>
         ) : null}
         <div className="flex flex-col gap-6" aria-busy={query.isPending}>
           {!query.isError && data ? (
@@ -435,13 +441,15 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
                   </div>
                 </div>
                 {!manage && filters.period ? (
-                  <button
+                  <Button
                     type="button"
-                    className="inline-flex min-h-11 max-w-full items-center gap-2 justify-self-start border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
                     onClick={() => change('bulan', '')}
+                    variant="ghost"
+                    size="text"
+                    align="start"
                   >
                     Semua bulan
-                  </button>
+                  </Button>
                 ) : null}
               </div>
             }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link } from 'react-router'
 import { MailCheck } from 'lucide-react'
+import { ButtonLink, Button } from '../../components/Button'
 import { FormField } from '../../components/FormField'
 import { Feedback } from '../../components/Feedback'
 import { getSupabase, setSessionPersistence } from '../../lib/supabase'
@@ -88,12 +89,9 @@ export function RegisterPage() {
             tautan konfirmasi akan dikirim. Buka tautan tersebut di browser yang
             sama untuk mengaktifkan akun.
           </p>
-          <Link
-            className="inline-flex min-h-12 w-full max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
-            to="/login"
-          >
+          <ButtonLink to="/login" variant="solid" width="full">
             Kembali ke halaman masuk
-          </Link>
+          </ButtonLink>
           <p className="text-muted">
             Sudah memiliki akun? Gunakan email dan password Anda untuk masuk.
           </p>
@@ -194,13 +192,9 @@ export function RegisterPage() {
           <div className="flex min-h-12 items-center py-2 max-sm:min-h-8 [&>div]:w-full">
             {error ? <Feedback>{error}</Feedback> : null}
           </div>
-          <button
-            className="inline-flex min-h-12 w-full max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
-            type="submit"
-            disabled={pending}
-          >
+          <Button type="submit" disabled={pending} variant="solid" width="full">
             {pending ? 'Mendaftarkan akun…' : 'Daftar Akun'}
-          </button>
+          </Button>
         </form>
         <p className="flex min-h-6 flex-wrap items-center justify-center gap-2 text-sm leading-5 text-muted [&>a]:font-bold [&>a]:text-action [&>a:hover]:underline">
           Sudah punya akun? <Link to="/login">Masuk di sini</Link>

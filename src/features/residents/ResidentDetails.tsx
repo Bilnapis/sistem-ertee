@@ -3,13 +3,9 @@ import { cn } from '../../lib/cn'
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useLocation } from 'react-router'
+import { Button, ButtonLink } from '../../components/Button'
 import { Feedback } from '../../components/Feedback'
-import {
-  ModalBody,
-  ModalFooter,
-  ModalButton,
-  ModalLink,
-} from '../../components/Modal'
+import { ModalBody, ModalFooter } from '../../components/Modal'
 import type { ResidentProfile } from '../../lib/database.types'
 import {
   archiveResident,
@@ -47,13 +43,15 @@ export function ResidentHistory({ id }: { id: string }) {
       ) : history.isError ? (
         <>
           <Feedback>Riwayat belum dapat dimuat.</Feedback>
-          <button
+          <Button
             type="button"
-            className="inline-flex min-h-11 max-w-full items-center gap-2 self-start border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
             onClick={() => void history.refetch()}
+            variant="ghost"
+            size="text"
+            align="start"
           >
             Coba lagi riwayat
-          </button>
+          </Button>
         </>
       ) : !history.data?.length ? (
         <p>Belum ada riwayat perubahan.</p>
@@ -238,14 +236,16 @@ export function ResidentDetails({
             </div>
           ))}
         </dl>
-        <button
+        <Button
           type="button"
-          className="inline-flex min-h-11 max-w-full items-center gap-2 self-start border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
           aria-pressed={reveal}
           onClick={() => setReveal((value) => !value)}
+          variant="ghost"
+          size="text"
+          align="start"
         >
           {reveal ? 'Samarkan NIK dan KK' : 'Tampilkan NIK dan KK'}
-        </button>
+        </Button>
         <VerificationNote profile={profile} />
         {mutation.isError ? (
           <Feedback>{residentError(mutation.error)}</Feedback>
@@ -259,49 +259,49 @@ export function ResidentDetails({
         <div className="flex flex-wrap gap-3">
           {!profile.archived_at ? (
             <>
-              <button
+              <Button
                 type="button"
-                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
                 disabled={
                   mutation.isPending ||
                   profile.verification_status === 'terverifikasi'
                 }
                 onClick={() => void act('verify')}
+                variant="outline"
               >
                 Verifikasi data
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
-                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
                 disabled={mutation.isPending}
                 onClick={() => {
                   setAction('repair')
                   mutation.reset()
                 }}
+                variant="outline"
               >
                 Minta perbaikan
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
-                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-danger bg-danger px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-red-800 disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
                 disabled={mutation.isPending}
                 onClick={() => {
                   setAction('archive')
                   mutation.reset()
                 }}
+                variant="danger"
               >
                 Arsipkan warga
-              </button>
+              </Button>
             </>
           ) : (
-            <button
+            <Button
               type="button"
-              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
               disabled={mutation.isPending}
               onClick={() => setAction('restore')}
+              variant="outline"
             >
               Pulihkan arsip
-            </button>
+            </Button>
           )}
         </div>
         {action ? (
@@ -348,26 +348,22 @@ export function ResidentDetails({
               </p>
             )}
             <div className="flex flex-wrap gap-3">
-              <button
+              <Button
                 type="button"
-                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
                 disabled={mutation.isPending}
                 onClick={() => setAction(null)}
+                variant="outline"
               >
                 Batalkan tindakan
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
-                className={
-                  action === 'archive'
-                    ? 'inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-danger bg-danger px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-red-800 disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0'
-                    : 'inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0'
-                }
                 disabled={mutation.isPending}
                 onClick={() => void act(action)}
+                variant={action === 'archive' ? 'danger' : 'solid'}
               >
                 {mutation.isPending ? 'Menyimpan…' : 'Konfirmasi tindakan'}
-              </button>
+              </Button>
             </div>
           </section>
         ) : null}
@@ -375,18 +371,18 @@ export function ResidentDetails({
       </ModalBody>
       <ModalFooter>
         <div>
-          <ModalButton
+          <Button
             type="button"
-            variant="secondary"
+            variant="outline"
             disabled={mutation.isPending}
             onClick={onClose}
           >
             Tutup
-          </ModalButton>
+          </Button>
           {!profile.archived_at ? (
-            <ModalLink
+            <ButtonLink
               aria-disabled={mutation.isPending}
-              variant="primary"
+              variant="solid"
               to={{
                 pathname: `/admin/warga/${profile.id}/edit`,
                 search: location.search,
@@ -396,7 +392,7 @@ export function ResidentDetails({
               }}
             >
               Edit Data
-            </ModalLink>
+            </ButtonLink>
           ) : null}
         </div>
       </ModalFooter>

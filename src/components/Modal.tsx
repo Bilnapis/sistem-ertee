@@ -1,8 +1,7 @@
 import { useEffect, useId, useRef } from 'react'
 import type { ComponentProps, ReactNode } from 'react'
 import { X } from 'lucide-react'
-import { Link } from 'react-router'
-import { cn } from '../lib/cn'
+import { Button } from './Button'
 import './Modal.css'
 
 type ModalProps = {
@@ -95,15 +94,18 @@ export function Modal({
       }}
     >
       {placement === 'start' ? (
-        <button
-          type="button"
-          className="absolute start-auto end-3 top-4 z-1 grid size-11 place-items-center rounded-control border-0 bg-transparent p-0 text-slate-300 hover:bg-slate-800"
-          aria-label="Tutup menu navigasi"
-          disabled={pending}
-          onClick={onClose}
-        >
-          <X size={24} aria-hidden="true" />
-        </button>
+        <div className="absolute end-3 top-4 z-1">
+          <Button
+            type="button"
+            aria-label="Tutup menu navigasi"
+            disabled={pending}
+            onClick={onClose}
+            variant="ghost"
+            tone="inverse"
+            leadingIcon={<X size={24} aria-hidden="true" />}
+            size="icon"
+          />
+        </div>
       ) : (
         <header className="mb-6 flex shrink-0 items-start justify-between gap-4">
           <div className="min-w-0">
@@ -122,15 +124,15 @@ export function Modal({
               </p>
             ) : null}
           </div>
-          <button
+          <Button
             type="button"
-            className="inline-flex size-11 shrink-0 items-center justify-center rounded-control border-0 border-border p-2 text-muted enabled:hover:bg-soft disabled:cursor-default disabled:opacity-40"
             aria-label="Tutup dialog"
             disabled={pending}
             onClick={onClose}
-          >
-            <X size={22} aria-hidden="true" />
-          </button>
+            variant="ghost"
+            leadingIcon={<X size={22} aria-hidden="true" />}
+            size="icon"
+          />
         </header>
       )}
       {placement === 'start' ? (
@@ -167,40 +169,4 @@ export function ModalForm({
       {children}
     </form>
   )
-}
-
-type ModalActionVariant = 'secondary' | 'primary' | 'danger'
-
-const actionStyles = {
-  secondary: 'border-border bg-surface text-slate-700 enabled:hover:bg-page',
-  primary:
-    'border-transparent bg-action text-white enabled:hover:bg-action-hover forced-colors:border-[ButtonText]',
-  danger:
-    'border-danger bg-danger text-white enabled:hover:bg-red-800 forced-colors:border-[ButtonText]',
-}
-
-function actionClassName(variant: ModalActionVariant) {
-  return cn(
-    'inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere enabled:cursor-pointer disabled:cursor-wait disabled:opacity-65 aria-disabled:cursor-wait aria-disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0',
-    actionStyles[variant],
-  )
-}
-
-export function ModalButton({
-  variant = 'secondary',
-  type = 'button',
-  ...props
-}: Omit<ComponentProps<'button'>, 'className' | 'style'> & {
-  variant?: ModalActionVariant
-}) {
-  return <button {...props} type={type} className={actionClassName(variant)} />
-}
-
-export function ModalLink({
-  variant = 'primary',
-  ...props
-}: Omit<ComponentProps<typeof Link>, 'className' | 'style'> & {
-  variant?: ModalActionVariant
-}) {
-  return <Link {...props} className={actionClassName(variant)} />
 }

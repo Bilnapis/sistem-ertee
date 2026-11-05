@@ -1,12 +1,7 @@
 import { useEffect } from 'react'
-import {
-  Link,
-  Outlet,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from 'react-router'
+import { Outlet, useLocation, useNavigate, useSearchParams } from 'react-router'
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { Button, ButtonLink } from '../../components/Button'
 import { PageIntro } from '../../components/PageIntro'
 import { TextInput } from '../../components/TextInput'
 import {
@@ -151,13 +146,14 @@ export default function AnnouncementsPage({
         </div>
       ) : null}
       {filters.search || filters.status !== 'all' ? (
-        <button
+        <Button
           type="button"
           onClick={() => navigate(base, { replace: true })}
-          className="min-h-11 justify-self-start text-sm font-bold text-action hover:underline"
+          variant="ghost"
+          size="text"
         >
           Reset filter
-        </button>
+        </Button>
       ) : null}
     </div>
   )
@@ -178,22 +174,24 @@ export default function AnnouncementsPage({
             }
           />
           {manage ? (
-            <Link
+            <ButtonLink
               to={{ pathname: `${base}/tambah`, search: location.search }}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-sm font-bold text-white hover:bg-action-hover forced-colors:border-[ButtonText]"
+              variant="solid"
+              size="compact"
+              leadingIcon={<Plus size={18} aria-hidden="true" />}
             >
-              <Plus size={20} aria-hidden="true" />
               Buat Pengumuman
-            </Link>
+            </ButtonLink>
           ) : null}
         </header>
         {isManager(profile?.role) ? (
-          <Link
+          <ButtonLink
             to={manage ? '/warga/pengumuman' : '/admin/pengumuman'}
-            className="inline-flex min-h-11 items-center self-start text-sm font-bold text-action hover:underline"
+            variant="ghost"
+            size="text"
           >
             {manage ? 'Lihat tampilan pembaca' : 'Kelola pengumuman'}
-          </Link>
+          </ButtonLink>
         ) : null}
         {manage ? (
           <TablePagination
@@ -249,24 +247,28 @@ export default function AnnouncementsPage({
                     {total} pengumuman · Halaman {filters.page} dari {pageCount}
                   </p>
                   <div className="flex gap-2">
-                    <button
+                    <Button
                       type="button"
-                      className="inline-flex min-h-11 items-center gap-2 rounded-control border border-border bg-surface px-3 text-ink disabled:cursor-default disabled:opacity-50"
                       disabled={filters.page <= 1}
                       onClick={() => change('page', String(filters.page - 1))}
+                      variant="outline"
+                      leadingIcon={<ChevronLeft size={18} aria-hidden="true" />}
+                      size="compact"
                     >
-                      <ChevronLeft size={18} aria-hidden="true" />
                       Sebelumnya
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
-                      className="inline-flex min-h-11 items-center gap-2 rounded-control border border-border bg-surface px-3 text-ink disabled:cursor-default disabled:opacity-50"
                       disabled={filters.page >= pageCount}
                       onClick={() => change('page', String(filters.page + 1))}
+                      variant="outline"
+                      trailingIcon={
+                        <ChevronRight size={18} aria-hidden="true" />
+                      }
+                      size="compact"
                     >
                       Berikutnya
-                      <ChevronRight size={18} aria-hidden="true" />
-                    </button>
+                    </Button>
                   </div>
                 </nav>
               </>

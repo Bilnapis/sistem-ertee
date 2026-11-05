@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router'
+import { Button } from '../../components/Button'
 import { Feedback } from '../../components/Feedback'
 import { ModalBody } from '../../components/Modal'
 import { residentError, useResident } from './data'
@@ -50,13 +51,13 @@ export default function ResidentDialog({
         <ModalBody>
           <div className="flex flex-col items-center gap-4 px-5 py-10 text-center text-muted [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-ink">
             <Feedback>{residentError(resident.error)}</Feedback>
-            <button
+            <Button
               type="button"
-              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
               onClick={() => void resident.refetch()}
+              variant="outline"
             >
               Coba lagi data warga
-            </button>
+            </Button>
           </div>
         </ModalBody>
       ) : mode === 'view' && resident.data ? (

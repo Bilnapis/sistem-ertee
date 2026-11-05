@@ -9,8 +9,9 @@ padding sel 16 × 12 px, serta tombol pagination 44 × 44 px. Teks isi,
 badge, tag, teks sekunder, dan tautan aksi memakai 14 px (0.875rem).
 Kolom aksi rata akhir.
 
-Seluruh utility tabel, status memuat/gagal/kosong, petunjuk gulir, badge,
-tautan aksi, dan pagination berada dalam file komponen ini. `TablePagination`,
+Utility tabel, status memuat/gagal/kosong, petunjuk gulir, badge, dan susunan
+pagination berada dalam file komponen ini. Tombol dan tautan aksi memakai
+`Button` serta `ButtonLink`. `TablePagination`,
 `TableCellText`, `TableBadge`, dan `TableActionLink` tidak menerima prop
 `className` atau `style`. Halaman memasok data, isi kolom, proporsi lebar,
 status permintaan, dan callback; jangan menambahkan selector tabel dari
@@ -88,7 +89,9 @@ wrapper halaman atau CSS global.
 - `TableCellText` menampilkan teks utama, `secondary` untuk blok rumah,
   dan `tag` untuk role. `TableBadge` menerima `tone` berupa `neutral`,
   `success`, `warning`, `info`, atau `danger`; status tetap berlabel teks.
-  `TableActionLink` menerima `to`, `aria-label`, serta isi tautan.
+  `TableActionLink` menerima `to`, `aria-label`, serta isi tautan dan memakai
+  `ButtonLink` varian ghost. Tombol pagination memakai `Button` ukuran ikon;
+  styling tombol berasal dari `src/components/Button.tsx`.
 
 Tabel menggunakan elemen semantik dan region gulir yang dapat difokuskan.
 Lebar minimum mengikuti jumlah kolom: 44rem untuk hingga lima kolom,

@@ -1,10 +1,17 @@
+import type { ButtonStyleProps } from '../../components/Button'
 import { useState } from 'react'
 import { LogOut } from 'lucide-react'
+import { Button } from '../../components/Button'
 import { Feedback } from '../../components/Feedback'
 import { getSupabase } from '../../lib/supabase'
 import { authErrorMessage } from './errors'
 
-export function SignOutButton({ className }: { className?: string }) {
+export function SignOutButton({
+  variant = 'outline',
+  size,
+  width,
+  align,
+}: Pick<ButtonStyleProps, 'variant' | 'size' | 'width' | 'align'>) {
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
   async function signOut() {
@@ -21,18 +28,18 @@ export function SignOutButton({ className }: { className?: string }) {
   }
   return (
     <div className="flex min-w-0 flex-col gap-3">
-      <button
-        className={
-          className ??
-          'inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0'
-        }
+      <Button
         type="button"
         disabled={pending}
         onClick={signOut}
+        variant={variant}
+        size={size}
+        width={width}
+        align={align}
+        leadingIcon={<LogOut size={18} aria-hidden="true" />}
       >
-        <LogOut size={18} aria-hidden="true" />
         {pending ? 'Sedang keluar…' : 'Keluar'}
-      </button>
+      </Button>
       {error ? <Feedback>{error}</Feedback> : null}
     </div>
   )

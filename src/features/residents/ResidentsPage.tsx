@@ -1,5 +1,6 @@
 import { Plus, Search, UsersRound } from 'lucide-react'
-import { Link, Outlet, useLocation, useSearchParams } from 'react-router'
+import { Outlet, useLocation, useSearchParams } from 'react-router'
+import { ButtonLink, Button } from '../../components/Button'
 import { Feedback } from '../../components/Feedback'
 import { PageIntro } from '../../components/PageIntro'
 import { SummaryCardView } from '../../components/SummaryCardView'
@@ -68,19 +69,21 @@ export default function ResidentsPage() {
       aria-labelledby="resident-page-title"
     >
       <div className="mx-auto flex w-full max-w-[96rem] min-w-0 flex-col gap-6 px-6 pt-6 pb-8 @max-[33rem]/page:px-4 @max-[33rem]/page:pb-6">
-        <header className="flex flex-wrap items-center justify-between gap-4 [&>a]:min-h-11 [&>a]:flex-[0_1_auto] [&>a]:px-4 [&>a]:py-2.5 @max-[33rem]/page:[&>a]:basis-full [&>a>span]:min-w-0 [&>a>span]:wrap-anywhere [&>div]:min-w-0 [&>div]:flex-[1_1_18rem]">
+        <header className="flex flex-wrap items-center justify-between gap-4 [&>div]:min-w-0 [&>div]:flex-[1_1_18rem]">
           <PageIntro
             id="resident-page-title"
             title="Data Warga"
             description="Kelola data warga RT 04"
           />
-          <Link
-            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
+          <ButtonLink
             to={linkTo('tambah')}
+            variant="solid"
+            leadingIcon={<Plus size={18} aria-hidden="true" />}
+            size="compact"
+            width="responsive"
           >
-            <Plus size={18} aria-hidden="true" />
-            <span>Tambah warga</span>
-          </Link>
+            Tambah warga
+          </ButtonLink>
         </header>
         <section aria-label="Ringkasan pendataan">
           <SummaryCardView
@@ -102,13 +105,13 @@ export default function ResidentsPage() {
         {summary.isError ? (
           <div className="flex flex-wrap gap-3">
             <Feedback>Ringkasan belum dapat dimuat.</Feedback>
-            <button
+            <Button
               type="button"
-              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
               onClick={() => void summary.refetch()}
+              variant="outline"
             >
               Coba lagi ringkasan
-            </button>
+            </Button>
           </div>
         ) : null}
         <section className="min-w-0" aria-label="Daftar warga">

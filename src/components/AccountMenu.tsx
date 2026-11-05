@@ -1,5 +1,6 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { ChevronDown, UserRoundPen } from 'lucide-react'
+import { Button } from './Button'
 import { SignOutButton } from '../features/auth/SignOutButton'
 import { ResidentEditor } from '../features/residents/ResidentEditor'
 import { ResidentModal } from '../features/residents/ResidentModal'
@@ -81,21 +82,24 @@ export function AccountMenu({ profile }: { profile: ResidentProfile }) {
           }
         }}
       >
-        <button
+        <Button
           ref={trigger}
           type="button"
-          className="group/account flex min-h-12 w-full min-w-0 cursor-pointer items-center gap-3 rounded-control border border-transparent bg-surface px-2 py-1.5 text-start text-ink hover:border-border hover:bg-soft aria-expanded:border-border aria-expanded:bg-soft @max-[33rem]/authenticated-content:gap-2"
           aria-label={`Menu akun ${profile.full_name}, ${role}`}
           aria-expanded={open}
           aria-controls={menuId}
           onClick={() => setOpen((previous) => !previous)}
+          variant="ghost"
+          size="compact"
+          leadingIcon={
+            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-focus-soft text-xs leading-none font-bold text-action @max-[33rem]/authenticated-content:size-8">
+              {initials(profile.full_name)}
+            </span>
+          }
+          trailingIcon={<ChevronDown size={16} aria-hidden="true" />}
+          width="full"
+          align="start"
         >
-          <span
-            className="grid size-9 shrink-0 place-items-center rounded-full bg-focus-soft text-xs leading-none font-bold text-action @max-[33rem]/authenticated-content:size-8"
-            aria-hidden="true"
-          >
-            {initials(profile.full_name)}
-          </span>
           <span className="flex min-w-0 flex-1 flex-col gap-0.5">
             <span className="max-w-[20ch] truncate text-sm leading-normal font-semibold">
               {profile.full_name}
@@ -104,12 +108,7 @@ export function AccountMenu({ profile }: { profile: ResidentProfile }) {
               {role}
             </span>
           </span>
-          <ChevronDown
-            size={16}
-            className="shrink-0 text-muted group-aria-expanded/account:rotate-180"
-            aria-hidden="true"
-          />
-        </button>
+        </Button>
         <div
           ref={dropdown}
           id={menuId}
@@ -122,19 +121,27 @@ export function AccountMenu({ profile }: { profile: ResidentProfile }) {
             <strong>{profile.full_name}</strong>
             <span>{profile.email}</span>
           </div>
-          <button
+          <Button
             type="button"
-            className="flex min-h-11 w-full min-w-0 items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-start text-sm leading-normal font-medium wrap-anywhere text-ink hover:bg-soft [&>svg]:shrink-0 [&>svg]:text-muted"
             onClick={() => {
               setOpen(false)
               trigger.current?.focus()
               setEditing(true)
             }}
+            variant="ghost"
+            leadingIcon={<UserRoundPen size={18} aria-hidden="true" />}
+            size="compact"
+            width="full"
+            align="start"
           >
-            <UserRoundPen size={18} aria-hidden="true" />
             Ubah data diri
-          </button>
-          <SignOutButton className="flex min-h-11 w-full min-w-0 items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-start text-sm leading-normal font-medium wrap-anywhere text-ink hover:bg-soft [&>svg]:shrink-0 [&>svg]:text-muted" />
+          </Button>
+          <SignOutButton
+            variant="ghost"
+            size="compact"
+            width="full"
+            align="start"
+          />
         </div>
       </div>
       {editing ? (

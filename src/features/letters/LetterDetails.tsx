@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Download, Info } from 'lucide-react'
 import { useLocation, useNavigate, useParams } from 'react-router'
+import { Button } from '../../components/Button'
 import { Feedback } from '../../components/Feedback'
 import { formatDate, roleLabels } from '../residents/data'
 import {
@@ -11,12 +12,7 @@ import {
   useLetter,
   useLetterHistory,
 } from './data'
-import {
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalButton,
-} from '../../components/Modal'
+import { Modal, ModalBody, ModalFooter } from '../../components/Modal'
 import { LetterStatusBadge } from './LetterStatusBadge'
 
 export default function LetterDetails({
@@ -67,15 +63,15 @@ export default function LetterDetails({
         </ModalBody>
       ) : request.isError ? (
         <ModalBody>
-          <div className="flex flex-col gap-4 py-3 [&>button]:self-start">
+          <div className="flex flex-col gap-4 py-3">
             <Feedback>{letterError(request.error)}</Feedback>
-            <button
+            <Button
               type="button"
-              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
               onClick={() => void request.refetch()}
+              variant="outline"
             >
               Coba lagi
-            </button>
+            </Button>
           </div>
         </ModalBody>
       ) : data ? (
@@ -116,7 +112,7 @@ export default function LetterDetails({
               ))}
             </dl>
             {data.attachment ? (
-              <div className="flex items-center justify-between gap-4 rounded-summary border border-border p-4 text-sm leading-normal max-sm:flex-col max-sm:items-start [&_button]:shrink-0 [&_p]:mt-1 [&_p]:text-muted [&>div]:min-w-0 [&>div]:wrap-anywhere">
+              <div className="flex items-center justify-between gap-4 rounded-summary border border-border p-4 text-sm leading-normal max-sm:flex-col max-sm:items-start [&_p]:mt-1 [&_p]:text-muted [&>div]:min-w-0 [&>div]:wrap-anywhere">
                 <div>
                   <strong>Lampiran Pendukung</strong>
                   <p>
@@ -124,15 +120,15 @@ export default function LetterDetails({
                     {Math.ceil(data.attachment.size / 1024)} KB
                   </p>
                 </div>
-                <button
+                <Button
                   type="button"
-                  className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
                   disabled={download.isPending}
                   onClick={() => download.mutate()}
+                  variant="outline"
+                  leadingIcon={<Download size={18} aria-hidden="true" />}
                 >
-                  <Download size={18} aria-hidden="true" />
                   {download.isPending ? 'Mengunduh…' : 'Unduh lampiran'}
-                </button>
+                </Button>
               </div>
             ) : null}
             {download.isError ? (
@@ -157,13 +153,15 @@ export default function LetterDetails({
               ) : history.isError ? (
                 <>
                   <Feedback>{letterError(history.error)}</Feedback>
-                  <button
+                  <Button
                     type="button"
-                    className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
                     onClick={() => void history.refetch()}
+                    variant="ghost"
+                    size="text"
+                    align="start"
                   >
                     Coba lagi riwayat
-                  </button>
+                  </Button>
                 </>
               ) : (
                 <ol>
@@ -184,9 +182,8 @@ export default function LetterDetails({
             {change.isError ? (
               <div className="flex flex-col gap-2">
                 <Feedback>{letterError(change.error)}</Feedback>
-                <button
+                <Button
                   type="button"
-                  className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
                   onClick={async () => {
                     await Promise.all([
                       request.refetch(),
@@ -195,27 +192,30 @@ export default function LetterDetails({
                     ])
                     change.reset()
                   }}
+                  variant="ghost"
+                  size="text"
+                  align="start"
                 >
                   Muat ulang detail
-                </button>
+                </Button>
               </div>
             ) : null}
           </ModalBody>
           <ModalFooter>
-            <ModalButton
+            <Button
               type="button"
-              variant="secondary"
+              variant="outline"
               disabled={change.isPending}
               onClick={close}
             >
               {manage && data.status === 'diproses'
                 ? 'Masih Diproses'
                 : 'Tutup'}
-            </ModalButton>
+            </Button>
             {manage && data.status !== 'selesai' ? (
-              <ModalButton
+              <Button
                 type="button"
-                variant="primary"
+                variant="solid"
                 disabled={
                   change.isPending || change.isError || request.isFetching
                 }
@@ -226,7 +226,7 @@ export default function LetterDetails({
                   : data.status === 'pengajuan'
                     ? 'Mulai Proses'
                     : 'Selesai Diproses'}
-              </ModalButton>
+              </Button>
             ) : null}
           </ModalFooter>
         </>

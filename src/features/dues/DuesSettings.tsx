@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useLocation, useNavigate } from 'react-router'
+import { Button } from '../../components/Button'
 import { Feedback } from '../../components/Feedback'
 import { TextInput } from '../../components/TextInput'
 import { getSupabase } from '../../lib/supabase'
@@ -11,7 +12,6 @@ import {
   ModalBody,
   ModalFooter,
   ModalForm,
-  ModalButton,
 } from '../../components/Modal'
 
 function SettingsForm({
@@ -143,21 +143,17 @@ function SettingsForm({
           ) : null}
         </ModalBody>
         <ModalFooter>
-          <ModalButton
+          <Button
             type="button"
-            variant="secondary"
+            variant="outline"
             disabled={mutation.isPending}
             onClick={close}
           >
             Batal
-          </ModalButton>
-          <ModalButton
-            type="submit"
-            variant="primary"
-            disabled={mutation.isPending}
-          >
+          </Button>
+          <Button type="submit" variant="solid" disabled={mutation.isPending}>
             {mutation.isPending ? 'Menyimpan…' : 'Simpan pengaturan'}
-          </ModalButton>
+          </Button>
         </ModalFooter>
       </ModalForm>
     </Modal>
@@ -183,13 +179,13 @@ export default function DuesSettings() {
         <ModalBody>
           <div className="flex flex-col items-start gap-3">
             <Feedback>{duesError(query.error)}</Feedback>
-            <button
+            <Button
               type="button"
-              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
               onClick={() => void query.refetch()}
+              variant="outline"
             >
               Coba lagi
-            </button>
+            </Button>
           </div>
         </ModalBody>
       ) : (

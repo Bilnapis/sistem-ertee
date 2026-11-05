@@ -6,6 +6,7 @@ import {
   useOutletContext,
   useParams,
 } from 'react-router'
+import { Button } from '../../components/Button'
 import { Feedback } from '../../components/Feedback'
 import { TextInput } from '../../components/TextInput'
 import {
@@ -13,7 +14,6 @@ import {
   ModalBody,
   ModalFooter,
   ModalForm,
-  ModalButton,
 } from '../../components/Modal'
 import {
   announcementError,
@@ -208,33 +208,33 @@ function AnnouncementEditor({
                   Muat ulang akan mengganti masukan formulir dengan data
                   terbaru. Salin perubahan Anda jika masih diperlukan.
                 </p>
-                <button
+                <Button
                   type="button"
                   disabled={reloading}
                   onClick={() => void reloadForm()}
-                  className="min-h-12 self-start rounded-control border border-border px-4 py-3 text-sm font-bold text-action"
+                  variant="outline"
                 >
                   {reloading ? 'Memuat ulang…' : 'Muat ulang data dan formulir'}
-                </button>
+                </Button>
               </>
             ) : null}
           </div>
         ) : null}
       </ModalBody>
       <ModalFooter>
-        <ModalButton
+        <Button
           type="submit"
           disabled={
             mutation.isPending || reloading || stale || Boolean(invalidAction)
           }
-          variant="primary"
+          variant="solid"
         >
           {mutation.isPending
             ? 'Menyimpan…'
             : mode === 'republish'
               ? 'Simpan dan tayangkan ulang'
               : 'Simpan Pengumuman'}
-        </ModalButton>
+        </Button>
       </ModalFooter>
     </ModalForm>
   )
@@ -281,13 +281,13 @@ export default function AnnouncementForm({ mode }: { mode: Mode }) {
         <ModalBody>
           <div className="flex flex-col gap-3">
             <Feedback>{announcementError(detail.error)}</Feedback>
-            <button
+            <Button
               type="button"
               onClick={() => void detail.refetch()}
-              className="min-h-12 self-start rounded-control border border-border px-4 py-3 text-sm font-bold text-action"
+              variant="outline"
             >
               Coba lagi
-            </button>
+            </Button>
           </div>
         </ModalBody>
       ) : mode === 'create' || initial ? (

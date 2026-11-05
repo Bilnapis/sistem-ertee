@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useLocation, useNavigate } from 'react-router'
+import { Button } from '../../components/Button'
 import { TextInput } from '../../components/TextInput'
 import { Feedback } from '../../components/Feedback'
 import { getSupabase } from '../../lib/supabase'
@@ -9,7 +10,6 @@ import {
   ModalBody,
   ModalFooter,
   ModalForm,
-  ModalButton,
 } from '../../components/Modal'
 import { ComplaintSelect, ComplaintTextarea } from './ComplaintFields'
 import {
@@ -140,21 +140,17 @@ export default function ComplaintForm() {
           ) : null}
         </ModalBody>
         <ModalFooter>
-          <ModalButton
+          <Button
             type="button"
             disabled={submission.isPending}
             onClick={close}
-            variant="secondary"
+            variant="outline"
           >
             Batal
-          </ModalButton>
-          <ModalButton
-            type="submit"
-            disabled={submission.isPending}
-            variant="primary"
-          >
+          </Button>
+          <Button type="submit" disabled={submission.isPending} variant="solid">
             {submission.isPending ? 'Mengirim…' : 'Kirim Pengaduan'}
-          </ModalButton>
+          </Button>
         </ModalFooter>
       </ModalForm>
     </Modal>

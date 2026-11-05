@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { ArrowLeft, ArrowRight, FileText, Plus, Search } from 'lucide-react'
-import { Link, Outlet, useLocation, useSearchParams } from 'react-router'
+import { Outlet, useLocation, useSearchParams } from 'react-router'
+import { ButtonLink, Button } from '../../components/Button'
 import { TextInput } from '../../components/TextInput'
 import { Feedback } from '../../components/Feedback'
 import { PageIntro } from '../../components/PageIntro'
@@ -155,7 +156,7 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
       aria-labelledby="letters-page-title"
     >
       <div className="mx-auto flex w-full max-w-[96rem] min-w-0 flex-col gap-6">
-        <header className="flex items-center justify-between gap-4 @max-[600px]/page:flex-col @max-[600px]/page:items-start [&>a]:shrink-0">
+        <header className="flex items-center justify-between gap-4 @max-[600px]/page:flex-col @max-[600px]/page:items-start">
           <PageIntro
             id="letters-page-title"
             title={waiting ? 'Pengajuan Belum Diproses' : 'Pengajuan Surat'}
@@ -169,50 +170,55 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
           />
           {manage ? (
             waiting ? (
-              <Link
-                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
+              <ButtonLink
                 to="/admin/pengajuan-surat"
+                variant="outline"
+                leadingIcon={<ArrowLeft size={18} aria-hidden="true" />}
               >
-                <ArrowLeft size={18} aria-hidden="true" />
                 Semua pengajuan
-              </Link>
+              </ButtonLink>
             ) : (
-              <Link
-                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
+              <ButtonLink
                 to="/warga/pengajuan-surat"
+                variant="outline"
+                trailingIcon={<ArrowRight size={18} aria-hidden="true" />}
               >
                 Pengajuan saya
-                <ArrowRight size={18} aria-hidden="true" />
-              </Link>
+              </ButtonLink>
             )
           ) : (
-            <Link
-              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
+            <ButtonLink
               to={{ pathname: `${base}/tambah`, search: location.search }}
+              variant="solid"
+              leadingIcon={<Plus size={20} aria-hidden="true" />}
             >
-              <Plus size={20} aria-hidden="true" />
               Ajukan Surat
-            </Link>
+            </ButtonLink>
           )}
         </header>
         {!manage && isManager(profile?.role) ? (
-          <Link
-            className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
+          <ButtonLink
             to="/admin/pengajuan-surat"
+            variant="ghost"
+            trailingIcon={<ArrowRight size={16} aria-hidden="true" />}
+            size="text"
+            align="start"
           >
             Kelola seluruh pengajuan warga{' '}
-            <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          </ButtonLink>
         ) : null}
         {blocked ? (
           <div className="rounded-summary border border-amber-300 bg-amber-50 px-5 py-4 text-sm leading-relaxed text-warning">
             <p>{blocked}</p>
-            <Link
-              className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
+            <ButtonLink
               to="/warga/profil"
+              variant="ghost"
+              trailingIcon={<ArrowRight size={16} aria-hidden="true" />}
+              size="text"
+              align="start"
             >
-              Periksa profil saya <ArrowRight size={16} aria-hidden="true" />
-            </Link>
+              Periksa profil saya
+            </ButtonLink>
           </div>
         ) : null}
         {manage ? (
@@ -223,13 +229,15 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
             {summary.isError ? (
               <div className="my-3 flex flex-col gap-2">
                 <Feedback>{letterError(summary.error)}</Feedback>
-                <button
+                <Button
                   type="button"
-                  className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
                   onClick={() => void summary.refetch()}
+                  variant="ghost"
+                  size="text"
+                  align="start"
                 >
                   Coba lagi ringkasan
-                </button>
+                </Button>
               </div>
             ) : (
               <SummaryCardView

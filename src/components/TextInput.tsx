@@ -2,6 +2,7 @@ import { cn } from '../lib/cn'
 import { CircleAlert, Eye, EyeOff } from 'lucide-react'
 import { useId } from 'react'
 import type { ComponentPropsWithRef, ReactNode } from 'react'
+import { Button } from './Button'
 
 export type TextInputProps = ComponentPropsWithRef<'input'> & {
   label: string
@@ -111,30 +112,34 @@ export function TextInput({
           />
         ) : null}
         {onToggleVisibility ? (
-          <button
-            type="button"
-            className="me-[-0.75rem] grid min-h-11 w-11 flex-none cursor-pointer place-items-center rounded-lg border border-transparent bg-transparent p-0 text-muted focus-visible:outline-offset-[-4px] hover:enabled:bg-soft hover:enabled:text-ink active:enabled:bg-focus-soft disabled:cursor-not-allowed disabled:text-muted disabled:opacity-100 motion-safe:transition-[background-color,scale] motion-safe:duration-150 motion-safe:ease-out motion-safe:enabled:active:not-data-[static]:scale-[0.96]"
-            disabled={disabled}
-            onClick={onToggleVisibility}
-            data-static={isStatic || undefined}
-            aria-label={`${visible ? 'Sembunyikan' : 'Tampilkan'} ${label.replace(/\s*\*$/, '').toLocaleLowerCase('id-ID')}`}
-            aria-pressed={visible}
-          >
-            <span className="grid" aria-hidden="true">
-              <Eye
-                className="col-start-1 row-start-1 opacity-0 transition-opacity duration-150 ease-ui data-[shown]:opacity-100 motion-safe:scale-25 motion-safe:blur-[4px] motion-safe:transition-[opacity,scale,filter] motion-safe:duration-300 motion-safe:data-[shown]:scale-100 motion-safe:data-[shown]:blur-none"
-                data-shown={showEye || undefined}
-                size={20}
-                strokeWidth={1.75}
-              />
-              <EyeOff
-                className="col-start-1 row-start-1 opacity-0 transition-opacity duration-150 ease-ui data-[shown]:opacity-100 motion-safe:scale-25 motion-safe:blur-[4px] motion-safe:transition-[opacity,scale,filter] motion-safe:duration-300 motion-safe:data-[shown]:scale-100 motion-safe:data-[shown]:blur-none"
-                data-shown={!showEye || undefined}
-                size={20}
-                strokeWidth={1.75}
-              />
-            </span>
-          </button>
+          <span className="-me-3 inline-flex shrink-0">
+            <Button
+              type="button"
+              disabled={disabled}
+              onClick={onToggleVisibility}
+              data-static={isStatic || undefined}
+              aria-label={`${visible ? 'Sembunyikan' : 'Tampilkan'} ${label.replace(/\s*\*$/, '').toLocaleLowerCase('id-ID')}`}
+              aria-pressed={visible}
+              variant="ghost"
+              size="icon"
+              leadingIcon={
+                <span className="grid" aria-hidden="true">
+                  <Eye
+                    className="col-start-1 row-start-1 opacity-0 transition-opacity duration-150 ease-ui data-[shown]:opacity-100 motion-safe:scale-25 motion-safe:blur-[4px] motion-safe:transition-[opacity,scale,filter] motion-safe:duration-300 motion-safe:data-[shown]:scale-100 motion-safe:data-[shown]:blur-none"
+                    data-shown={showEye || undefined}
+                    size={20}
+                    strokeWidth={1.75}
+                  />
+                  <EyeOff
+                    className="col-start-1 row-start-1 opacity-0 transition-opacity duration-150 ease-ui data-[shown]:opacity-100 motion-safe:scale-25 motion-safe:blur-[4px] motion-safe:transition-[opacity,scale,filter] motion-safe:duration-300 motion-safe:data-[shown]:scale-100 motion-safe:data-[shown]:blur-none"
+                    data-shown={!showEye || undefined}
+                    size={20}
+                    strokeWidth={1.75}
+                  />
+                </span>
+              }
+            />
+          </span>
         ) : null}
       </div>
       {helperText ? (

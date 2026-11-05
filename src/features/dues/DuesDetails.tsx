@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Download, RefreshCw } from 'lucide-react'
-import { Link, useLocation, useNavigate, useParams } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router'
+import { ButtonLink, Button } from '../../components/Button'
 import { Feedback } from '../../components/Feedback'
 import { useAuth } from '../auth/AuthProvider'
 import { TextInput } from '../../components/TextInput'
@@ -20,12 +21,7 @@ import {
 } from './data'
 import type { PaymentStatus } from './types'
 import { DuesStatusBadge } from './DuesStatusBadge'
-import {
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalButton,
-} from '../../components/Modal'
+import { Modal, ModalBody, ModalFooter } from '../../components/Modal'
 
 export default function DuesDetails({ manage = false }: { manage?: boolean }) {
   const { profile } = useAuth()
@@ -81,13 +77,13 @@ export default function DuesDetails({ manage = false }: { manage?: boolean }) {
         <ModalBody>
           <div className="flex flex-col items-start gap-3">
             <Feedback>{duesError(query.error)}</Feedback>
-            <button
+            <Button
               type="button"
-              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
               onClick={() => void query.refetch()}
+              variant="outline"
             >
               Coba lagi
-            </button>
+            </Button>
           </div>
         </ModalBody>
       ) : detail ? (
@@ -133,15 +129,15 @@ export default function DuesDetails({ manage = false }: { manage?: boolean }) {
               </div>
             </dl>
             {!manage && detail.invoice.status === 'belum_bayar' ? (
-              <Link
-                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
+              <ButtonLink
                 to={{
                   pathname: `${base}/${id}/bayar`,
                   search: location.search,
                 }}
+                variant="solid"
               >
                 Bayar Iuran
-              </Link>
+              </ButtonLink>
             ) : null}
             <section className="flex flex-col gap-3">
               <h3 className="text-lg font-bold">Konfirmasi pembayaran</h3>
@@ -181,15 +177,17 @@ export default function DuesDetails({ manage = false }: { manage?: boolean }) {
                       </p>
                     ) : null}
                     {payment.attachment ? (
-                      <button
+                      <Button
                         type="button"
-                        className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
                         disabled={download.isPending}
                         onClick={() => download.mutate(payment.attachment!)}
+                        variant="ghost"
+                        leadingIcon={<Download size={17} aria-hidden="true" />}
+                        size="text"
+                        align="start"
                       >
-                        <Download size={17} aria-hidden="true" />
                         Unduh bukti: {payment.attachment.name}
-                      </button>
+                      </Button>
                     ) : (
                       <p className="text-xs leading-relaxed text-muted">
                         Pembayaran tunai tanpa lampiran.
@@ -263,60 +261,60 @@ export default function DuesDetails({ manage = false }: { manage?: boolean }) {
                         : 'Batalkan pembayaran yang sudah disahkan beserta pemasukan kas tertaut?'}
                     </p>
                     <div className="mt-5 flex flex-wrap items-center gap-4 [&>*]:flex-[1_1_12rem]">
-                      <button
+                      <Button
                         type="button"
-                        className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
                         disabled={review.isPending}
                         onClick={() => setAction(null)}
+                        variant="outline"
                       >
                         Kembali
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         type="button"
-                        className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-danger bg-danger px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-red-800 disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
                         disabled={review.isPending}
                         onClick={() => submitAction(action)}
+                        variant="danger"
                       >
                         {review.isPending
                           ? 'Menyimpan…'
                           : action === 'ditolak'
                             ? 'Ya, tolak konfirmasi'
                             : 'Ya, batalkan pembayaran'}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ) : (
                   <div className="mt-5 flex flex-wrap items-center gap-4 [&>*]:flex-[1_1_12rem]">
                     {active.status === 'diajukan' ? (
                       <>
-                        <button
+                        <Button
                           type="button"
-                          className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
                           disabled={review.isPending}
                           onClick={() => setAction('ditolak')}
+                          variant="outline"
                         >
                           Tolak konfirmasi
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                           type="button"
-                          className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
                           disabled={review.isPending}
                           onClick={() => submitAction('disetujui')}
+                          variant="solid"
                         >
                           {review.isPending
                             ? 'Mengesahkan…'
                             : 'Sahkan pembayaran'}
-                        </button>
+                        </Button>
                       </>
                     ) : (
-                      <button
+                      <Button
                         type="button"
-                        className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-danger bg-danger px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-red-800 disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
                         disabled={review.isPending}
                         onClick={() => setAction('dibatalkan')}
+                        variant="danger"
                       >
                         Batalkan pembayaran
-                      </button>
+                      </Button>
                     )}
                   </div>
                 )}
@@ -356,23 +354,23 @@ export default function DuesDetails({ manage = false }: { manage?: boolean }) {
             </section>
           </ModalBody>
           <ModalFooter>
-            <ModalButton
+            <Button
               type="button"
-              variant="secondary"
+              variant="outline"
               disabled={query.isFetching || review.isPending}
               onClick={() => void query.refetch()}
+              leadingIcon={<RefreshCw size={16} aria-hidden="true" />}
             >
-              <RefreshCw size={16} aria-hidden="true" />
               Muat ulang
-            </ModalButton>
-            <ModalButton
+            </Button>
+            <Button
               type="button"
-              variant="primary"
+              variant="solid"
               disabled={review.isPending}
               onClick={close}
             >
               Tutup
-            </ModalButton>
+            </Button>
           </ModalFooter>
         </>
       ) : null}

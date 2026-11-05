@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
 import { Megaphone } from 'lucide-react'
+import { ButtonLink, Button } from '../../components/Button'
 import { cn } from '../../lib/cn'
 import { Feedback } from '../../components/Feedback'
 import { formatDate } from '../residents/data'
@@ -83,13 +84,14 @@ export function AnnouncementCards({
             {item.description}
           </p>
           <AnnouncementPeriod announcement={item} />
-          <Link
-            className="inline-flex min-h-11 items-center self-start text-sm font-bold text-action hover:underline"
+          <ButtonLink
             aria-label={`Baca selengkapnya: ${item.title}`}
             to={{ pathname: `/warga/pengumuman/${item.id}`, search }}
+            variant="ghost"
+            size="text"
           >
             Baca selengkapnya
-          </Link>
+          </ButtonLink>
         </article>
       ))}
     </div>
@@ -122,14 +124,14 @@ export function AnnouncementState({
     return (
       <div className="flex flex-col gap-3 rounded-card border border-border bg-surface p-5">
         <Feedback>{announcementError(error)}</Feedback>
-        <button
+        <Button
           type="button"
           disabled={fetching}
           onClick={onRetry}
-          className="min-h-12 self-start rounded-control border border-border px-5 py-3 text-sm font-bold text-action"
+          variant="outline"
         >
           Coba lagi
-        </button>
+        </Button>
       </div>
     )
   if (empty)
@@ -164,12 +166,9 @@ export function HomeAnnouncements() {
           <Megaphone size={22} className="text-action" aria-hidden="true" />
           Pengumuman
         </h2>
-        <Link
-          to="/warga/pengumuman"
-          className="inline-flex min-h-11 items-center text-sm font-bold text-action hover:underline"
-        >
+        <ButtonLink to="/warga/pengumuman" variant="ghost" size="text">
           Lihat semua
-        </Link>
+        </ButtonLink>
       </header>
       <AnnouncementState
         loading={query.isPending}

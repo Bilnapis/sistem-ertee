@@ -7,8 +7,9 @@ import {
   MoveHorizontal,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
-import { Link } from 'react-router'
+
 import type { LinkProps } from 'react-router'
+import { Button, ButtonLink } from './Button'
 import { cn } from '../lib/cn'
 import { Feedback } from './Feedback'
 
@@ -87,14 +88,14 @@ export function TablePagination<T>({
             <>
               <Feedback>{error}</Feedback>
               {onRetry ? (
-                <button
+                <Button
                   type="button"
-                  className="inline-flex min-h-12 max-w-full items-center justify-center rounded-control border border-border bg-surface px-5 py-3 text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150"
                   onClick={onRetry}
                   disabled={isFetching}
+                  variant="outline"
                 >
                   {retryLabel}
-                </button>
+                </Button>
               ) : null}
             </>
           ) : (
@@ -103,14 +104,14 @@ export function TablePagination<T>({
               {emptyState.title ? <h2>{emptyState.title}</h2> : null}
               <p>{emptyState.description}</p>
               {emptyState.action ? (
-                <button
+                <Button
                   type="button"
-                  className="inline-flex min-h-12 max-w-full items-center justify-center rounded-control border border-border bg-surface px-5 py-3 text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150"
                   onClick={emptyState.action.onClick}
                   disabled={isFetching}
+                  variant="outline"
                 >
                   {emptyState.action.label}
-                </button>
+                </Button>
               ) : null}
             </>
           )}
@@ -198,30 +199,32 @@ export function TablePagination<T>({
             {itemLabel}
           </p>
           <nav aria-label={label}>
-            <button
+            <Button
               type="button"
-              className="inline-flex size-11 shrink-0 items-center justify-center rounded-control border border-border bg-surface p-2 text-muted enabled:hover:bg-soft disabled:cursor-default disabled:opacity-40 rtl:[&>svg]:-scale-x-100"
               disabled={page <= 1 || isFetching}
               aria-label="Halaman sebelumnya"
               onClick={() => onPageChange(page - 1)}
-            >
-              <ChevronLeft size={18} aria-hidden="true" />
-            </button>
+              variant="outline"
+              leadingIcon={<ChevronLeft size={18} aria-hidden="true" />}
+              size="icon"
+              mirrorIcons
+            />
             <span className="min-w-0 px-1 wrap-anywhere" aria-current="page">
               <bdi>
                 {page.toLocaleString('id-ID')} /{' '}
                 {pageCount.toLocaleString('id-ID')}
               </bdi>
             </span>
-            <button
+            <Button
               type="button"
-              className="inline-flex size-11 shrink-0 items-center justify-center rounded-control border border-border bg-surface p-2 text-muted enabled:hover:bg-soft disabled:cursor-default disabled:opacity-40 rtl:[&>svg]:-scale-x-100"
               disabled={page >= pageCount || isFetching || !total}
               aria-label="Halaman berikutnya"
               onClick={() => onPageChange(page + 1)}
-            >
-              <ChevronRight size={18} aria-hidden="true" />
-            </button>
+              variant="outline"
+              leadingIcon={<ChevronRight size={18} aria-hidden="true" />}
+              size="icon"
+              mirrorIcons
+            />
           </nav>
         </footer>
       ) : null}
@@ -280,13 +283,16 @@ export function TableActionLink({
   'aria-label': label,
 }: Pick<LinkProps, 'children' | 'to' | 'aria-label'>) {
   return (
-    <Link
+    <ButtonLink
       to={to}
       aria-label={label}
-      className="inline-flex min-h-11 max-w-full items-center justify-end gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-semibold wrap-anywhere text-action hover:underline [&>span]:min-w-0 [&>span]:wrap-anywhere [&>svg]:shrink-0 rtl:[&>svg]:-scale-x-100"
+      variant="ghost"
+      trailingIcon={<ArrowRight size={16} aria-hidden="true" />}
+      size="text"
+      align="start"
+      mirrorIcons
     >
       <span>{children}</span>
-      <ArrowRight size={16} aria-hidden="true" />
-    </Link>
+    </ButtonLink>
   )
 }

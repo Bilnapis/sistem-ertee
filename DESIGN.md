@@ -78,7 +78,9 @@ Acuan adalah `design.fig`, frame daftar `0:4505`, detail `0:4584`, edit
 `0:4697`, dan tambah `0:4798`, seluruhnya 1648 × 1056 px. File desain
 dibaca langsung menggunakan CLI OpenPencil tanpa mengubah sumbernya.
 
-Token global berada di `src/styles.css`; seluruh utility Tailwind ditulis langsung pada atribut `className` di JSX.
+Token global berada di `src/styles.css`; utility Tailwind ditulis pada JSX
+komponen pemilik tampilannya. Seluruh tombol memakai `Button` atau `ButtonLink`
+dari `src/components/Button.tsx`, tanpa override `className` atau `style`.
 Font Inter dan ikon Lucide menggunakan dependensi yang sudah tersedia.
 Border tabel memakai token `--color-border: #dce4ee`; border idle input, pencarian,
 dan filter memakai `--color-control-border: #e2e8f0`. State hover, fokus, error,
@@ -117,8 +119,9 @@ pada container di bawah 33rem.
 dan Pengaduan dengan acuan tabel Data Warga yang sudah diterapkan: radius 8 px,
 header `soft` 14 px semibold (600) dengan huruf kapital di awal judul saja,
 isi 14 px,
-padding sel 16 × 12 px, dan tombol pagination 44 px. Seluruh gaya tabel, badge, tautan aksi, status daftar,
-dan pagination berada di `src/components/TablePagination.tsx`. Komponen
+padding sel 16 × 12 px, dan tombol pagination 44 px. Gaya tabel, badge,
+status daftar, dan susunan pagination berada di `src/components/TablePagination.tsx`.
+Tombol pagination dan tautan aksi memakai `Button` serta `ButtonLink`. Komponen
 tidak menerima override `className` atau `style`; halaman hanya memasok
 data, konfigurasi kolom, dan callback. API ada di `docs/table-pagination.md`.
 
@@ -183,10 +186,14 @@ serta batas pengujian ada di `docs/monthly-dues.md`.
 ## Styling Tailwind
 
 Seluruh komponen dan halaman, termasuk preview, memakai Tailwind v4. Token berada
-di `src/styles.css`; utility tombol, field, kartu, badge dan dialog ditulis
-langsung pada `className` masing-masing elemen JSX. Kondisi dan class dari
-pemanggil digabungkan dengan `cn` bila diperlukan. Class tidak disimpan dalam
-object, konstanta styling atau modul terpisah. Tidak ada CSS Modules atau `@apply`.
+di `src/styles.css`; utility field, kartu, badge dan dialog ditulis pada JSX
+komponen pemiliknya. Tombol aksi, tautan berbentuk tombol, kontrol ikon,
+pagination, menu akun dan kontrol password memakai `Button` atau `ButtonLink`.
+Komponen tersebut memusatkan gaya dasar dari tombol Tambah warga, varian
+`solid`, `outline`, `ghost`, `danger`, ukuran, ikon, fokus dan disabled. Parent
+mengatur layout tanpa selector untuk mengubah tampilan tombol. API tersedia
+di `docs/button.md`; preview pengembangan ada pada `/preview/button`.
+Tidak ada CSS Modules atau `@apply`.
 
 Tombol utama/sekunder/destruktif minimal 48 px dengan teks 14 px; navigasi ringkas
 dan tombol ikon minimal 44 px. Semua input/select minimal 48 px dengan teks 16 px,

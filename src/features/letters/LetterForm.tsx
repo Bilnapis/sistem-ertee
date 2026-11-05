@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ChevronDown, FileUp, Info, Paperclip } from 'lucide-react'
-import { Link, useLocation, useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
+import { Button, ButtonLink } from '../../components/Button'
 import { TextInput } from '../../components/TextInput'
 import { Feedback } from '../../components/Feedback'
 import type {
@@ -24,7 +25,6 @@ import {
   ModalBody,
   ModalFooter,
   ModalForm,
-  ModalButton,
 } from '../../components/Modal'
 import { LetterTypePicker } from './LetterTypePicker'
 
@@ -118,21 +118,19 @@ export default function LetterForm() {
     >
       {blocked ? (
         <ModalBody>
-          <div className="flex flex-col gap-4 py-3 [&>button]:self-start">
+          <div className="flex flex-col gap-4 py-3">
             <Feedback>{blocked}</Feedback>
-            <Link
+            <ButtonLink
               to="/warga/profil"
-              className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
+              variant="ghost"
+              size="text"
+              align="start"
             >
               Periksa profil saya
-            </Link>
-            <button
-              type="button"
-              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
-              onClick={close}
-            >
+            </ButtonLink>
+            <Button type="button" onClick={close} variant="outline">
               Kembali ke pengajuan
-            </button>
+            </Button>
           </div>
         </ModalBody>
       ) : (
@@ -157,10 +155,9 @@ export default function LetterForm() {
                 <label id="letter-type-label" htmlFor="letter-type">
                   Jenis Surat <span aria-hidden="true">*</span>
                 </label>
-                <button
+                <Button
                   id="letter-type"
                   type="button"
-                  className="flex min-h-12 w-full min-w-0 items-center justify-between gap-3 rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&>svg]:shrink-0 [&>svg]:text-muted [&[readonly]]:bg-page"
                   aria-haspopup="dialog"
                   aria-labelledby="letter-type-label letter-type-value"
                   aria-invalid={Boolean(errors.type)}
@@ -168,12 +165,15 @@ export default function LetterForm() {
                     errors.type ? 'letter-type-error' : undefined
                   }
                   onClick={() => setChoosing(true)}
+                  variant="outline"
+                  trailingIcon={<ChevronDown size={20} aria-hidden="true" />}
+                  width="full"
+                  align="between"
                 >
                   <span id="letter-type-value">
                     {type ? letterTypes[type] : 'Pilih jenis surat'}
                   </span>
-                  <ChevronDown size={20} aria-hidden="true" />
-                </button>
+                </Button>
                 {errors.type ? (
                   <p
                     id="letter-type-error"
@@ -272,9 +272,8 @@ export default function LetterForm() {
                   JPG, PNG, PDF • Maksimal 5 MB
                 </p>
                 {file ? (
-                  <button
+                  <Button
                     type="button"
-                    className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
                     onClick={() => {
                       setFile(null)
                       const input = document.getElementById(
@@ -286,9 +285,12 @@ export default function LetterForm() {
                         file: undefined,
                       }))
                     }}
+                    variant="ghost"
+                    size="text"
+                    align="start"
                   >
                     Hapus pilihan berkas
-                  </button>
+                  </Button>
                 ) : null}
                 {errors.file ? (
                   <p
@@ -318,21 +320,21 @@ export default function LetterForm() {
             ) : null}
           </ModalBody>
           <ModalFooter>
-            <ModalButton
+            <Button
               type="button"
-              variant="secondary"
+              variant="outline"
               disabled={submission.isPending}
               onClick={close}
             >
               Batal
-            </ModalButton>
-            <ModalButton
+            </Button>
+            <Button
               type="submit"
-              variant="primary"
+              variant="solid"
               disabled={submission.isPending}
             >
               {submission.isPending ? 'Mengirim pengajuan…' : 'Kirim Pengajuan'}
-            </ModalButton>
+            </Button>
           </ModalFooter>
         </ModalForm>
       )}

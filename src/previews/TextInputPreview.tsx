@@ -11,6 +11,7 @@ import {
   UserRound,
 } from 'lucide-react'
 import { Link } from 'react-router'
+import { ButtonLink, Button } from '../components/Button'
 import { TextInput } from '../components/TextInput'
 
 export default function TextInputPreview() {
@@ -52,13 +53,15 @@ export default function TextInputPreview() {
             Komponen
           </span>
         </Link>
-        <Link
-          className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-slate-600 underline underline-offset-4 hover:text-action rtl:[&>svg]:-scale-x-100"
+        <ButtonLink
           to="/login"
+          variant="ghost"
+          leadingIcon={<ArrowLeft size={16} aria-hidden="true" />}
+          size="text"
+          mirrorIcons
         >
-          <ArrowLeft size={16} aria-hidden="true" />
           Halaman masuk
-        </Link>
+        </ButtonLink>
       </header>
       <main className="mx-auto w-full max-w-[68rem] pt-11 pb-6 @max-[44rem]/page:pt-6">
         <div className="mb-10 max-w-[40rem] [&>h1]:mb-4 [&>h1]:text-[clamp(2.5rem,5cqi,3.5rem)] [&>h1]:leading-[1.15] [&>h1]:font-semibold [&>h1]:tracking-[-0.045em] [&>p:last-child]:max-w-[34rem] [&>p:last-child]:text-base [&>p:last-child]:leading-relaxed [&>p:last-child]:text-muted">
@@ -217,13 +220,14 @@ export default function TextInputPreview() {
               autoComplete="off"
             />
             <div className="flex flex-wrap items-center gap-4">
-              <button
-                className="inline-flex min-h-12 max-w-full items-center justify-center gap-3 rounded-control border border-transparent bg-action px-4 py-3 text-sm leading-5 font-bold text-white enabled:hover:bg-action-hover motion-safe:transition-[background-color,scale] motion-safe:duration-150 motion-safe:ease-out motion-safe:enabled:active:scale-[0.96] [&>svg]:shrink-0 rtl:[&>svg]:-scale-x-100"
+              <Button
                 type="submit"
+                variant="solid"
+                trailingIcon={<ArrowRight size={18} aria-hidden="true" />}
+                mirrorIcons
               >
                 Periksa input
-                <ArrowRight size={18} aria-hidden="true" />
-              </button>
+              </Button>
               <p
                 className="flex items-start gap-1.5 text-xs leading-normal text-success empty:hidden [&>svg]:shrink-0"
                 role="status"

@@ -1,4 +1,4 @@
-import { Link } from 'react-router'
+import { ButtonLink } from '../../components/Button'
 
 export function UpcomingModule({
   title,
@@ -18,12 +18,9 @@ export function UpcomingModule({
       <section className="rounded-card border border-border bg-surface p-8 max-sm:p-6">
         <h2 className="text-xl font-bold">Layanan sedang disiapkan</h2>
         <p className="mt-3 mb-6 leading-6 text-muted">{description}</p>
-        <Link
-          className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
-          to="/warga"
-        >
+        <ButtonLink to="/warga" variant="ghost" size="text" align="start">
           Kembali ke dashboard
-        </Link>
+        </ButtonLink>
       </section>
     </main>
   )

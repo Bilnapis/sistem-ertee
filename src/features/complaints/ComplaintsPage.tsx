@@ -1,12 +1,7 @@
 import { useEffect } from 'react'
 import { ArrowRight, ClipboardList, Plus, Search } from 'lucide-react'
-import {
-  Link,
-  Outlet,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from 'react-router'
+import { Outlet, useLocation, useNavigate, useSearchParams } from 'react-router'
+import { ButtonLink, Button } from '../../components/Button'
 import { PageIntro } from '../../components/PageIntro'
 import { SummaryCardView } from '../../components/SummaryCardView'
 import {
@@ -174,26 +169,27 @@ export default function ComplaintsPage({
                 : 'Sampaikan pengaduan dan pantau penanganannya di sini.'
             }
           />
-          <Link
+          <ButtonLink
             to={
               manage
                 ? '/warga/pengaduan'
                 : { pathname: `${base}/tambah`, search: location.search }
             }
-            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm font-bold wrap-anywhere text-white hover:bg-action-hover forced-colors:border-[ButtonText]"
+            variant="solid"
+            leadingIcon={manage ? null : <Plus size={20} aria-hidden="true" />}
           >
-            {manage ? null : <Plus size={20} aria-hidden="true" />}
             {manage ? 'Pengaduan saya' : 'Buat Pengaduan'}
-          </Link>
+          </ButtonLink>
         </header>
         {!manage && isManager(profile?.role) ? (
-          <Link
-            className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-action hover:underline"
+          <ButtonLink
             to="/admin/pengaduan"
+            variant="ghost"
+            trailingIcon={<ArrowRight size={16} aria-hidden="true" />}
+            size="text"
           >
             Kelola seluruh pengaduan warga{' '}
-            <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          </ButtonLink>
         ) : null}
         {manage ? (
           <section
@@ -296,13 +292,13 @@ export default function ComplaintsPage({
                   </ComplaintSelect>
                 </div>
                 {filtered ? (
-                  <button
+                  <Button
                     type="button"
-                    className="min-h-12 justify-self-start rounded-control border border-border bg-surface px-4 py-3 text-sm font-semibold text-action hover:bg-soft"
                     onClick={() => navigate(base, { replace: true })}
+                    variant="outline"
                   >
                     Hapus filter
-                  </button>
+                  </Button>
                 ) : null}
               </div>
             }

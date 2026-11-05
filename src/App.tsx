@@ -1,12 +1,6 @@
 import { lazy, Suspense } from 'react'
-import {
-  BrowserRouter,
-  Link,
-  Navigate,
-  Outlet,
-  Route,
-  Routes,
-} from 'react-router'
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router'
+import { Button, ButtonLink } from './components/Button'
 import { AuthProvider, useAuth } from './features/auth/AuthProvider'
 import { LoginPage } from './features/auth/LoginPage'
 import { RegisterPage } from './features/auth/RegisterPage'
@@ -48,6 +42,9 @@ const AdminSidebarPreview = import.meta.env.DEV
 const TextInputPreview = import.meta.env.DEV
   ? lazy(() => import('./previews/TextInputPreview'))
   : null
+const ButtonPreview = import.meta.env.DEV
+  ? lazy(() => import('./previews/ButtonPreview'))
+  : null
 
 function GuestLayout() {
   const { session, loading } = useAuth()
@@ -66,12 +63,9 @@ function ProtectedLayout() {
           <h1>Akses belum tersedia</h1>
           <Feedback>{error}</Feedback>
           <div className="flex flex-col gap-3">
-            <button
-              className="inline-flex min-h-12 w-full max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
-              onClick={retry}
-            >
+            <Button onClick={retry} variant="solid" width="full">
               Coba lagi
-            </button>
+            </Button>
             <SignOutButton />
           </div>
         </section>
@@ -93,12 +87,9 @@ function AuthCallback() {
           berbeda. Jika email sudah dikonfirmasi, silakan masuk dengan email dan
           password Anda.
         </p>
-        <Link
-          to="/login"
-          className="inline-flex min-h-12 w-full max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
-        >
+        <ButtonLink to="/login" variant="solid" width="full">
           Ke halaman masuk
-        </Link>
+        </ButtonLink>
       </section>
     </main>
   )
@@ -112,12 +103,9 @@ function ManagerOnly() {
     <main className="@container/page mx-auto w-full max-w-[1088px] flex-1 px-6 py-12 max-sm:px-4 max-sm:py-8">
       <h1>Akses ditolak</h1>
       <p>Halaman pengelolaan hanya tersedia bagi Ketua RT dan Pengurus RT.</p>
-      <Link
-        to="/warga/profil"
-        className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
-      >
+      <ButtonLink to="/warga/profil" variant="ghost" size="text" align="start">
         Kembali ke profil
-      </Link>
+      </ButtonLink>
     </main>
   )
 }
@@ -149,6 +137,9 @@ export function App() {
                   path="/preview/text-input"
                   element={<TextInputPreview />}
                 />
+              ) : null}
+              {ButtonPreview ? (
+                <Route path="/preview/button" element={<ButtonPreview />} />
               ) : null}
               <Route element={<ProtectedLayout />}>
                 <Route element={<ManagerOnly />}>
