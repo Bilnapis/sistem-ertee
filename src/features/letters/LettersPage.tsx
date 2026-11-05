@@ -5,6 +5,7 @@ import { ButtonLink, Button } from '../../components/Button'
 import { TextInput } from '../../components/TextInput'
 import { Feedback } from '../../components/Feedback'
 import { PageIntro } from '../../components/PageIntro'
+import { Select } from '../../components/Select'
 import { SummaryCardView } from '../../components/SummaryCardView'
 import {
   TableActionLink,
@@ -306,8 +307,7 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
                   <label className="sr-only" htmlFor="letter-status-filter">
                     Status
                   </label>
-                  <select
-                    className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                  <Select
                     id="letter-status-filter"
                     value={filters.status}
                     onChange={(event) => change('status', event.target.value)}
@@ -318,15 +318,14 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
                         {label}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
                 {manage ? (
                   <div className="min-w-0">
                     <label className="sr-only" htmlFor="letter-type-filter">
                       Jenis surat
                     </label>
-                    <select
-                      className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                    <Select
                       id="letter-type-filter"
                       value={filters.type}
                       onChange={(event) => change('type', event.target.value)}
@@ -337,22 +336,21 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
                           {label}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
                 ) : null}
                 <div className="min-w-0">
                   <label className="sr-only" htmlFor="letter-sort-filter">
                     Urutan
                   </label>
-                  <select
-                    className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                  <Select
                     id="letter-sort-filter"
                     value={filters.sort}
                     onChange={(event) => change('sort', event.target.value)}
                   >
                     <option value="newest">Terbaru</option>
                     <option value="oldest">Terlama</option>
-                  </select>
+                  </Select>
                 </div>
               </div>
             }

@@ -5,6 +5,7 @@ import { Button } from '../../components/Button'
 import { FormField } from '../../components/FormField'
 import { Feedback } from '../../components/Feedback'
 import { ModalBody, ModalFooter, ModalForm } from '../../components/Modal'
+import { Select } from '../../components/Select'
 import { getSupabase } from '../../lib/supabase'
 import type {
   ResidentFields,
@@ -164,9 +165,8 @@ export function ResidentEditor({
   ) => (
     <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
       <label htmlFor={`resident-${key}`}>{label}</label>
-      <select
+      <Select
         required
-        className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-9 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
         id={`resident-${key}`}
         value={fields[key]}
         onChange={(event) => setField(key, event.target.value)}
@@ -181,7 +181,7 @@ export function ResidentEditor({
             {text}
           </option>
         ))}
-      </select>
+      </Select>
       {errors[key] ? (
         <p
           className="text-xs leading-[1.125rem] text-danger"
@@ -230,9 +230,8 @@ export function ResidentEditor({
             <>
               <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
                 <label htmlFor="resident-role">Role *</label>
-                <select
+                <Select
                   id="resident-role"
-                  className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-9 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
                   value={role}
                   onChange={(event) => {
                     setRole(event.target.value as ResidentRole)
@@ -244,13 +243,12 @@ export function ResidentEditor({
                       {label}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
               <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
                 <label htmlFor="resident-active">Status Warga *</label>
-                <select
+                <Select
                   id="resident-active"
-                  className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-9 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
                   value={String(active)}
                   onChange={(event) => {
                     setActive(event.target.value === 'true')
@@ -259,7 +257,7 @@ export function ResidentEditor({
                 >
                   <option value="true">Aktif</option>
                   <option value="false">Tidak Aktif</option>
-                </select>
+                </Select>
               </div>
             </>
           ) : null}

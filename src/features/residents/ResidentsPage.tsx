@@ -3,6 +3,7 @@ import { Outlet, useLocation, useSearchParams } from 'react-router'
 import { ButtonLink, Button } from '../../components/Button'
 import { Feedback } from '../../components/Feedback'
 import { PageIntro } from '../../components/PageIntro'
+import { Select } from '../../components/Select'
 import { SummaryCardView } from '../../components/SummaryCardView'
 import {
   TableActionLink,
@@ -135,10 +136,12 @@ export default function ResidentsPage() {
                     />
                   </div>
                 </div>
-                <label className="min-w-0">
-                  <span className="sr-only">Status akun</span>
-                  <select
-                    className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                <div className="min-w-0">
+                  <label className="sr-only" htmlFor="resident-status-filter">
+                    Status akun
+                  </label>
+                  <Select
+                    id="resident-status-filter"
                     aria-label="Status akun"
                     value={filters.status}
                     onChange={(event) => change('status', event.target.value)}
@@ -147,12 +150,14 @@ export default function ResidentsPage() {
                     <option value="active">Aktif</option>
                     <option value="inactive">Tidak Aktif</option>
                     <option value="archived">Diarsipkan</option>
-                  </select>
-                </label>
-                <label className="min-w-0">
-                  <span className="sr-only">Role warga</span>
-                  <select
-                    className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                  </Select>
+                </div>
+                <div className="min-w-0">
+                  <label className="sr-only" htmlFor="resident-role-filter">
+                    Role warga
+                  </label>
+                  <Select
+                    id="resident-role-filter"
                     aria-label="Role warga"
                     value={filters.role}
                     onChange={(event) => change('role', event.target.value)}
@@ -163,20 +168,22 @@ export default function ResidentsPage() {
                         {label}
                       </option>
                     ))}
-                  </select>
-                </label>
-                <label className="min-w-0">
-                  <span className="sr-only">Urutkan warga</span>
-                  <select
-                    className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-start font-sans text-base leading-6 text-ellipsis text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                  </Select>
+                </div>
+                <div className="min-w-0">
+                  <label className="sr-only" htmlFor="resident-sort-filter">
+                    Urutkan warga
+                  </label>
+                  <Select
+                    id="resident-sort-filter"
                     aria-label="Urutkan warga"
                     value={filters.sort}
                     onChange={(event) => change('sort', event.target.value)}
                   >
                     <option value="newest">Terbaru</option>
                     <option value="name">Nama A–Z</option>
-                  </select>
-                </label>
+                  </Select>
+                </div>
               </div>
             }
             caption="Data warga beserta role dan status akun"

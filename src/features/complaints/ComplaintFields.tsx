@@ -1,5 +1,6 @@
 import { useId } from 'react'
 import type { ComponentProps } from 'react'
+import { Select } from '../../components/Select'
 import { cn } from '../../lib/cn'
 
 export function ComplaintSelect({
@@ -30,15 +31,14 @@ export function ComplaintSelect({
           </span>
         ) : null}
       </div>
-      <select
+      <Select
         {...props}
         id={id}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-error` : undefined}
-        className="min-h-12 w-full min-w-0 rounded-control border border-control-border bg-surface px-3 py-2.5 pe-8 text-base leading-6 text-ellipsis text-ink hover:border-slate-600 disabled:bg-soft disabled:text-muted aria-invalid:border-danger"
       >
         {children}
-      </select>
+      </Select>
       {error ? (
         <p id={`${id}-error`} className="text-xs text-danger">
           {error}

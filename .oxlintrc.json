@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "overrides": [
+    {
+      "files": ["**/*"],
+      "excludeFiles": ["src/components/Select.tsx"],
+      "plugins": ["unicorn", "typescript", "oxc", "react"],
+      "rules": {
+        "react/forbid-elements": [
+          "error",
+          {
+            "forbid": [
+              {
+                "element": "select",
+                "message": "Use the shared Select component from src/components/Select.tsx."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

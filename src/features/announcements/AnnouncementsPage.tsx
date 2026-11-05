@@ -3,6 +3,7 @@ import { Outlet, useLocation, useNavigate, useSearchParams } from 'react-router'
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { Button, ButtonLink } from '../../components/Button'
 import { PageIntro } from '../../components/PageIntro'
+import { Select } from '../../components/Select'
 import { TextInput } from '../../components/TextInput'
 import {
   TablePagination,
@@ -130,11 +131,10 @@ export default function AnnouncementsPage({
           <label className="sr-only" htmlFor="announcement-status">
             Status pengumuman
           </label>
-          <select
+          <Select
             id="announcement-status"
             value={filters.status}
             onChange={(e) => change('status', e.target.value)}
-            className="min-h-12 w-full rounded-control border border-control-border bg-surface px-3 py-2.5 text-base text-ink"
           >
             <option value="all">Semua status</option>
             {Object.entries(announcementStatuses).map(([value, label]) => (
@@ -142,7 +142,7 @@ export default function AnnouncementsPage({
                 {label}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
       ) : null}
       {filters.search || filters.status !== 'all' ? (
