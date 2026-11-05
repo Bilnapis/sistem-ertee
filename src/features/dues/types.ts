@@ -12,7 +12,6 @@ export type DuesInvoice = {
   resident_id: string
   identity_snapshot: {
     full_name: string
-    house_block: string
     house_number: string | null
   }
   period: string

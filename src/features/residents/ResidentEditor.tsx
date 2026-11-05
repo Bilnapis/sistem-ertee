@@ -136,7 +136,6 @@ export function ResidentEditor({
     full_name: 'Masukkan nama lengkap',
     nik: '16 digit angka',
     family_card_number: '16 digit angka',
-    house_block: 'Contoh: A-05',
     phone: 'Contoh: 0812-0000-0408',
     address: 'Masukkan alamat lengkap',
   }
@@ -211,7 +210,6 @@ export function ResidentEditor({
           )}
           {selection('gender', 'Jenis Kelamin *', genderLabels)}
           {selection('marital_status', 'Status Pernikahan *', maritalLabels)}
-          {textField('house_block', 'Blok Rumah *', 50)}
           {textField('phone', 'Nomor HP *', 25, 'tel')}
           {textField('address', 'Alamat Lengkap *', 500)}
           <FormField

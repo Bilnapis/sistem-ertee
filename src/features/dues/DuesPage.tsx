@@ -57,15 +57,8 @@ function CurrentBill({ invoice }: { invoice: DuesInvoice }) {
           <dd>{invoice.identity_snapshot.full_name}</dd>
         </div>
         <div>
-          <dt>Blok Rumah</dt>
-          <dd>
-            {[
-              invoice.identity_snapshot.house_block,
-              invoice.identity_snapshot.house_number,
-            ]
-              .filter(Boolean)
-              .join(' / ')}
-          </dd>
+          <dt>Nomor Rumah</dt>
+          <dd>{invoice.identity_snapshot.house_number ?? 'Belum diisi'}</dd>
         </div>
         <div>
           <dt>Periode</dt>
@@ -238,12 +231,11 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
       rowHeader: true,
       render: (invoice) => (
         <TableCellText
-          secondary={[
-            invoice.identity_snapshot.house_block,
-            invoice.identity_snapshot.house_number,
-          ]
-            .filter(Boolean)
-            .join(' / ')}
+          secondary={
+            invoice.identity_snapshot.house_number
+              ? `Nomor rumah ${invoice.identity_snapshot.house_number}`
+              : undefined
+          }
         >
           {invoice.identity_snapshot.full_name}
         </TableCellText>
@@ -380,7 +372,7 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
                       hideLabel
                       wrapperClassName="@max-[50rem]/table-pagination:col-span-full"
                       type="search"
-                      placeholder="Cari nama atau blok rumah"
+                      placeholder="Cari nama atau nomor rumah"
                       maxLength={200}
                       value={filters.search}
                       leadingIcon={<Search size={18} />}

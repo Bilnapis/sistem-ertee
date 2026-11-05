@@ -62,7 +62,6 @@ export function ResidentHome({
             ['NIK', profile.nik],
             ['Nomor HP', profile.phone],
             ['Alamat', profile.address],
-            ['Blok rumah', profile.house_block],
             ['Nomor KK', profile.family_card_number ?? 'Belum diisi'],
             [
               'Jenis kelamin',

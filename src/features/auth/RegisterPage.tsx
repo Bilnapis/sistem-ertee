@@ -148,13 +148,7 @@ export function RegisterPage() {
               placeholder="Masukkan alamat lengkap"
               autoComplete="street-address"
               maxLength={500}
-            />
-            <FormField
-              {...bind('house_block')}
-              label="Blok Rumah *"
-              placeholder="Masukkan nomor atau blok rumah"
-              maxLength={50}
-              autoComplete="address-line2"
+              wrapperClassName="col-span-full"
             />
             <FormField
               {...bind('password')}

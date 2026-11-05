@@ -89,6 +89,10 @@ before(async () => {
     '20261104000300_complaints.sql',
     '20261105000100_announcements.sql',
     '20261105000200_announcement_conflicts.sql',
+    '20261105000300_letters_without_house_block.sql',
+    '20261105000400_dues_without_house_block.sql',
+    '20261105000500_complaints_without_house_block.sql',
+    '20261105000600_remove_resident_house_block.sql',
   ]) {
     await db.exec(
       await readFile(
@@ -107,7 +111,6 @@ before(async () => {
           full_name: `Warga Dummy ${n}`,
           nik: String(n).padStart(16, '0'),
           family_card_number: '0000000000000099',
-          house_block: 'DUMMY-A',
           house_number: String(n),
           phone: '081234567890',
           address: 'Jalan Dummy Nomor 1',

@@ -86,7 +86,7 @@ wrapper halaman atau CSS global.
   pemuatan serta percobaan ulang. Pagination disembunyikan saat memuat/gagal.
   `emptyState` mendukung `icon`, `title`, `description`, dan aksi opsional
   `{ label, onClick }`, misalnya kembali ke halaman pertama.
-- `TableCellText` menampilkan teks utama, `secondary` untuk blok rumah,
+- `TableCellText` menampilkan teks utama, `secondary` untuk nomor rumah,
   dan `tag` untuk role. `TableBadge` menerima `tone` berupa `neutral`,
   `success`, `warning`, `info`, atau `danger`; status tetap berlabel teks.
   `TableActionLink` menerima `to`, `aria-label`, serta isi tautan dan memakai

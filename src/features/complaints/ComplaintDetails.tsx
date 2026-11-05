@@ -251,7 +251,6 @@ export default function ComplaintDetails({
             <dl className="grid grid-cols-2 gap-4 text-sm max-sm:grid-cols-1 [&_dd]:m-0 [&_dd]:font-semibold [&_dd]:wrap-anywhere [&_dt]:mb-1 [&_dt]:text-muted">
               {[
                 ['Nama pengaju', data.identity_snapshot.full_name],
-                ['Blok rumah', data.identity_snapshot.house_block],
                 [
                   'Nomor rumah',
                   data.identity_snapshot.house_number ?? 'Belum diisi',

@@ -113,9 +113,6 @@ export function LoginPage() {
           <p className="flex min-h-6 flex-wrap items-center justify-center gap-2 text-sm leading-5 text-muted [&>a]:font-bold [&>a]:text-action [&>a:hover]:underline">
             Belum punya akun? <Link to="/register">Daftar di sini</Link>
           </p>
-          <p className="rounded-summary bg-page px-4 py-3 text-center text-sm leading-5 font-semibold text-slate-600">
-            Butuh bantuan? Hubungi Admin RT
-          </p>
         </div>
       </section>
       <footer className="mt-8 text-center text-sm leading-5 text-slate-500 max-sm:text-xs">

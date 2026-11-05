@@ -7,7 +7,7 @@ const db = new PGlite()
 const alice = '00000000-0000-4000-8000-000000000001'
 const bob = '00000000-0000-4000-8000-000000000002'
 const sessionFor = id => id.replace('8000', '9000')
-const metadata = (nik, extra = {}) => ({ full_name: 'Warga Uji', nik, phone: '081234567890', address: 'Jalan Dummy Nomor 1', house_block: 'UJI-A1', ...extra })
+const metadata = (nik, extra = {}) => ({ full_name: 'Warga Uji', nik, phone: '081234567890', address: 'Jalan Dummy Nomor 1', ...extra })
 
 async function addUser(id, nik, extra) {
   await db.query('insert into auth.users (id, email, raw_user_meta_data) values ($1, $2, $3)', [id, `${id}@example.test`, JSON.stringify(metadata(nik, extra))])
@@ -27,7 +27,7 @@ before(async () => {
   // Minimal Auth contract for executing the real migration in PostgreSQL/WASM.
   await db.exec(`create role anon; create role authenticated; create role service_role bypassrls;
     create schema auth;
-    create table auth.users (id uuid primary key, email text, raw_user_meta_data jsonb default '{}');
+    create table auth.users (id uuid primary key, email text, raw_user_meta_data jsonb default '{}', raw_app_meta_data jsonb default '{}');
     create table auth.sessions (id uuid primary key, user_id uuid references auth.users(id) on delete cascade);
     create function auth.uid() returns uuid language sql stable as
       $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
@@ -35,7 +35,9 @@ before(async () => {
       $$ select nullif(current_setting('request.jwt.claims', true), '')::jsonb $$;
     grant usage on schema auth, public to anon, authenticated, service_role;
     grant execute on function auth.uid() to authenticated;`)
-  await db.exec(await readFile(new URL('../supabase/migrations/20261102000100_resident_auth.sql', import.meta.url), 'utf8'))
+  for (const migration of ['20261102000100_resident_auth.sql', '20261103000100_resident_management.sql', '20261105000600_remove_resident_house_block.sql']) {
+    await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'))
+  }
   await addUser(alice, '0000000000000001', { role: 'ketua_rt', is_active: false, verification_status: 'terverifikasi' })
   await addUser(bob, '0000000000000002')
 })
@@ -91,7 +93,7 @@ test('duplicate NIK rolls back Auth user and profile creation together', async (
 
 test('database validates required identity independently of the browser', async () => {
   const id = '00000000-0000-4000-8000-000000000004'
-  for (const extra of [{ full_name: '' }, { nik: '123' }, { phone: 'abc' }, { address: '' }, { house_block: '' }]) {
+  for (const extra of [{ full_name: '' }, { nik: '123' }, { phone: 'abc' }, { address: '' }]) {
     await assert.rejects(addUser(id, '0000000000000004', extra), /check constraint/)
   }
 })

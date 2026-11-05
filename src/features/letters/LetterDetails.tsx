@@ -93,7 +93,6 @@ export default function LetterDetails({
               {[
                 ['Nama Pemohon', data.identity_snapshot.full_name],
                 ['Tanggal Pengajuan', formatDate(data.created_at)],
-                ['Blok Rumah', data.identity_snapshot.house_block],
                 ['Keperluan Surat', data.purpose],
                 [
                   'Nomor Rumah',

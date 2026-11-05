@@ -109,14 +109,10 @@ export default function DuesDetails({ manage = false }: { manage?: boolean }) {
                 <dd>{detail.invoice.identity_snapshot.full_name}</dd>
               </div>
               <div>
-                <dt>Blok Rumah</dt>
+                <dt>Nomor Rumah</dt>
                 <dd>
-                  {[
-                    detail.invoice.identity_snapshot.house_block,
-                    detail.invoice.identity_snapshot.house_number,
-                  ]
-                    .filter(Boolean)
-                    .join(' / ')}
+                  {detail.invoice.identity_snapshot.house_number ??
+                    'Belum diisi'}
                 </dd>
               </div>
               <div>

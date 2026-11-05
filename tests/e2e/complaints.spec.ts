@@ -37,7 +37,6 @@ async function mockComplaints(page: Page, options: Options = {}) {
     family_card_number: null,
     gender: null,
     marital_status: null,
-    house_block: 'DUMMY-A',
     house_number: null,
     phone: '081234567890',
     address: 'Jalan Dummy Nomor 3',
@@ -82,7 +81,6 @@ async function mockComplaints(page: Page, options: Options = {}) {
         applicant_id: i % 2 ? uid(4) : uid(3),
         identity_snapshot: {
           full_name: `Warga Dummy ${i % 2 ? 4 : 3}`,
-          house_block: 'DUMMY-A',
           house_number: '03',
         },
         title: `Lampu lingkungan dummy ${i + 1}`,
@@ -247,7 +245,6 @@ async function mockComplaints(page: Page, options: Options = {}) {
           applicant_id: currentId,
           identity_snapshot: {
             full_name: profile.full_name,
-            house_block: profile.house_block,
             house_number: profile.house_number,
           },
           title: String(body.p_title),

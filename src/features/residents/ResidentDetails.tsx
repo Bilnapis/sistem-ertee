@@ -191,7 +191,6 @@ export function ResidentDetails({
         ? maritalLabels[profile.marital_status]
         : 'Belum diisi',
     ],
-    ['Blok Rumah', profile.house_block],
     ['Nomor Rumah', profile.house_number ?? 'Belum diisi'],
     ['Nomor HP', profile.phone],
     ['Alamat Lengkap', profile.address],
@@ -211,7 +210,7 @@ export function ResidentDetails({
           </span>
           <div>
             <h3>{profile.full_name}</h3>
-            <p>Blok {profile.house_block} · RT 04</p>
+            <p>RT 04</p>
           </div>
           <span
             className={cn(

@@ -18,7 +18,6 @@ const fields = (n) => ({
   family_card_number: '0000000000000099',
   gender: 'laki_laki',
   marital_status: 'menikah',
-  house_block: 'DUMMY-A',
   house_number: String(n),
   phone: '081234567890',
   address: 'Jalan Dummy Nomor 1',
@@ -125,6 +124,8 @@ before(async () => {
     '20261102000100_resident_auth.sql',
     '20261103000100_resident_management.sql',
     '20261104000100_letter_requests.sql',
+    '20261105000300_letters_without_house_block.sql',
+    '20261105000600_remove_resident_house_block.sql',
   ])
     await db.exec(
       await readFile(
@@ -163,6 +164,7 @@ test('submission uses current owner and a frozen identity snapshot; retries prod
   assert.equal(request.reference, 'SRT-001')
   assert.equal(request.status, 'pengajuan')
   assert.equal(request.identity_snapshot.full_name, fields(3).full_name)
+  assert.equal(Object.hasOwn(request.identity_snapshot, 'house_block'), false)
   assert.equal((await submit(alice, 101)).id, request.id)
   assert.equal(
     (

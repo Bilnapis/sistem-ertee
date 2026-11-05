@@ -79,7 +79,7 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
     {
       id: 'applicant',
       header: manage ? 'Nama warga' : 'Nomor pengajuan',
-      width: waiting ? 23 : 24,
+      width: waiting ? 22 : 24,
       rowHeader: true,
       render: (request) => (
         <TableCellText>
@@ -90,13 +90,13 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
     {
       id: 'type',
       header: 'Jenis surat',
-      width: waiting ? 22 : 24,
+      width: waiting ? 21 : 24,
       render: (request) => request.letter_type_label,
     },
     {
       id: 'date',
       header: 'Tanggal',
-      width: waiting ? 18 : 22,
+      width: waiting ? 17 : 22,
       render: (request) => (
         <time dateTime={request.created_at}>
           {formatDate(request.created_at)}
@@ -145,10 +145,11 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
         String((filters.page - 1) * 4 + index + 1).padStart(2, '0'),
     })
     columns.splice(2, 0, {
-      id: 'block',
-      header: 'Blok',
-      width: 7,
-      render: (request) => request.identity_snapshot.house_block,
+      id: 'house-number',
+      header: 'Nomor Rumah',
+      width: 10,
+      render: (request) =>
+        request.identity_snapshot.house_number ?? 'Belum diisi',
     })
   }
   return (

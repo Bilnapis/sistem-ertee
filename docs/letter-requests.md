@@ -32,10 +32,10 @@ URL/key lokal, buat akun dummy, lengkapi profil, dan verifikasi melalui pengurus
 | `/warga/pengajuan-surat/tambah`           | Dialog formulir dan pemilih delapan jenis surat.                            |
 | `/warga/pengajuan-surat/:id`              | Detail, riwayat dan unduh lampiran sendiri.                                 |
 | `/admin/pengajuan-surat`                  | Ringkasan dan daftar seluruh warga, pencarian, filter jenis/status, urutan. |
-| `/admin/pengajuan-surat?status=pengajuan` | Pengajuan belum diproses dengan nomor urut dan blok rumah.                  |
+| `/admin/pengajuan-surat?status=pengajuan` | Pengajuan belum diproses dengan nomor urut dan nomor rumah.                  |
 | `/admin/pengajuan-surat/:id`              | Detail serta Mulai Proses/Selesai Diproses.                                 |
 
-Nama/blok/nomor rumah dibaca saja dari profil. Server mengambil salinan identitas
+Nama dan nomor rumah dibaca saja dari profil. Server mengambil salinan identitas
 saat pengajuan, termasuk NIK/KK/alamat; perubahan profil selanjutnya tidak
 menimpa salinan itu. Nomor rumah lama boleh kosong, mengikuti aturan profil
 yang sudah ada. Nomor HP aktif disalin sebagai kontak pengajuan, tanpa mengubah

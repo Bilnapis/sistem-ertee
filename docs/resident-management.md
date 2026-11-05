@@ -73,11 +73,62 @@ dijalankan; hasil penerapan cloud berikut dicatat terpisah.
   akun atau identitas uji tambahan yang dibuat. Deployment hosting frontend
   dan pengujian konkurensi dua koneksi PostgreSQL bukan bagian penerapan ini.
 
-CLI tersedia melalui `npx --yes supabase`, tetapi belum login/terhubung.
-Penerapan SQL Editor tidak otomatis mencatat riwayat migrasi CLI. Sebelum
-memakai `db push` untuk migrasi berikutnya, login dan sinkronkan kedua versi
-migrasi yang sudah diterapkan dengan `migration repair` pada proyek remote
-tepat ini; jangan menjalankan ulang migrasi CREATE TABLE yang sudah ada.
+CLI v3 sudah login dan tertaut ke proyek `vzdkaqvrzsjrmnsbbkaz`. Riwayat lama
+yang sebelumnya dipasang melalui SQL Editor sudah disinkronkan saat penerapan
+pengumuman pada 5 November 2026. Setelah penghapusan blok rumah, seluruh sebelas
+versi migrasi lokal dan cloud sinkron. Gunakan target eksplisit
+`--remote=vzdkaqvrzsjrmnsbbkaz`; jangan menjalankan ulang migrasi CREATE TABLE
+yang sudah ada.
+
+## Penghapusan blok rumah
+
+Blok rumah tidak lagi dikumpulkan pada pendaftaran, tambah/edit warga, atau
+profil sendiri. Kolom tersebut juga tidak ditampilkan pada surat, iuran, dan
+pengaduan. Alamat dan nomor rumah yang sudah tersimpan tetap dipertahankan.
+Pencarian warga memakai nama, NIK, atau nomor rumah; pencarian iuran memakai
+nama atau nomor rumah.
+
+Terapkan empat migrasi berikut sesuai urutan sebelum memakai frontend dan
+Edge Function terbaru:
+
+1. `20261105000300_letters_without_house_block.sql`
+2. `20261105000400_dues_without_house_block.sql`
+3. `20261105000500_complaints_without_house_block.sql`
+4. `20261105000600_remove_resident_house_block.sql`
+
+Tiga migrasi pertama menghentikan pembacaan blok rumah pada layanan terkait.
+Migrasi terakhir memperbarui trigger registrasi, validasi, audit, dan RPC warga,
+lalu menghapus kolom `profiles.house_block`. Penghapusan kolom tidak mengubah
+status verifikasi, waktu pembaruan, atau data profil lainnya. Salinan identitas
+historis pada layanan lama tetap tersimpan; pengajuan dan tagihan baru tidak
+lagi menyertakan blok rumah. Deploy ulang `create-resident` setelah migrasi.
+
+### Penerapan cloud — 5 November 2026
+
+Keempat migrasi di atas sudah diterapkan ke proyek **Sistem ErTee**
+(`vzdkaqvrzsjrmnsbbkaz`) melalui CLI v3 dengan
+`db push --remote=vzdkaqvrzsjrmnsbbkaz --skip-vault --yes`. Sebelum penerapan,
+dry run memastikan hanya empat migrasi tersebut yang dijalankan; sepuluh fungsi
+SQL cloud cocok dengan baseline lokal. Migrasi lama, seed, role tambahan, dan
+Vault tidak diterapkan ulang.
+
+Pembacaan ulang database memastikan kolom `profiles.house_block` tidak ada dan
+tidak ada fungsi SQL aplikasi yang masih merujuknya. Kesepuluh fungsi yang
+diperbarui cocok dengan isi migrasi baru; signature, hak akses, pengaturan
+`search_path`, dan RLS tetap sama. Sidik data kedua profil, setelah mengabaikan
+kolom yang dihapus, identik sebelum dan sesudah migrasi. Ketiga event riwayat
+juga identik. Nomor rumah serta satu surat, dua tagihan iuran, dan satu pengaduan
+yang sudah ada tetap tersimpan.
+
+Edge Function `create-resident` dideploy ulang melalui API dan aktif pada
+versi **2**, dengan `verify_jwt = false` sesuai konfigurasi. Sesi dan role tetap
+divalidasi oleh handler dan database. Ketiga berkas sumber yang diunduh kembali
+dari cloud identik dengan sumber lokal dan tidak lagi menyebut `house_block`.
+Uji HTTP nyata menghasilkan GET `405 METHOD_NOT_ALLOWED`, OPTIONS `204`, serta
+POST tanpa sesi dan dengan bearer tidak valid `401 SESSION_REQUIRED`.
+
+Pemeriksaan ini tidak membuat akun warga baru. Pembuatan akun dengan sesi
+pengelola nyata belum diuji pada penerapan ini. Hosting frontend tidak diubah.
 
 ## Kontrak dan otorisasi
 

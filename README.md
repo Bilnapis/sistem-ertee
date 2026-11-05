@@ -38,7 +38,7 @@ styling atau modul terpisah. Prettier mengurutkan class pada JSX dan pemanggilan
 ## Menghubungkan Supabase
 
 1. Buat project Supabase pengembangan yang masih kosong.
-2. Buka SQL Editor dan jalankan seluruh isi [`supabase/migrations/20261102000100_resident_auth.sql`](supabase/migrations/20261102000100_resident_auth.sql) sekali. Alternatif dengan CLI: `npx supabase login`, `npx supabase link --project-ref <project-ref>`, lalu `npx supabase db push`.
+2. Buka SQL Editor dan jalankan seluruh file di `supabase/migrations/` sesuai urutan nama, masing-masing sekali. Alternatif dengan CLI: `npx supabase login`, `npx supabase link --project-ref <project-ref>`, lalu `npx supabase db push`.
 3. Buka dialog **Connect** di dashboard Supabase. Isi `.env.local` dengan Project URL dan publishable key:
 
    ```dotenv
@@ -70,7 +70,7 @@ Migrasi diterapkan saat stack lokal diinisialisasi. Salin API URL dan anon/publi
 | Route                                                                                   | Perilaku                                                                                      |
 | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | `/login`                                                                                | Masuk dengan email/password; pilihan menyimpan sesi dan kontrol tampil/sembunyikan password.  |
-| `/register`                                                                             | Nama, email, NIK dummy 16 digit, nomor HP, alamat, blok rumah, password, dan konfirmasi.      |
+| `/register`                                                                             | Nama, email, NIK dummy 16 digit, nomor HP, alamat, password, dan konfirmasi.      |
 | `/auth/callback`                                                                        | Menangani konfirmasi email Supabase menggunakan PKCE.                                         |
 | `/warga`                                                                                | Dashboard terlindungi dengan sidebar, profil milik sesi aktif, dan tombol Keluar.             |
 | `/warga/profil`                                                                         | Profil warga sendiri, dibuka dari menu Warga.                                                 |

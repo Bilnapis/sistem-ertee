@@ -16,7 +16,6 @@ const makeProfile = (n: number): ResidentProfile => ({
   family_card_number: '0000000000000099',
   gender: n % 2 ? 'laki_laki' : 'perempuan',
   marital_status: 'menikah',
-  house_block: 'DUMMY-A',
   house_number: String(n),
   phone: '081234567890',
   address: `Jalan Dummy Nomor ${n}`,
@@ -147,12 +146,9 @@ async function mockResidents(page: Page, options: Options = {}) {
           (body.p_role === 'all' || body.p_role === profile.role) &&
           (body.p_verification === 'all' ||
             body.p_verification === profile.verification_status) &&
-          [
-            profile.full_name,
-            profile.nik,
-            profile.house_number ?? '',
-            profile.house_block,
-          ].some((value) => value.toLowerCase().includes(search)),
+          [profile.full_name, profile.nik, profile.house_number ?? ''].some(
+            (value) => value.toLowerCase().includes(search),
+          ),
       )
       rows.sort((a, b) =>
         body.p_sort === 'name'
@@ -297,7 +293,7 @@ async function fillNewResident(page: Page) {
   await dialog
     .getByLabel('Status Pernikahan *', { exact: true })
     .selectOption('belum_menikah')
-  await dialog.getByLabel('Blok Rumah *', { exact: true }).fill('DUMMY-C')
+  await expect(dialog.getByLabel(/Blok Rumah/i)).toHaveCount(0)
   await expect(dialog.getByLabel(/^(Nomor Rumah|RT|RW)$/)).toHaveCount(0)
   await dialog.getByLabel('Nomor HP *', { exact: true }).fill('0812-3456-7890')
   await dialog
@@ -348,6 +344,7 @@ for (const role of ['ketua_rt', 'pengurus_rt'] as const)
       exact: true,
     })
     await expect(editor.getByLabel(/^(Nomor Rumah|RT|RW)$/)).toHaveCount(0)
+    await expect(editor.getByLabel(/Blok Rumah/i)).toHaveCount(0)
     await editor
       .getByLabel('Alamat Lengkap *', { exact: true })
       .fill('Alamat Dummy Diperbarui')
@@ -370,6 +367,7 @@ for (const role of ['ketua_rt', 'pengurus_rt'] as const)
     )!.body
     expect(creation.phone).toBe('081234567890')
     expect(creation.house_number).toBe('')
+    expect(creation).not.toHaveProperty('house_block')
     expect(creation).not.toHaveProperty('rt')
     expect(creation).not.toHaveProperty('rw')
     expect(creation).not.toHaveProperty('confirmation')

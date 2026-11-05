@@ -20,7 +20,6 @@ const profile = {
   nik: '0000000000000001',
   phone: '081234567890',
   address: 'Jalan Dummy Nomor 1',
-  house_block: 'UJI-A1',
   role: 'warga',
   is_active: true,
   verification_status: 'menunggu_verifikasi',
@@ -137,9 +136,7 @@ async function fillRegistration(page: Page) {
   await page.getByLabel('NIK *', { exact: true }).fill(profile.nik)
   await page.getByLabel('Nomor HP *', { exact: true }).fill(profile.phone)
   await page.getByLabel('Alamat *', { exact: true }).fill(profile.address)
-  await page
-    .getByLabel('Blok Rumah *', { exact: true })
-    .fill(profile.house_block)
+  await expect(page.getByLabel(/Blok Rumah/i)).toHaveCount(0)
   await page.getByLabel('Password *', { exact: true }).fill('PasswordUji123!')
   await page
     .getByLabel('Konfirmasi Password *', { exact: true })
@@ -617,6 +614,7 @@ test('registration sends profile metadata, then asks for confirmation without a 
     nik: profile.nik,
   })
   expect(calls.signup?.data).not.toHaveProperty('role')
+  expect(calls.signup?.data).not.toHaveProperty('house_block')
   expect(calls.signup?.data).not.toHaveProperty('password')
   expect(calls.signup).not.toHaveProperty('confirmation')
   expect(

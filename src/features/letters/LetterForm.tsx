@@ -185,11 +185,6 @@ export default function LetterForm() {
                 ) : null}
               </div>
               <TextInput
-                label="Blok Rumah"
-                value={profile.house_block}
-                readOnly
-              />
-              <TextInput
                 label="Nomor Rumah"
                 value={profile.house_number ?? 'Belum diisi'}
                 readOnly

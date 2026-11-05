@@ -36,7 +36,6 @@ export type ResidentProfile = {
   nik: string
   phone: string
   address: string
-  house_block: string
   family_card_number: string | null
   gender: Gender | null
   marital_status: MaritalStatus | null
@@ -100,7 +99,6 @@ export type LetterIdentity = {
   nik: string
   family_card_number: string
   address: string
-  house_block: string
   house_number: string | null
 }
 export type LetterRequest = {

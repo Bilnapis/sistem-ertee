@@ -92,10 +92,10 @@ Sidebar mengikuti peran. Tautan Pengaduan saya dan Kelola seluruh pengaduan warg
 menghubungkan cakupan pribadi dan pengelolaan. Pengelola yang membuka route
 pribadi hanya melihat pengaduannya sendiri pada route tersebut.
 
-Formulir hanya menampilkan judul, kategori, dan deskripsi, tanpa nama pengaju,
-blok rumah, atau nomor rumah. Judul, deskripsi, dan kategori wajib. Judul maksimal
+Formulir hanya menampilkan judul, kategori, dan deskripsi, tanpa nama pengaju
+atau nomor rumah. Judul, deskripsi, dan kategori wajib. Judul maksimal
 200 karakter, deskripsi dan catatan maksimal 2.000 karakter. Pilihan kategori tetap Fasilitas Umum, Keamanan,
-serta Kebersihan dan Sampah. Pemilik ditetapkan dari sesi; nama/blok/nomor rumah
+serta Kebersihan dan Sampah. Pemilik ditetapkan dari sesi; nama dan nomor rumah
 disalin server saat pengajuan. NIK, KK, dan alamat tidak disalin ke pengaduan.
 Pengaduan terkirim tidak dapat diedit, dibatalkan, atau dihapus oleh warga.
 

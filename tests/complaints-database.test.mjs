@@ -83,6 +83,10 @@ before(async () => {
     '20261104000100_letter_requests.sql',
     '20261104000200_monthly_dues.sql',
     '20261104000300_complaints.sql',
+    '20261105000300_letters_without_house_block.sql',
+    '20261105000400_dues_without_house_block.sql',
+    '20261105000500_complaints_without_house_block.sql',
+    '20261105000600_remove_resident_house_block.sql',
   ]) {
     await db.exec(
       await readFile(
@@ -101,7 +105,6 @@ before(async () => {
           full_name: `Warga Dummy ${n}`,
           nik: String(n).padStart(16, '0'),
           family_card_number: '0000000000000099',
-          house_block: 'DUMMY-A',
           house_number: String(n),
           phone: '081234567890',
           address: 'Jalan Dummy Nomor 1',
@@ -129,7 +132,6 @@ test('active unverified and incomplete profiles submit; retries preserve one com
   assert.match(c.reference, /^ADU-\d+$/)
   assert.deepEqual(c.identity_snapshot, {
     full_name: 'Warga Dummy 5',
-    house_block: 'DUMMY-A',
     house_number: '5',
   })
   assert.equal(c.submitted_payload, undefined)
