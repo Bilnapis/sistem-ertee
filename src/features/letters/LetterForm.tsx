@@ -19,7 +19,13 @@ import {
   uploadAttachment,
   validateAttachment,
 } from './data'
-import { LetterModal } from './LetterModal'
+import {
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalForm,
+  ModalButton,
+} from '../../components/Modal'
 import { LetterTypePicker } from './LetterTypePicker'
 
 type Errors = Partial<
@@ -104,223 +110,231 @@ export default function LetterForm() {
     submission.mutate()
   }
   return (
-    <LetterModal
+    <Modal
       title="Form Pengajuan Surat"
       description="Lengkapi data berikut untuk mengajukan surat."
-      kind="form"
       pending={submission.isPending}
       onClose={close}
     >
       {blocked ? (
-        <div className="flex flex-col gap-4 py-3 [&>button]:self-start">
-          <Feedback>{blocked}</Feedback>
-          <Link
-            to="/warga/profil"
-            className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
-          >
-            Periksa profil saya
-          </Link>
-          <button
-            type="button"
-            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
-            onClick={close}
-          >
-            Kembali ke pengajuan
-          </button>
-        </div>
+        <ModalBody>
+          <div className="flex flex-col gap-4 py-3 [&>button]:self-start">
+            <Feedback>{blocked}</Feedback>
+            <Link
+              to="/warga/profil"
+              className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
+            >
+              Periksa profil saya
+            </Link>
+            <button
+              type="button"
+              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
+              onClick={close}
+            >
+              Kembali ke pengajuan
+            </button>
+          </div>
+        </ModalBody>
       ) : (
-        <form
+        <ModalForm
           ref={formRef}
           noValidate
           onSubmit={submit}
           aria-busy={submission.isPending}
         >
-          <fieldset
-            className="m-0 mb-5 grid min-w-0 grid-cols-2 gap-4 border-0 p-0 max-sm:grid-cols-1 [&_input[readonly]]:text-muted"
-            disabled={submission.isPending}
-          >
-            <legend className="sr-only">Informasi pengajuan surat</legend>
-            <TextInput
-              label="Nama Pemohon"
-              value={profile.full_name}
-              readOnly
-            />
-            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-              <label id="letter-type-label" htmlFor="letter-type">
-                Jenis Surat <span aria-hidden="true">*</span>
-              </label>
-              <button
-                id="letter-type"
-                type="button"
-                className="flex min-h-12 w-full min-w-0 items-center justify-between gap-3 rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&>svg]:shrink-0 [&>svg]:text-muted [&[readonly]]:bg-page"
-                aria-haspopup="dialog"
-                aria-labelledby="letter-type-label letter-type-value"
-                aria-invalid={Boolean(errors.type)}
-                aria-describedby={errors.type ? 'letter-type-error' : undefined}
-                onClick={() => setChoosing(true)}
-              >
-                <span id="letter-type-value">
-                  {type ? letterTypes[type] : 'Pilih jenis surat'}
-                </span>
-                <ChevronDown size={20} aria-hidden="true" />
-              </button>
-              {errors.type ? (
-                <p
-                  id="letter-type-error"
-                  className="text-xs leading-normal text-danger"
-                  role="alert"
-                >
-                  {errors.type}
-                </p>
-              ) : null}
-            </div>
-            <TextInput
-              label="Blok Rumah"
-              value={profile.house_block}
-              readOnly
-            />
-            <TextInput
-              label="Nomor Rumah"
-              value={profile.house_number ?? 'Belum diisi'}
-              readOnly
-            />
-            <TextInput
-              label="Keperluan Surat"
-              placeholder="Contoh: Administrasi pekerjaan"
-              required
-              value={purpose}
-              maxLength={2000}
-              onChange={(event) => setPurpose(event.target.value)}
-              error={errors.purpose}
-            />
-            <TextInput
-              label="Nomor HP Aktif"
-              placeholder="08xxxxxxxxxx"
-              type="tel"
-              autoComplete="tel"
-              required
-              value={phone}
-              maxLength={25}
-              onChange={(event) => setPhone(event.target.value)}
-              error={errors.phone}
-            />
-            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-              <label htmlFor="letter-notes">Keterangan Tambahan</label>
-              <textarea
-                className="min-h-24 w-full min-w-0 resize-y rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
-                id="letter-notes"
-                rows={3}
-                placeholder="Tambahkan keterangan jika diperlukan"
-                value={notes}
-                maxLength={2000}
-                onChange={(event) => setNotes(event.target.value)}
-                aria-invalid={Boolean(errors.notes)}
-                aria-describedby={
-                  errors.notes ? 'letter-notes-error' : undefined
-                }
+          <ModalBody>
+            <fieldset
+              className="m-0 grid min-w-0 grid-cols-2 gap-4 border-0 p-0 max-sm:grid-cols-1 [&_input[readonly]]:text-muted"
+              disabled={submission.isPending}
+            >
+              <legend className="sr-only">Informasi pengajuan surat</legend>
+              <TextInput
+                label="Nama Pemohon"
+                value={profile.full_name}
+                readOnly
               />
-              {errors.notes ? (
-                <p
-                  id="letter-notes-error"
-                  className="text-xs leading-normal text-danger"
-                >
-                  {errors.notes}
-                </p>
-              ) : null}
-            </div>
-            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-              <label htmlFor="letter-file">Lampiran Pendukung</label>
-              <div className="relative flex min-h-24 items-center justify-start gap-3 rounded-control border border-control-border p-4 text-sm leading-normal wrap-anywhere text-slate-700 focus-within:outline-3 focus-within:outline-offset-4 focus-within:outline-focus [&_input]:absolute [&_input]:inset-0 [&_input]:h-full [&_input]:w-full [&_input]:cursor-pointer [&_input]:opacity-0 [&_svg]:shrink-0 [&_svg]:text-muted">
-                <input
-                  id="letter-file"
-                  type="file"
-                  accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf"
-                  aria-describedby={`letter-file-help${errors.file ? ' letter-file-error' : ''}`}
-                  aria-invalid={Boolean(errors.file)}
-                  onChange={(event) => {
-                    const next = event.target.files?.[0] ?? null
-                    setFile(next)
-                    setErrors((previous) => ({
-                      ...previous,
-                      file: next
-                        ? (validateAttachment(next) ?? undefined)
-                        : undefined,
-                    }))
-                  }}
-                />
-                {file ? (
-                  <Paperclip size={20} aria-hidden="true" />
-                ) : (
-                  <FileUp size={20} aria-hidden="true" />
-                )}
-                <span>{file ? file.name : 'Unggah berkas (opsional)'}</span>
-              </div>
-              <p
-                id="letter-file-help"
-                className="text-xs leading-normal text-muted"
-              >
-                JPG, PNG, PDF • Maksimal 5 MB
-              </p>
-              {file ? (
+              <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
+                <label id="letter-type-label" htmlFor="letter-type">
+                  Jenis Surat <span aria-hidden="true">*</span>
+                </label>
                 <button
+                  id="letter-type"
                   type="button"
-                  className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
-                  onClick={() => {
-                    setFile(null)
-                    const input = document.getElementById(
-                      'letter-file',
-                    ) as HTMLInputElement
-                    input.value = ''
-                    setErrors((previous) => ({ ...previous, file: undefined }))
-                  }}
+                  className="flex min-h-12 w-full min-w-0 items-center justify-between gap-3 rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&>svg]:shrink-0 [&>svg]:text-muted [&[readonly]]:bg-page"
+                  aria-haspopup="dialog"
+                  aria-labelledby="letter-type-label letter-type-value"
+                  aria-invalid={Boolean(errors.type)}
+                  aria-describedby={
+                    errors.type ? 'letter-type-error' : undefined
+                  }
+                  onClick={() => setChoosing(true)}
                 >
-                  Hapus pilihan berkas
+                  <span id="letter-type-value">
+                    {type ? letterTypes[type] : 'Pilih jenis surat'}
+                  </span>
+                  <ChevronDown size={20} aria-hidden="true" />
                 </button>
-              ) : null}
-              {errors.file ? (
+                {errors.type ? (
+                  <p
+                    id="letter-type-error"
+                    className="text-xs leading-normal text-danger"
+                    role="alert"
+                  >
+                    {errors.type}
+                  </p>
+                ) : null}
+              </div>
+              <TextInput
+                label="Blok Rumah"
+                value={profile.house_block}
+                readOnly
+              />
+              <TextInput
+                label="Nomor Rumah"
+                value={profile.house_number ?? 'Belum diisi'}
+                readOnly
+              />
+              <TextInput
+                label="Keperluan Surat"
+                placeholder="Contoh: Administrasi pekerjaan"
+                required
+                value={purpose}
+                maxLength={2000}
+                onChange={(event) => setPurpose(event.target.value)}
+                error={errors.purpose}
+              />
+              <TextInput
+                label="Nomor HP Aktif"
+                placeholder="08xxxxxxxxxx"
+                type="tel"
+                autoComplete="tel"
+                required
+                value={phone}
+                maxLength={25}
+                onChange={(event) => setPhone(event.target.value)}
+                error={errors.phone}
+              />
+              <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
+                <label htmlFor="letter-notes">Keterangan Tambahan</label>
+                <textarea
+                  className="min-h-24 w-full min-w-0 resize-y rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                  id="letter-notes"
+                  rows={3}
+                  placeholder="Tambahkan keterangan jika diperlukan"
+                  value={notes}
+                  maxLength={2000}
+                  onChange={(event) => setNotes(event.target.value)}
+                  aria-invalid={Boolean(errors.notes)}
+                  aria-describedby={
+                    errors.notes ? 'letter-notes-error' : undefined
+                  }
+                />
+                {errors.notes ? (
+                  <p
+                    id="letter-notes-error"
+                    className="text-xs leading-normal text-danger"
+                  >
+                    {errors.notes}
+                  </p>
+                ) : null}
+              </div>
+              <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
+                <label htmlFor="letter-file">Lampiran Pendukung</label>
+                <div className="relative flex min-h-24 items-center justify-start gap-3 rounded-control border border-control-border p-4 text-sm leading-normal wrap-anywhere text-slate-700 focus-within:outline-3 focus-within:outline-offset-4 focus-within:outline-focus [&_input]:absolute [&_input]:inset-0 [&_input]:h-full [&_input]:w-full [&_input]:cursor-pointer [&_input]:opacity-0 [&_svg]:shrink-0 [&_svg]:text-muted">
+                  <input
+                    id="letter-file"
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf"
+                    aria-describedby={`letter-file-help${errors.file ? ' letter-file-error' : ''}`}
+                    aria-invalid={Boolean(errors.file)}
+                    onChange={(event) => {
+                      const next = event.target.files?.[0] ?? null
+                      setFile(next)
+                      setErrors((previous) => ({
+                        ...previous,
+                        file: next
+                          ? (validateAttachment(next) ?? undefined)
+                          : undefined,
+                      }))
+                    }}
+                  />
+                  {file ? (
+                    <Paperclip size={20} aria-hidden="true" />
+                  ) : (
+                    <FileUp size={20} aria-hidden="true" />
+                  )}
+                  <span>{file ? file.name : 'Unggah berkas (opsional)'}</span>
+                </div>
                 <p
-                  id="letter-file-error"
-                  className="text-xs leading-normal text-danger"
-                  role="alert"
+                  id="letter-file-help"
+                  className="text-xs leading-normal text-muted"
                 >
-                  {errors.file}
+                  JPG, PNG, PDF • Maksimal 5 MB
                 </p>
-              ) : null}
-            </div>
-          </fieldset>
-          <p className="mt-5 flex items-start gap-3 rounded-summary border border-blue-200 bg-blue-50 px-4 py-3 text-sm leading-normal text-info [&>svg]:mt-0.5 [&>svg]:shrink-0">
-            <Info size={20} aria-hidden="true" />
-            <span>
-              Pengajuan surat akan diproses secara manual oleh pengurus RT.
-              Status pengajuan dapat dipantau melalui ErTee.
-            </span>
-          </p>
-          {submission.isError ? (
-            <div className="my-3 flex flex-col gap-2">
-              <Feedback>
-                {letterError(submission.error)} Data formulir tetap tersimpan di
-                dialog ini.
-              </Feedback>
-            </div>
-          ) : null}
-          <div className="mt-5 flex items-stretch justify-end gap-4 max-sm:flex-col max-sm:[&>button]:w-full max-sm:[&>button]:min-w-0 [&>button:first-child]:min-w-30 [&>button:last-child]:min-w-60">
-            <button
+                {file ? (
+                  <button
+                    type="button"
+                    className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
+                    onClick={() => {
+                      setFile(null)
+                      const input = document.getElementById(
+                        'letter-file',
+                      ) as HTMLInputElement
+                      input.value = ''
+                      setErrors((previous) => ({
+                        ...previous,
+                        file: undefined,
+                      }))
+                    }}
+                  >
+                    Hapus pilihan berkas
+                  </button>
+                ) : null}
+                {errors.file ? (
+                  <p
+                    id="letter-file-error"
+                    className="text-xs leading-normal text-danger"
+                    role="alert"
+                  >
+                    {errors.file}
+                  </p>
+                ) : null}
+              </div>
+            </fieldset>
+            <p className="flex items-start gap-3 rounded-summary border border-blue-200 bg-blue-50 px-4 py-3 text-sm leading-normal text-info [&>svg]:mt-0.5 [&>svg]:shrink-0">
+              <Info size={20} aria-hidden="true" />
+              <span>
+                Pengajuan surat akan diproses secara manual oleh pengurus RT.
+                Status pengajuan dapat dipantau melalui ErTee.
+              </span>
+            </p>
+            {submission.isError ? (
+              <div className="flex flex-col gap-2">
+                <Feedback>
+                  {letterError(submission.error)} Data formulir tetap tersimpan
+                  di dialog ini.
+                </Feedback>
+              </div>
+            ) : null}
+          </ModalBody>
+          <ModalFooter>
+            <ModalButton
               type="button"
-              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
+              variant="secondary"
               disabled={submission.isPending}
               onClick={close}
             >
               Batal
-            </button>
-            <button
+            </ModalButton>
+            <ModalButton
               type="submit"
-              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
+              variant="primary"
               disabled={submission.isPending}
             >
               {submission.isPending ? 'Mengirim pengajuan…' : 'Kirim Pengajuan'}
-            </button>
-          </div>
-        </form>
+            </ModalButton>
+          </ModalFooter>
+        </ModalForm>
       )}
       {choosing ? (
         <LetterTypePicker
@@ -333,6 +347,6 @@ export default function LetterForm() {
           }}
         />
       ) : null}
-    </LetterModal>
+    </Modal>
   )
 }

@@ -1,15 +1,16 @@
-import { useId, useRef, useState } from 'react'
-import { Menu, Sidebar, X } from 'lucide-react'
+import { useId, useState } from 'react'
+import { Menu, Sidebar } from 'lucide-react'
 import { Outlet } from 'react-router'
 import { useAuth } from '../features/auth/AuthProvider'
 import { SignOutButton } from '../features/auth/SignOutButton'
 import { AdminSidebar } from './AdminSidebar'
 import { AccountMenu } from './AccountMenu'
+import { Modal } from './Modal'
 import { isManager } from '../features/residents/data'
 
 export function AuthenticatedLayout() {
   const { profile } = useAuth()
-  const drawer = useRef<HTMLDialogElement>(null)
+  const [drawerOpen, setDrawerOpen] = useState(false)
   const sidebarId = useId()
   const drawerId = useId()
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -69,7 +70,8 @@ export function AuthenticatedLayout() {
                 aria-label="Buka menu navigasi"
                 aria-haspopup="dialog"
                 aria-controls={drawerId}
-                onClick={() => drawer.current?.showModal()}
+                aria-expanded={drawerOpen}
+                onClick={() => setDrawerOpen(true)}
               >
                 <Menu size={20} aria-hidden="true" />
               </button>
@@ -86,27 +88,20 @@ export function AuthenticatedLayout() {
           <SignOutButton />
         </footer>
       </div>
-      <dialog
-        ref={drawer}
-        id={drawerId}
-        className="app-drawer fixed inset-y-0 start-0 end-auto m-0 h-dvh max-h-dvh w-sidebar max-w-[calc(100%-1.5rem)] overflow-hidden border-0 bg-transparent p-0"
-        aria-label="Menu navigasi"
-        closedby="any"
-      >
-        <button
-          type="button"
-          className="absolute start-auto end-3 top-4 z-1 grid size-11 place-items-center rounded-control border-0 bg-transparent p-0 text-slate-300 hover:bg-slate-800"
-          aria-label="Tutup menu navigasi"
-          onClick={() => drawer.current?.close()}
+      {drawerOpen ? (
+        <Modal
+          id={drawerId}
+          title="Menu navigasi"
+          placement="start"
+          onClose={() => setDrawerOpen(false)}
         >
-          <X size={24} aria-hidden="true" />
-        </button>
-        <AdminSidebar
-          {...sidebarProps}
-          className="h-full overscroll-y-contain [--sidebar-brand-padding-end:2.75rem]"
-          onNavigate={() => drawer.current?.close()}
-        />
-      </dialog>
+          <AdminSidebar
+            {...sidebarProps}
+            className="h-full overscroll-y-contain [--sidebar-brand-padding-end:2.75rem]"
+            onNavigate={() => setDrawerOpen(false)}
+          />
+        </Modal>
+      ) : null}
     </div>
   )
 }

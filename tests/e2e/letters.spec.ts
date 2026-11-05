@@ -370,6 +370,46 @@ async function chooseType(page: Page, search = 'SKCK') {
   await picker.getByRole('button', { name: 'Pilih Surat', exact: true }).click()
 }
 
+test('pending dialogs block dismissal and allow closing after a failed request', async ({
+  page,
+}) => {
+  await mockLetters(page, { submitFailure: true })
+  const form = await openForm(page)
+  await chooseType(page)
+  await form
+    .getByLabel('Keperluan Surat', { exact: true })
+    .fill('Administrasi pekerjaan dummy')
+
+  let release!: () => void
+  const response = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  await page.route('**/rest/v1/rpc/submit_letter_request', async (route) => {
+    await response
+    await route.fallback()
+  })
+  const close = form.getByRole('button', { name: 'Tutup dialog', exact: true })
+  try {
+    await form
+      .getByRole('button', { name: 'Kirim Pengajuan', exact: true })
+      .click()
+    await expect(close).toBeDisabled()
+    await page.keyboard.press('Escape')
+    await expect(form).toBeVisible()
+    await page.mouse.click(2, 2)
+    await expect(form).toBeVisible()
+  } finally {
+    release()
+  }
+  await expect(form.getByRole('alert')).toBeVisible()
+  await expect(close).toBeEnabled()
+  await page.keyboard.press('Escape')
+  await expect(form).not.toBeVisible()
+  await expect(
+    page.getByRole('link', { name: 'Ajukan Surat', exact: true }),
+  ).toBeFocused()
+})
+
 test('resident submits own request, searches type picker, reads status and immutable details', async ({
   page,
 }) => {

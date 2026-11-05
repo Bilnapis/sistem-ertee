@@ -11,7 +11,12 @@ import {
   useLetter,
   useLetterHistory,
 } from './data'
-import { LetterModal } from './LetterModal'
+import {
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalButton,
+} from '../../components/Modal'
 import { LetterStatusBadge } from './LetterStatusBadge'
 
 export default function LetterDetails({
@@ -41,7 +46,7 @@ export default function LetterDetails({
   })
   const data = request.data
   return (
-    <LetterModal
+    <Modal
       title="Detail Pengajuan Surat"
       description={
         data
@@ -52,158 +57,165 @@ export default function LetterDetails({
       pending={change.isPending}
     >
       {request.isPending ? (
-        <p
-          className="flex flex-col items-center gap-3 rounded-card border border-border bg-surface px-5 py-12 text-center leading-normal text-muted [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-ink"
-          role="status"
-        >
-          Memuat pengajuan…
-        </p>
-      ) : request.isError ? (
-        <div className="flex flex-col gap-4 py-3 [&>button]:self-start">
-          <Feedback>{letterError(request.error)}</Feedback>
-          <button
-            type="button"
-            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
-            onClick={() => void request.refetch()}
+        <ModalBody>
+          <p
+            className="flex flex-col items-center gap-3 rounded-card border border-border bg-surface px-5 py-12 text-center leading-normal text-muted [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-ink"
+            role="status"
           >
-            Coba lagi
-          </button>
-        </div>
-      ) : data ? (
-        <>
-          {location.state?.letterSubmitted ? (
-            <p
-              className="mb-5 rounded-control bg-success-soft px-4 py-3 text-sm leading-normal text-success"
-              role="status"
-            >
-              Pengajuan berhasil dikirim. Anda dapat memantau statusnya di sini.
-            </p>
-          ) : null}
-          <div className="-mt-2 mb-5">
-            <LetterStatusBadge status={data.status} />
-          </div>
-          <dl className="m-0 grid grid-cols-2 gap-x-6 gap-y-4 max-sm:grid-cols-1 [&_dd]:m-0 [&_dd]:text-base [&_dd]:leading-normal [&_dd]:font-bold [&_dd]:wrap-anywhere [&_dd]:whitespace-pre-wrap [&_dt]:mb-1 [&_dt]:text-sm [&_dt]:leading-normal [&_dt]:font-semibold [&_dt]:text-muted">
-            {[
-              ['Nama Pemohon', data.identity_snapshot.full_name],
-              ['Tanggal Pengajuan', formatDate(data.created_at)],
-              ['Blok Rumah', data.identity_snapshot.house_block],
-              ['Keperluan Surat', data.purpose],
-              [
-                'Nomor Rumah',
-                data.identity_snapshot.house_number ?? 'Belum diisi',
-              ],
-              ['Keterangan Tambahan', data.additional_notes || '—'],
-              ['Jenis Surat', data.letter_type_label],
-              ['Status Pengajuan', letterStatuses[data.status]],
-              ['Nomor HP Aktif', data.contact_phone],
-              ['Alamat', data.identity_snapshot.address],
-            ].map(([label, value]) => (
-              <div key={label}>
-                <dt>{label}</dt>
-                <dd>{value}</dd>
-              </div>
-            ))}
-          </dl>
-          {data.attachment ? (
-            <div className="mt-5 flex items-center justify-between gap-4 rounded-summary border border-border p-4 text-sm leading-normal max-sm:flex-col max-sm:items-start [&_button]:shrink-0 [&_p]:mt-1 [&_p]:text-muted [&>div]:min-w-0 [&>div]:wrap-anywhere">
-              <div>
-                <strong>Lampiran Pendukung</strong>
-                <p>
-                  {data.attachment.name} ·{' '}
-                  {Math.ceil(data.attachment.size / 1024)} KB
-                </p>
-              </div>
-              <button
-                type="button"
-                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
-                disabled={download.isPending}
-                onClick={() => download.mutate()}
-              >
-                <Download size={18} aria-hidden="true" />
-                {download.isPending ? 'Mengunduh…' : 'Unduh lampiran'}
-              </button>
-            </div>
-          ) : null}
-          {download.isError ? (
-            <Feedback>{letterError(download.error)}</Feedback>
-          ) : null}
-          <p className="mt-5 flex items-start gap-3 rounded-summary border border-blue-200 bg-blue-50 px-4 py-3 text-sm leading-normal text-info [&>svg]:mt-0.5 [&>svg]:shrink-0">
-            <Info size={20} aria-hidden="true" />
-            <span>
-              {data.status === 'selesai'
-                ? 'Pemrosesan surat telah selesai. Hubungi pengurus RT untuk penyerahan surat.'
-                : data.status === 'diproses'
-                  ? 'Surat masih dalam proses pengerjaan secara manual di luar sistem ErTee.'
-                  : 'Surat diproses secara manual di luar sistem ErTee.'}
-            </span>
+            Memuat pengajuan…
           </p>
-          <details className="mt-5 rounded-summary border border-border px-4 py-3 text-sm leading-normal [&_li]:py-2 [&_li]:ps-1 [&_li_p]:text-muted [&_li_time]:text-muted [&_ol]:mb-0 [&_ol]:list-decimal [&_ol]:ps-5 [&_summary]:cursor-pointer [&_summary]:font-semibold [&>div]:mt-3 [&>p]:mt-3">
-            <summary>
-              Riwayat status{history.data ? ` (${history.data.length})` : ''}
-            </summary>
-            {history.isPending ? (
-              <p role="status">Memuat riwayat…</p>
-            ) : history.isError ? (
-              <>
-                <Feedback>{letterError(history.error)}</Feedback>
-                <button
-                  type="button"
-                  className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
-                  onClick={() => void history.refetch()}
-                >
-                  Coba lagi riwayat
-                </button>
-              </>
-            ) : (
-              <ol>
-                {history.data?.map((event) => (
-                  <li key={event.id}>
-                    <strong>{letterStatuses[event.status]}</strong>
-                    <p>
-                      {event.actor_name} · {roleLabels[event.actor_role]}
-                    </p>
-                    <time dateTime={event.occurred_at}>
-                      {formatDate(event.occurred_at)}
-                    </time>
-                  </li>
-                ))}
-              </ol>
-            )}
-          </details>
-          {change.isError ? (
-            <div className="my-3 flex flex-col gap-2">
-              <Feedback>{letterError(change.error)}</Feedback>
-              <button
-                type="button"
-                className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
-                onClick={async () => {
-                  await Promise.all([
-                    request.refetch(),
-                    history.refetch(),
-                    client.invalidateQueries({ queryKey: ['letters'] }),
-                  ])
-                  change.reset()
-                }}
-              >
-                Muat ulang detail
-              </button>
-            </div>
-          ) : null}
-          <div className="mt-5 flex items-stretch justify-end gap-4 max-sm:flex-col [&>button]:flex-1">
+        </ModalBody>
+      ) : request.isError ? (
+        <ModalBody>
+          <div className="flex flex-col gap-4 py-3 [&>button]:self-start">
+            <Feedback>{letterError(request.error)}</Feedback>
             <button
               type="button"
               className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
+              onClick={() => void request.refetch()}
+            >
+              Coba lagi
+            </button>
+          </div>
+        </ModalBody>
+      ) : data ? (
+        <>
+          <ModalBody>
+            {location.state?.letterSubmitted ? (
+              <p
+                className="rounded-control bg-success-soft px-4 py-3 text-sm leading-normal text-success"
+                role="status"
+              >
+                Pengajuan berhasil dikirim. Anda dapat memantau statusnya di
+                sini.
+              </p>
+            ) : null}
+            <div>
+              <LetterStatusBadge status={data.status} />
+            </div>
+            <dl className="m-0 grid grid-cols-2 gap-x-6 gap-y-4 max-sm:grid-cols-1 [&_dd]:m-0 [&_dd]:text-base [&_dd]:leading-normal [&_dd]:font-bold [&_dd]:wrap-anywhere [&_dd]:whitespace-pre-wrap [&_dt]:mb-1 [&_dt]:text-sm [&_dt]:leading-normal [&_dt]:font-semibold [&_dt]:text-muted">
+              {[
+                ['Nama Pemohon', data.identity_snapshot.full_name],
+                ['Tanggal Pengajuan', formatDate(data.created_at)],
+                ['Blok Rumah', data.identity_snapshot.house_block],
+                ['Keperluan Surat', data.purpose],
+                [
+                  'Nomor Rumah',
+                  data.identity_snapshot.house_number ?? 'Belum diisi',
+                ],
+                ['Keterangan Tambahan', data.additional_notes || '—'],
+                ['Jenis Surat', data.letter_type_label],
+                ['Status Pengajuan', letterStatuses[data.status]],
+                ['Nomor HP Aktif', data.contact_phone],
+                ['Alamat', data.identity_snapshot.address],
+              ].map(([label, value]) => (
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+            {data.attachment ? (
+              <div className="flex items-center justify-between gap-4 rounded-summary border border-border p-4 text-sm leading-normal max-sm:flex-col max-sm:items-start [&_button]:shrink-0 [&_p]:mt-1 [&_p]:text-muted [&>div]:min-w-0 [&>div]:wrap-anywhere">
+                <div>
+                  <strong>Lampiran Pendukung</strong>
+                  <p>
+                    {data.attachment.name} ·{' '}
+                    {Math.ceil(data.attachment.size / 1024)} KB
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
+                  disabled={download.isPending}
+                  onClick={() => download.mutate()}
+                >
+                  <Download size={18} aria-hidden="true" />
+                  {download.isPending ? 'Mengunduh…' : 'Unduh lampiran'}
+                </button>
+              </div>
+            ) : null}
+            {download.isError ? (
+              <Feedback>{letterError(download.error)}</Feedback>
+            ) : null}
+            <p className="flex items-start gap-3 rounded-summary border border-blue-200 bg-blue-50 px-4 py-3 text-sm leading-normal text-info [&>svg]:mt-0.5 [&>svg]:shrink-0">
+              <Info size={20} aria-hidden="true" />
+              <span>
+                {data.status === 'selesai'
+                  ? 'Pemrosesan surat telah selesai. Hubungi pengurus RT untuk penyerahan surat.'
+                  : data.status === 'diproses'
+                    ? 'Surat masih dalam proses pengerjaan secara manual di luar sistem ErTee.'
+                    : 'Surat diproses secara manual di luar sistem ErTee.'}
+              </span>
+            </p>
+            <details className="rounded-summary border border-border px-4 py-3 text-sm leading-normal [&_li]:py-2 [&_li]:ps-1 [&_li_p]:text-muted [&_li_time]:text-muted [&_ol]:mb-0 [&_ol]:list-decimal [&_ol]:ps-5 [&_summary]:cursor-pointer [&_summary]:font-semibold [&>div]:mt-3 [&>p]:mt-3">
+              <summary>
+                Riwayat status{history.data ? ` (${history.data.length})` : ''}
+              </summary>
+              {history.isPending ? (
+                <p role="status">Memuat riwayat…</p>
+              ) : history.isError ? (
+                <>
+                  <Feedback>{letterError(history.error)}</Feedback>
+                  <button
+                    type="button"
+                    className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
+                    onClick={() => void history.refetch()}
+                  >
+                    Coba lagi riwayat
+                  </button>
+                </>
+              ) : (
+                <ol>
+                  {history.data?.map((event) => (
+                    <li key={event.id}>
+                      <strong>{letterStatuses[event.status]}</strong>
+                      <p>
+                        {event.actor_name} · {roleLabels[event.actor_role]}
+                      </p>
+                      <time dateTime={event.occurred_at}>
+                        {formatDate(event.occurred_at)}
+                      </time>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </details>
+            {change.isError ? (
+              <div className="flex flex-col gap-2">
+                <Feedback>{letterError(change.error)}</Feedback>
+                <button
+                  type="button"
+                  className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
+                  onClick={async () => {
+                    await Promise.all([
+                      request.refetch(),
+                      history.refetch(),
+                      client.invalidateQueries({ queryKey: ['letters'] }),
+                    ])
+                    change.reset()
+                  }}
+                >
+                  Muat ulang detail
+                </button>
+              </div>
+            ) : null}
+          </ModalBody>
+          <ModalFooter>
+            <ModalButton
+              type="button"
+              variant="secondary"
               disabled={change.isPending}
               onClick={close}
             >
               {manage && data.status === 'diproses'
                 ? 'Masih Diproses'
                 : 'Tutup'}
-            </button>
+            </ModalButton>
             {manage && data.status !== 'selesai' ? (
-              <button
+              <ModalButton
                 type="button"
-                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
+                variant="primary"
                 disabled={
                   change.isPending || change.isError || request.isFetching
                 }
@@ -214,11 +226,11 @@ export default function LetterDetails({
                   : data.status === 'pengajuan'
                     ? 'Mulai Proses'
                     : 'Selesai Diproses'}
-              </button>
+              </ModalButton>
             ) : null}
-          </div>
+          </ModalFooter>
         </>
       ) : null}
-    </LetterModal>
+    </Modal>
   )
 }

@@ -657,11 +657,26 @@ for (const width of [320, 375, 768, 1280, 1648])
         radius: getComputedStyle(node).borderRadius,
         padding: getComputedStyle(node).padding,
       }))
-      expect(geometry).toEqual({ width: 648, radius: '22px', padding: '28px' })
+      expect(geometry).toEqual({ width: 1000, radius: '12px', padding: '28px' })
     }
     expect(
       await form.evaluate((node) => node.scrollWidth <= node.clientWidth),
     ).toBe(true)
+    const header = form.locator('header')
+    const footer = form.locator('footer')
+    const headerBefore = await header.boundingBox()
+    const footerBefore = await footer.boundingBox()
+    await form
+      .getByLabel('Catatan pembayaran (opsional)')
+      .scrollIntoViewIfNeeded()
+    expect(await header.boundingBox()).toEqual(headerBefore)
+    expect(await footer.boundingBox()).toEqual(footerBefore)
+    await expect(
+      footer.getByRole('button', {
+        name: 'Kirim Bukti Pembayaran',
+        exact: true,
+      }),
+    ).toBeInViewport()
     await page.screenshot({
       path: `test-results/dues-payment-${width}.png`,
       fullPage: false,

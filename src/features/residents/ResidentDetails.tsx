@@ -2,8 +2,14 @@ import { cn } from '../../lib/cn'
 
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { Link, useLocation } from 'react-router'
+import { useLocation } from 'react-router'
 import { Feedback } from '../../components/Feedback'
+import {
+  ModalBody,
+  ModalFooter,
+  ModalButton,
+  ModalLink,
+} from '../../components/Modal'
 import type { ResidentProfile } from '../../lib/database.types'
 import {
   archiveResident,
@@ -196,190 +202,191 @@ export function ResidentDetails({
     ['Role', roleLabels[profile.role]],
   ]
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex items-center gap-4 rounded-summary bg-page p-4 max-sm:flex-wrap max-sm:gap-3 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:wrap-anywhere max-sm:[&_h3]:text-lg [&_p]:mt-1 [&_p]:text-sm [&_p]:leading-normal [&_p]:text-muted [&>div]:min-w-0 [&>div]:flex-1">
-        <span
-          className="grid size-16 shrink-0 place-items-center rounded-full bg-brand text-2xl font-extrabold text-white max-sm:size-12 max-sm:text-lg"
-          aria-hidden="true"
-        >
-          {initials(profile.full_name)}
-        </span>
-        <div>
-          <h3>{profile.full_name}</h3>
-          <p>Blok {profile.house_block} · RT 04</p>
-        </div>
-        <span
-          className={cn(
-            'inline-flex w-fit max-w-full items-center rounded-full px-3 py-1 text-xs leading-normal font-semibold wrap-anywhere whitespace-normal forced-colors:border forced-colors:border-[CanvasText]',
-            profile.is_active
-              ? 'bg-success-soft text-success'
-              : 'bg-soft text-slate-600',
-          )}
-        >
-          {profile.archived_at
-            ? 'Diarsipkan'
-            : profile.is_active
-              ? 'Aktif'
-              : 'Tidak Aktif'}
-        </span>
-      </div>
-      <dl className="m-0 grid grid-cols-2 gap-x-4 gap-y-3 max-sm:grid-cols-1 [&_dd]:m-0 [&_dd]:text-sm [&_dd]:leading-relaxed [&_dd]:font-bold [&_dd]:wrap-anywhere [&_dt]:mb-3 [&_dt]:text-sm [&_dt]:font-semibold [&_dt]:text-slate-600 [&>div]:min-w-0 [&>div]:rounded-summary [&>div]:border [&>div]:border-border [&>div]:p-3">
-        {details.map(([label, value]) => (
-          <div key={label}>
-            <dt>{label}</dt>
-            <dd>{value}</dd>
-          </div>
-        ))}
-      </dl>
-      <button
-        type="button"
-        className="inline-flex min-h-11 max-w-full items-center gap-2 self-start border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
-        aria-pressed={reveal}
-        onClick={() => setReveal((value) => !value)}
-      >
-        {reveal ? 'Samarkan NIK dan KK' : 'Tampilkan NIK dan KK'}
-      </button>
-      <VerificationNote profile={profile} />
-      {mutation.isError ? (
-        <Feedback>{residentError(mutation.error)}</Feedback>
-      ) : null}
-      {profile.archived_at ? (
-        <p className="flex items-start gap-3 rounded-control bg-blue-50 p-4 text-sm leading-relaxed text-info [&>svg]:mt-0.5 [&>svg]:shrink-0">
-          Data diarsipkan pada {formatDate(profile.archived_at)}. Pulihkan
-          arsip, lalu aktifkan akun melalui Edit Data bila diperlukan.
-        </p>
-      ) : null}
-      <div className="flex flex-wrap gap-3">
-        {!profile.archived_at ? (
-          <>
-            <button
-              type="button"
-              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
-              disabled={
-                mutation.isPending ||
-                profile.verification_status === 'terverifikasi'
-              }
-              onClick={() => void act('verify')}
-            >
-              Verifikasi data
-            </button>
-            <button
-              type="button"
-              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
-              disabled={mutation.isPending}
-              onClick={() => {
-                setAction('repair')
-                mutation.reset()
-              }}
-            >
-              Minta perbaikan
-            </button>
-            <button
-              type="button"
-              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-danger bg-danger px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-red-800 disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
-              disabled={mutation.isPending}
-              onClick={() => {
-                setAction('archive')
-                mutation.reset()
-              }}
-            >
-              Arsipkan warga
-            </button>
-          </>
-        ) : (
-          <button
-            type="button"
-            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
-            disabled={mutation.isPending}
-            onClick={() => setAction('restore')}
+    <>
+      <ModalBody>
+        <div className="flex items-center gap-4 rounded-summary bg-page p-4 max-sm:flex-wrap max-sm:gap-3 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:wrap-anywhere max-sm:[&_h3]:text-lg [&_p]:mt-1 [&_p]:text-sm [&_p]:leading-normal [&_p]:text-muted [&>div]:min-w-0 [&>div]:flex-1">
+          <span
+            className="grid size-16 shrink-0 place-items-center rounded-full bg-brand text-2xl font-extrabold text-white max-sm:size-12 max-sm:text-lg"
+            aria-hidden="true"
           >
-            Pulihkan arsip
-          </button>
-        )}
-      </div>
-      {action ? (
-        <section
-          className="flex flex-col gap-3 rounded-control border border-amber-200 bg-amber-50 p-4 text-sm leading-relaxed [&_h3]:text-base [&_h3]:font-bold"
-          aria-label="Konfirmasi tindakan"
-        >
-          <h3>
-            {action === 'repair'
-              ? `Minta perbaikan data ${profile.full_name}`
-              : action === 'archive'
-                ? `Arsipkan ${profile.full_name}?`
-                : `Pulihkan ${profile.full_name}?`}
-          </h3>
-          {action === 'repair' ? (
-            <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-              <label htmlFor="review-note">Alasan perbaikan *</label>
-              <textarea
-                id="review-note"
-                className="min-h-25 w-full min-w-0 resize-y rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
-                value={note}
-                maxLength={2000}
-                aria-invalid={Boolean(noteError)}
-                aria-describedby={noteError ? 'review-note-error' : undefined}
-                onChange={(event) => {
-                  setNote(event.target.value)
-                  setNoteError('')
-                }}
-              />
-              {noteError ? (
-                <p
-                  className="text-xs leading-[1.125rem] text-danger"
-                  id="review-note-error"
-                >
-                  {noteError}
-                </p>
-              ) : null}
+            {initials(profile.full_name)}
+          </span>
+          <div>
+            <h3>{profile.full_name}</h3>
+            <p>Blok {profile.house_block} · RT 04</p>
+          </div>
+          <span
+            className={cn(
+              'inline-flex w-fit max-w-full items-center rounded-full px-3 py-1 text-xs leading-normal font-semibold wrap-anywhere whitespace-normal forced-colors:border forced-colors:border-[CanvasText]',
+              profile.is_active
+                ? 'bg-success-soft text-success'
+                : 'bg-soft text-slate-600',
+            )}
+          >
+            {profile.archived_at
+              ? 'Diarsipkan'
+              : profile.is_active
+                ? 'Aktif'
+                : 'Tidak Aktif'}
+          </span>
+        </div>
+        <dl className="m-0 grid grid-cols-2 gap-x-4 gap-y-3 max-sm:grid-cols-1 [&_dd]:m-0 [&_dd]:text-sm [&_dd]:leading-relaxed [&_dd]:font-bold [&_dd]:wrap-anywhere [&_dt]:mb-3 [&_dt]:text-sm [&_dt]:font-semibold [&_dt]:text-slate-600 [&>div]:min-w-0 [&>div]:rounded-summary [&>div]:border [&>div]:border-border [&>div]:p-3">
+          {details.map(([label, value]) => (
+            <div key={label}>
+              <dt>{label}</dt>
+              <dd>{value}</dd>
             </div>
+          ))}
+        </dl>
+        <button
+          type="button"
+          className="inline-flex min-h-11 max-w-full items-center gap-2 self-start border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
+          aria-pressed={reveal}
+          onClick={() => setReveal((value) => !value)}
+        >
+          {reveal ? 'Samarkan NIK dan KK' : 'Tampilkan NIK dan KK'}
+        </button>
+        <VerificationNote profile={profile} />
+        {mutation.isError ? (
+          <Feedback>{residentError(mutation.error)}</Feedback>
+        ) : null}
+        {profile.archived_at ? (
+          <p className="flex items-start gap-3 rounded-control bg-blue-50 p-4 text-sm leading-relaxed text-info [&>svg]:mt-0.5 [&>svg]:shrink-0">
+            Data diarsipkan pada {formatDate(profile.archived_at)}. Pulihkan
+            arsip, lalu aktifkan akun melalui Edit Data bila diperlukan.
+          </p>
+        ) : null}
+        <div className="flex flex-wrap gap-3">
+          {!profile.archived_at ? (
+            <>
+              <button
+                type="button"
+                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
+                disabled={
+                  mutation.isPending ||
+                  profile.verification_status === 'terverifikasi'
+                }
+                onClick={() => void act('verify')}
+              >
+                Verifikasi data
+              </button>
+              <button
+                type="button"
+                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
+                disabled={mutation.isPending}
+                onClick={() => {
+                  setAction('repair')
+                  mutation.reset()
+                }}
+              >
+                Minta perbaikan
+              </button>
+              <button
+                type="button"
+                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-danger bg-danger px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-red-800 disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
+                disabled={mutation.isPending}
+                onClick={() => {
+                  setAction('archive')
+                  mutation.reset()
+                }}
+              >
+                Arsipkan warga
+              </button>
+            </>
           ) : (
-            <p>
-              {action === 'archive'
-                ? 'Akses akun akan dihentikan. Data dan riwayat tetap tersimpan.'
-                : 'Data kembali ke daftar dengan akun tetap tidak aktif.'}
-            </p>
-          )}
-          <div className="flex flex-wrap gap-3">
             <button
               type="button"
               className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
               disabled={mutation.isPending}
-              onClick={() => setAction(null)}
+              onClick={() => setAction('restore')}
             >
-              Batalkan tindakan
+              Pulihkan arsip
             </button>
-            <button
-              type="button"
-              className={
-                action === 'archive'
-                  ? 'inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-danger bg-danger px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-red-800 disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0'
-                  : 'inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0'
-              }
-              disabled={mutation.isPending}
-              onClick={() => void act(action)}
-            >
-              {mutation.isPending ? 'Menyimpan…' : 'Konfirmasi tindakan'}
-            </button>
-          </div>
-        </section>
-      ) : null}
-      <ResidentHistory id={profile.id} />
-      <footer className="sticky -bottom-7 z-1 flex items-center justify-between gap-3 bg-surface pt-4 pb-1 max-sm:-bottom-5 max-sm:flex-wrap [&>div]:flex [&>div]:flex-wrap [&>div]:gap-3 max-sm:[&>div]:flex-1 max-sm:[&>div]:justify-end">
-        <span />
+          )}
+        </div>
+        {action ? (
+          <section
+            className="flex flex-col gap-3 rounded-control border border-amber-200 bg-amber-50 p-4 text-sm leading-relaxed [&_h3]:text-base [&_h3]:font-bold"
+            aria-label="Konfirmasi tindakan"
+          >
+            <h3>
+              {action === 'repair'
+                ? `Minta perbaikan data ${profile.full_name}`
+                : action === 'archive'
+                  ? `Arsipkan ${profile.full_name}?`
+                  : `Pulihkan ${profile.full_name}?`}
+            </h3>
+            {action === 'repair' ? (
+              <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
+                <label htmlFor="review-note">Alasan perbaikan *</label>
+                <textarea
+                  id="review-note"
+                  className="min-h-25 w-full min-w-0 resize-y rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                  value={note}
+                  maxLength={2000}
+                  aria-invalid={Boolean(noteError)}
+                  aria-describedby={noteError ? 'review-note-error' : undefined}
+                  onChange={(event) => {
+                    setNote(event.target.value)
+                    setNoteError('')
+                  }}
+                />
+                {noteError ? (
+                  <p
+                    className="text-xs leading-[1.125rem] text-danger"
+                    id="review-note-error"
+                  >
+                    {noteError}
+                  </p>
+                ) : null}
+              </div>
+            ) : (
+              <p>
+                {action === 'archive'
+                  ? 'Akses akun akan dihentikan. Data dan riwayat tetap tersimpan.'
+                  : 'Data kembali ke daftar dengan akun tetap tidak aktif.'}
+              </p>
+            )}
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
+                disabled={mutation.isPending}
+                onClick={() => setAction(null)}
+              >
+                Batalkan tindakan
+              </button>
+              <button
+                type="button"
+                className={
+                  action === 'archive'
+                    ? 'inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-danger bg-danger px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-red-800 disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0'
+                    : 'inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0'
+                }
+                disabled={mutation.isPending}
+                onClick={() => void act(action)}
+              >
+                {mutation.isPending ? 'Menyimpan…' : 'Konfirmasi tindakan'}
+              </button>
+            </div>
+          </section>
+        ) : null}
+        <ResidentHistory id={profile.id} />
+      </ModalBody>
+      <ModalFooter>
         <div>
-          <button
+          <ModalButton
             type="button"
-            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-surface px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-slate-700 enabled:cursor-pointer enabled:hover:bg-page disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 [&>svg]:shrink-0"
+            variant="secondary"
             disabled={mutation.isPending}
             onClick={onClose}
           >
             Tutup
-          </button>
+          </ModalButton>
           {!profile.archived_at ? (
-            <Link
+            <ModalLink
               aria-disabled={mutation.isPending}
-              className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
+              variant="primary"
               to={{
                 pathname: `/admin/warga/${profile.id}/edit`,
                 search: location.search,
@@ -389,10 +396,10 @@ export function ResidentDetails({
               }}
             >
               Edit Data
-            </Link>
+            </ModalLink>
           ) : null}
         </div>
-      </footer>
-    </div>
+      </ModalFooter>
+    </>
   )
 }

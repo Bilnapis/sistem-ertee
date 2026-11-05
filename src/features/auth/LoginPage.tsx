@@ -1,9 +1,14 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link } from 'react-router'
-import { X } from 'lucide-react'
 import { FormField } from '../../components/FormField'
 import { Feedback } from '../../components/Feedback'
+import {
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalButton,
+} from '../../components/Modal'
 import {
   getSupabase,
   isSupabaseConfigured,
@@ -18,7 +23,7 @@ export function LoginPage() {
   const [remember, setRemember] = useState(false)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
-  const helpDialog = useRef<HTMLDialogElement>(null)
+  const [helpOpen, setHelpOpen] = useState(false)
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -90,7 +95,7 @@ export function LoginPage() {
               <button
                 className="inline-flex min-h-11 max-w-full items-center gap-2 border-0 bg-transparent p-0 text-start text-sm leading-5 font-bold wrap-anywhere text-action hover:underline disabled:cursor-wait disabled:opacity-65 [&>svg]:shrink-0"
                 type="button"
-                onClick={() => helpDialog.current?.showModal()}
+                onClick={() => setHelpOpen(true)}
               >
                 Lupa password?
               </button>
@@ -122,32 +127,25 @@ export function LoginPage() {
           Mode persiapan · Koneksi Supabase belum dikonfigurasi.
         </p>
       ) : null}
-      <dialog
-        ref={helpDialog}
-        className="m-auto w-[calc(100%-2.5rem)] max-w-[480px] overflow-y-auto overscroll-contain rounded-dialog border-0 bg-surface p-8 text-ink shadow-dialog backdrop:bg-ink/40 [&>h2]:pe-7 [&>h2]:text-2xl [&>h2]:font-bold [&>p]:mt-4 [&>p]:mb-6 [&>p]:leading-6 [&>p]:text-muted"
-        aria-labelledby="help-title"
-      >
-        <button
-          className="absolute end-4 top-4 grid size-11 place-items-center rounded-control border-0 bg-transparent p-2 text-muted hover:bg-soft"
-          type="button"
-          aria-label="Tutup bantuan"
-          onClick={() => helpDialog.current?.close()}
-        >
-          <X size={22} />
-        </button>
-        <h2 id="help-title">Bantuan akun</h2>
-        <p>
-          Hubungi pengurus RT untuk bantuan pemulihan password. Pemulihan
-          mandiri melalui email belum tersedia pada tahap ini.
-        </p>
-        <button
-          type="button"
-          className="inline-flex min-h-12 w-full max-w-full shrink-0 items-center justify-center gap-2 rounded-control border border-transparent bg-action px-5 py-3 text-center text-sm leading-5 font-bold wrap-anywhere text-white enabled:cursor-pointer enabled:hover:bg-action-hover disabled:cursor-wait disabled:opacity-65 motion-safe:transition-colors motion-safe:duration-150 forced-colors:border-[ButtonText] [&>svg]:shrink-0"
-          onClick={() => helpDialog.current?.close()}
-        >
-          Mengerti
-        </button>
-      </dialog>
+      {helpOpen ? (
+        <Modal title="Bantuan akun" onClose={() => setHelpOpen(false)}>
+          <ModalBody>
+            <p className="text-sm leading-6 text-muted">
+              Hubungi pengurus RT untuk bantuan pemulihan password. Pemulihan
+              mandiri melalui email belum tersedia pada tahap ini.
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <ModalButton
+              type="button"
+              variant="primary"
+              onClick={() => setHelpOpen(false)}
+            >
+              Mengerti
+            </ModalButton>
+          </ModalFooter>
+        </Modal>
+      ) : null}
     </main>
   )
 }
