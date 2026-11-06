@@ -3,6 +3,7 @@ import { cn } from '../../lib/cn'
 import { useState, type ReactNode } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useLocation } from 'react-router'
+import { Eye, EyeOff } from 'lucide-react'
 import { Button, ButtonLink } from '../../components/Button'
 import { Feedback } from '../../components/Feedback'
 import { ModalBody, ModalFooter } from '../../components/Modal'
@@ -29,11 +30,22 @@ const eventLabels: Record<string, string> = {
   restored: 'Arsip dipulihkan',
   reviewed: 'Status verifikasi diperbarui',
 }
-export function ResidentHistory({ id }: { id: string }) {
+export function ResidentHistory({
+  id,
+  bordered = false,
+}: {
+  id: string
+  bordered?: boolean
+}) {
   const history = useResidentHistory(id)
   return (
     <section
-      className="border-t border-border pt-5 text-sm leading-relaxed [&_h3]:mb-3 [&_h3]:text-base [&_h3]:font-bold [&_li_p]:wrap-anywhere [&_li_p]:text-muted [&_ol]:flex [&_ol]:max-h-75 [&_ol]:list-decimal [&_ol]:flex-col [&_ol]:gap-4 [&_ol]:overflow-auto [&_ol]:ps-5"
+      className={cn(
+        'text-sm leading-relaxed [&_h3]:mb-3 [&_h3]:text-base [&_h3]:font-bold [&_li_p]:wrap-anywhere [&_li_p]:text-muted [&_ol]:flex [&_ol]:max-h-75 [&_ol]:list-decimal [&_ol]:flex-col [&_ol]:gap-4 [&_ol]:overflow-auto [&_ol]:ps-5',
+        bordered
+          ? 'rounded-control border border-border p-4'
+          : 'border-t border-border pt-5',
+      )}
       aria-label="Riwayat perubahan"
     >
       <h3>Riwayat perubahan</h3>
@@ -131,7 +143,8 @@ export function ResidentDetails({
   onClose: () => void
   onPending: (pending: boolean) => void
 }) {
-  const [reveal, setReveal] = useState(false)
+  const [revealNik, setRevealNik] = useState(false)
+  const [revealKk, setRevealKk] = useState(false)
   const [action, setAction] = useState<'repair' | 'archive' | 'restore' | null>(
     null,
   )
@@ -171,14 +184,45 @@ export function ResidentDetails({
   }
   const details: [string, ReactNode][] = [
     ['Nama Lengkap', profile.full_name],
-    ['NIK', reveal ? profile.nik : maskIdentity(profile.nik)],
+    [
+      'NIK',
+      <div className="flex min-w-0 items-center justify-between gap-2">
+        <span className="min-w-0 wrap-anywhere">
+          {revealNik ? profile.nik : maskIdentity(profile.nik)}
+        </span>
+        <Button
+          aria-label={revealNik ? 'Samarkan NIK' : 'Tampilkan NIK'}
+          aria-pressed={revealNik}
+          title={revealNik ? 'Samarkan NIK' : 'Tampilkan NIK'}
+          onClick={() => setRevealNik((value) => !value)}
+          variant="ghost"
+          size="icon"
+          leadingIcon={revealNik ? <EyeOff /> : <Eye />}
+        />
+      </div>,
+    ],
     [
       'Nomor Kartu Keluarga',
-      profile.family_card_number
-        ? reveal
-          ? profile.family_card_number
-          : maskIdentity(profile.family_card_number)
-        : 'Belum diisi',
+      profile.family_card_number ? (
+        <div className="flex min-w-0 items-center justify-between gap-2">
+          <span className="min-w-0 wrap-anywhere">
+            {revealKk
+              ? profile.family_card_number
+              : maskIdentity(profile.family_card_number)}
+          </span>
+          <Button
+            aria-label={revealKk ? 'Samarkan nomor KK' : 'Tampilkan nomor KK'}
+            aria-pressed={revealKk}
+            title={revealKk ? 'Samarkan nomor KK' : 'Tampilkan nomor KK'}
+            onClick={() => setRevealKk((value) => !value)}
+            variant="ghost"
+            size="icon"
+            leadingIcon={revealKk ? <EyeOff /> : <Eye />}
+          />
+        </div>
+      ) : (
+        'Belum diisi'
+      ),
     ],
     [
       'Jenis Kelamin',
@@ -215,151 +259,155 @@ export function ResidentDetails({
   return (
     <>
       <ModalBody>
-        <dl className="m-0 grid grid-cols-2 gap-x-4 gap-y-3 max-sm:grid-cols-1 [&_dd]:m-0 [&_dd]:text-sm [&_dd]:leading-relaxed [&_dd]:font-bold [&_dd]:wrap-anywhere [&_dt]:mb-3 [&_dt]:text-sm [&_dt]:font-semibold [&_dt]:text-slate-600 [&>div]:min-w-0 [&>div]:rounded-summary [&>div]:border [&>div]:border-border [&>div]:p-3">
-          {details.map(([label, value]) => (
-            <div key={label}>
-              <dt>{label}</dt>
-              <dd>{value}</dd>
-            </div>
-          ))}
-        </dl>
-        <Button
-          type="button"
-          aria-pressed={reveal}
-          onClick={() => setReveal((value) => !value)}
-          variant="ghost"
-          size="text"
-          align="start"
+        <section
+          className="flex flex-col gap-4 rounded-control border border-border p-4"
+          aria-label="Data diri"
         >
-          {reveal ? 'Samarkan NIK dan KK' : 'Tampilkan NIK dan KK'}
-        </Button>
-        <VerificationNote profile={profile} />
-        {mutation.isError ? (
-          <Feedback>{residentError(mutation.error)}</Feedback>
-        ) : null}
-        {profile.archived_at ? (
-          <p className="flex items-start gap-3 rounded-control bg-blue-50 p-4 text-sm leading-relaxed text-info [&>svg]:mt-0.5 [&>svg]:shrink-0">
-            Data diarsipkan pada {formatDate(profile.archived_at)}. Pulihkan
-            arsip, lalu aktifkan akun melalui Edit Data bila diperlukan.
-          </p>
-        ) : null}
-        <div className="flex flex-wrap gap-3">
-          {!profile.archived_at ? (
-            <>
-              <Button
-                type="button"
-                disabled={
-                  mutation.isPending ||
-                  profile.verification_status === 'terverifikasi'
-                }
-                onClick={() => void act('verify')}
-                variant="outline"
-              >
-                Verifikasi data
-              </Button>
-              <Button
-                type="button"
-                disabled={mutation.isPending}
-                onClick={() => {
-                  setAction('repair')
-                  mutation.reset()
-                }}
-                variant="outline"
-              >
-                Minta perbaikan
-              </Button>
-              <Button
-                type="button"
-                disabled={mutation.isPending}
-                onClick={() => {
-                  setAction('archive')
-                  mutation.reset()
-                }}
-                variant="danger"
-              >
-                Arsipkan warga
-              </Button>
-            </>
-          ) : (
-            <Button
-              type="button"
-              disabled={mutation.isPending}
-              onClick={() => setAction('restore')}
-              variant="outline"
-            >
-              Pulihkan arsip
-            </Button>
-          )}
-        </div>
-        {action ? (
-          <section
-            className="flex flex-col gap-3 rounded-control border border-amber-200 bg-amber-50 p-4 text-sm leading-relaxed [&_h3]:text-base [&_h3]:font-bold"
-            aria-label="Konfirmasi tindakan"
-          >
-            <h3>
-              {action === 'repair'
-                ? `Minta perbaikan data ${profile.full_name}`
-                : action === 'archive'
-                  ? `Arsipkan ${profile.full_name}?`
-                  : `Pulihkan ${profile.full_name}?`}
-            </h3>
-            {action === 'repair' ? (
-              <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-                <label htmlFor="review-note">
-                  Alasan perbaikan{' '}
-                  <span aria-hidden="true" className="text-danger">
-                    *
-                  </span>
-                </label>
-                <textarea
-                  id="review-note"
-                  className="min-h-25 w-full min-w-0 resize-y rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
-                  value={note}
-                  maxLength={2000}
-                  aria-invalid={Boolean(noteError)}
-                  aria-describedby={noteError ? 'review-note-error' : undefined}
-                  onChange={(event) => {
-                    setNote(event.target.value)
-                    setNoteError('')
-                  }}
-                />
-                {noteError ? (
-                  <p
-                    className="text-xs leading-[1.125rem] text-danger"
-                    id="review-note-error"
-                  >
-                    {noteError}
-                  </p>
-                ) : null}
+          <h3 className="text-base font-bold">Data diri</h3>
+          <dl className="m-0 grid grid-cols-2 gap-x-4 gap-y-3 max-sm:grid-cols-1 [&_dd]:m-0 [&_dd]:text-sm [&_dd]:leading-relaxed [&_dd]:font-bold [&_dd]:wrap-anywhere [&_dt]:mb-3 [&_dt]:text-sm [&_dt]:font-semibold [&_dt]:text-slate-600 [&>div]:min-w-0 [&>div]:rounded-summary [&>div]:border [&>div]:border-border [&>div]:p-3">
+            {details.map(([label, value]) => (
+              <div key={label}>
+                <dt>{label}</dt>
+                <dd>{value}</dd>
               </div>
+            ))}
+          </dl>
+        </section>
+        <section
+          className="flex flex-col gap-4 rounded-control border border-border p-4"
+          aria-label="Verifikasi data"
+        >
+          <h3 className="text-base font-bold">Verifikasi data</h3>
+          <VerificationNote profile={profile} />
+          {mutation.isError ? (
+            <Feedback>{residentError(mutation.error)}</Feedback>
+          ) : null}
+          {profile.archived_at ? (
+            <p className="flex items-start gap-3 rounded-control bg-blue-50 p-4 text-sm leading-relaxed text-info [&>svg]:mt-0.5 [&>svg]:shrink-0">
+              Data diarsipkan pada {formatDate(profile.archived_at)}. Pulihkan
+              arsip, lalu aktifkan akun melalui Edit Data bila diperlukan.
+            </p>
+          ) : null}
+          <div className="flex flex-wrap gap-3">
+            {!profile.archived_at ? (
+              <>
+                <Button
+                  type="button"
+                  disabled={
+                    mutation.isPending ||
+                    profile.verification_status === 'terverifikasi'
+                  }
+                  onClick={() => void act('verify')}
+                  variant="outline"
+                >
+                  Verifikasi data
+                </Button>
+                <Button
+                  type="button"
+                  disabled={mutation.isPending}
+                  onClick={() => {
+                    setAction('repair')
+                    mutation.reset()
+                  }}
+                  variant="outline"
+                >
+                  Minta perbaikan
+                </Button>
+                <Button
+                  type="button"
+                  disabled={mutation.isPending}
+                  onClick={() => {
+                    setAction('archive')
+                    mutation.reset()
+                  }}
+                  variant="danger"
+                >
+                  Arsipkan warga
+                </Button>
+              </>
             ) : (
-              <p>
-                {action === 'archive'
-                  ? 'Akses akun akan dihentikan. Data dan riwayat tetap tersimpan.'
-                  : 'Data kembali ke daftar dengan akun tetap tidak aktif.'}
-              </p>
-            )}
-            <div className="flex flex-wrap gap-3">
               <Button
                 type="button"
                 disabled={mutation.isPending}
-                onClick={() => setAction(null)}
+                onClick={() => setAction('restore')}
                 variant="outline"
               >
-                Batalkan tindakan
+                Pulihkan arsip
               </Button>
-              <Button
-                type="button"
-                disabled={mutation.isPending}
-                onClick={() => void act(action)}
-                variant={action === 'archive' ? 'danger' : 'solid'}
-              >
-                {mutation.isPending ? 'Menyimpan…' : 'Konfirmasi tindakan'}
-              </Button>
-            </div>
-          </section>
-        ) : null}
-        <ResidentHistory id={profile.id} />
+            )}
+          </div>
+          {action ? (
+            <section
+              className="flex flex-col gap-3 rounded-control border border-amber-200 bg-amber-50 p-4 text-sm leading-relaxed [&_h3]:text-base [&_h3]:font-bold"
+              aria-label="Konfirmasi tindakan"
+            >
+              <h3>
+                {action === 'repair'
+                  ? `Minta perbaikan data ${profile.full_name}`
+                  : action === 'archive'
+                    ? `Arsipkan ${profile.full_name}?`
+                    : `Pulihkan ${profile.full_name}?`}
+              </h3>
+              {action === 'repair' ? (
+                <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
+                  <label htmlFor="review-note">
+                    Alasan perbaikan{' '}
+                    <span aria-hidden="true" className="text-danger">
+                      *
+                    </span>
+                  </label>
+                  <textarea
+                    id="review-note"
+                    className="min-h-25 w-full min-w-0 resize-y rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"
+                    value={note}
+                    maxLength={2000}
+                    aria-invalid={Boolean(noteError)}
+                    aria-describedby={
+                      noteError ? 'review-note-error' : undefined
+                    }
+                    onChange={(event) => {
+                      setNote(event.target.value)
+                      setNoteError('')
+                    }}
+                  />
+                  {noteError ? (
+                    <p
+                      className="text-xs leading-[1.125rem] text-danger"
+                      id="review-note-error"
+                    >
+                      {noteError}
+                    </p>
+                  ) : null}
+                </div>
+              ) : (
+                <p>
+                  {action === 'archive'
+                    ? 'Akses akun akan dihentikan. Data dan riwayat tetap tersimpan.'
+                    : 'Data kembali ke daftar dengan akun tetap tidak aktif.'}
+                </p>
+              )}
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  type="button"
+                  disabled={mutation.isPending}
+                  onClick={() => setAction(null)}
+                  variant="outline"
+                >
+                  Batalkan tindakan
+                </Button>
+                <Button
+                  type="button"
+                  disabled={mutation.isPending}
+                  onClick={() => void act(action)}
+                  variant={action === 'archive' ? 'danger' : 'solid'}
+                >
+                  {mutation.isPending ? 'Menyimpan…' : 'Konfirmasi tindakan'}
+                </Button>
+              </div>
+            </section>
+          ) : null}
+        </section>
+        <ResidentHistory id={profile.id} bordered />
       </ModalBody>
       <ModalFooter>
         <div>
