@@ -8,15 +8,18 @@
 
 Pengujian tiruan tidak membuktikan konfigurasi project Supabase cloud, email, atau hosting. Skenario di bawah belum dijalankan pada project nyata.
 
+Pada 6 November 2026, konfirmasi email dinonaktifkan pada project cloud Sistem ErTee. Endpoint `/auth/v1/settings` mengembalikan `mailer_autoconfirm: true`, provider email aktif, dan pendaftaran aktif. Build, lint, serta enam pengujian browser pendaftaran/konfirmasi lulus, termasuk daftar → keluar → login kembali dengan respons Auth tiruan. Verifikasi cloud ini hanya membaca konfigurasi; tidak membuat akun atau mengirim email.
+
 ## Checklist setelah Supabase dikonfigurasi
 
 Gunakan dua identitas dummy berbeda. Contoh akun lokal: `warga.satu@example.test` dengan NIK `0000000000000001`, dan `warga.dua@example.test` dengan NIK `0000000000000002`. Gunakan alamat serta nomor HP fiktif.
 
 | Skenario | Hasil yang diharapkan |
 | --- | --- |
-| Daftar dengan data lengkap | Auth user dan satu profil terbentuk; role `warga`, status `menunggu_verifikasi`. |
-| Konfirmasi email aktif | Sebelum konfirmasi, login ditolak; tautan konfirmasi di browser pendaftaran membuka beranda warga. |
-| Konfirmasi email nonaktif (lingkungan uji) | Registrasi langsung membuka beranda dengan sesi aktif. |
+| Daftar dengan data lengkap | Auth user dan satu profil terbentuk; role `warga`, status `menunggu_verifikasi`; langsung membuka beranda dengan sesi aktif tanpa email konfirmasi atau SMTP. |
+| Keluar setelah mendaftar, lalu login dengan email/password yang sama | Login berhasil tanpa membuka tautan konfirmasi email. |
+| Supabase keliru masih mewajibkan konfirmasi email | Registrasi tanpa sesi menampilkan kegagalan; input dipertahankan, tanpa mengklaim akun siap digunakan. Nonaktifkan Confirm email di konfigurasi Auth project. |
+| Tautan konfirmasi PKCE lama | Callback tetap dapat menukar kode valid dan membuka beranda warga. |
 | NIK duplikat atau identitas tidak valid | Pendaftaran gagal; tidak meninggalkan Auth user tanpa profil. |
 | Email/password salah | Tidak membuka beranda; pesan kesalahan aman; input dipertahankan. |
 | Muat ulang halaman warga | Sesi valid mempertahankan login. |

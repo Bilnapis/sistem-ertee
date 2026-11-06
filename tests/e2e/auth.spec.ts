@@ -42,7 +42,7 @@ async function mockSupabase(
   options: {
     invalidPassword?: boolean
     disabled?: boolean
-    immediateSession?: boolean
+    confirmationRequired?: boolean
     signupFailure?: boolean
     profileFailure?: boolean
     fullName?: string
@@ -72,7 +72,9 @@ async function mockSupabase(
         })
       return route.fulfill({
         headers,
-        json: options.immediateSession ? session() : { user, session: null },
+        json: options.confirmationRequired
+          ? { user, session: null }
+          : session(),
       })
     }
     if (path.endsWith('/token')) {
@@ -609,15 +611,13 @@ test('registration rejects invalid identity and mismatched passwords before call
   expect(calls.signup).toBeUndefined()
 })
 
-test('registration sends profile metadata, then asks for confirmation without a session', async ({
+test('registration sends profile metadata and opens resident home without email confirmation', async ({
   page,
 }) => {
   const calls = await mockSupabase(page)
   await fillRegistration(page)
   await page.getByRole('button', { name: 'Daftar Akun', exact: true }).click()
-  await expect(
-    page.getByRole('heading', { name: 'Periksa email Anda' }),
-  ).toBeVisible()
+  await expect(page).toHaveURL(/\/warga$/)
   expect(calls.signup?.email).toBe(user.email)
   expect(calls.signup?.data).toMatchObject({
     full_name: profile.full_name,
@@ -628,40 +628,46 @@ test('registration sends profile metadata, then asks for confirmation without a 
   expect(calls.signup?.data).not.toHaveProperty('house_block')
   expect(calls.signup?.data).not.toHaveProperty('password')
   expect(calls.signup).not.toHaveProperty('confirmation')
-  expect(
-    await page.evaluate(() =>
-      Object.keys(localStorage).some((key) => key.endsWith('-code-verifier')),
-    ),
-  ).toBe(true)
+  await expect(page.getByText('Periksa email Anda')).toHaveCount(0)
+  await page.getByRole('button', { name: /^Menu akun / }).click()
+  await page.getByRole('button', { name: 'Keluar', exact: true }).click()
+  await expect(page).toHaveURL(/\/login$/)
+  await login(page)
+  await expect(page).toHaveURL(/\/warga$/)
 })
 
-test('registration enters resident home when email confirmation is disabled', async ({
+test('registration keeps fields and reports failure when Auth returns no session', async ({
   page,
 }) => {
-  await mockSupabase(page, { immediateSession: true })
+  await mockSupabase(page, { confirmationRequired: true })
   await fillRegistration(page)
   await page.getByRole('button', { name: 'Daftar Akun', exact: true }).click()
+  await expect(page).toHaveURL(/\/register$/)
+  await expect(page.getByRole('alert')).toContainText(
+    'Permintaan belum berhasil',
+  )
+  await expect(page.getByLabel('Email *', { exact: true })).toHaveValue(
+    user.email,
+  )
+  await expect(page.getByText('Periksa email Anda')).toHaveCount(0)
+})
+
+test('existing email confirmation links still exchange PKCE code and open protected home', async ({
+  page,
+}) => {
+  await mockSupabase(page)
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'sb-127-auth-token-code-verifier',
+      JSON.stringify('dummy-code-verifier'),
+    )
+  })
+  await page.goto('/auth/callback?code=dummy-confirmation-code')
   await expect(page).toHaveURL(/\/warga$/)
   await expect(
     page.getByRole('heading', {
       name: `Selamat datang, ${profile.full_name}!`,
     }),
-  ).toBeVisible()
-})
-
-test('email confirmation exchanges PKCE code and opens the protected home', async ({
-  page,
-}) => {
-  await mockSupabase(page)
-  await fillRegistration(page)
-  await page.getByRole('button', { name: 'Daftar Akun', exact: true }).click()
-  await expect(
-    page.getByRole('heading', { name: 'Periksa email Anda' }),
-  ).toBeVisible()
-  await page.goto('/auth/callback?code=dummy-confirmation-code')
-  await expect(page).toHaveURL(/\/warga$/)
-  await expect(
-    page.getByRole('heading', { name: 'Profil warga', exact: true }),
   ).toBeVisible()
   expect(
     await page.evaluate(() =>

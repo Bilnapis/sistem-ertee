@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link } from 'react-router'
-import { MailCheck } from 'lucide-react'
-import { ButtonLink, Button } from '../../components/Button'
+import { Button } from '../../components/Button'
 import { Logo } from '../../components/Logo'
 import { FormField } from '../../components/FormField'
 import { Feedback } from '../../components/Feedback'
@@ -17,7 +16,6 @@ export function RegisterPage() {
   const [hidden, setHidden] = useState(true)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
-  const [submitted, setSubmitted] = useState(false)
 
   const bind = (name: keyof Registration) => ({
     id: name,
@@ -54,51 +52,23 @@ export function RegisterPage() {
       const metadata = Object.fromEntries(
         Object.entries(profile).map(([key, value]) => [key, value.trim()]),
       )
-      const { error } = await getSupabase().auth.signUp({
+      const { data, error } = await getSupabase().auth.signUp({
         email: email.trim().toLowerCase(),
         password,
         options: {
           data: metadata,
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       })
       if (error) throw error
+      // GuestLayout opens the resident dashboard once Auth adopts the session.
+      if (!data.session) throw new Error('REGISTRATION_SESSION_UNAVAILABLE')
       setValues(emptyRegistration)
-      setSubmitted(true)
     } catch (error) {
       setError(authErrorMessage(error))
     } finally {
       setPending(false)
     }
   }
-
-  if (submitted)
-    return (
-      <main className="relative flex min-h-svh flex-col items-center justify-center px-5 py-8 max-sm:px-4">
-        <section
-          className="flex w-full max-w-[560px] flex-col gap-6 rounded-card bg-surface p-10 text-center shadow-card max-sm:px-6 max-sm:py-7 [&>p]:text-sm [&>p]:leading-6 [&>p]:text-muted"
-          aria-labelledby="confirmation-title"
-        >
-          <MailCheck
-            size={44}
-            className="self-center text-brand"
-            aria-hidden="true"
-          />
-          <h1 id="confirmation-title">Periksa email Anda</h1>
-          <p role="status">
-            Permintaan pendaftaran telah diterima. Jika email dapat didaftarkan,
-            tautan konfirmasi akan dikirim. Buka tautan tersebut di browser yang
-            sama untuk mengaktifkan akun.
-          </p>
-          <ButtonLink to="/login" variant="solid" width="full">
-            Kembali ke halaman masuk
-          </ButtonLink>
-          <p className="text-muted">
-            Sudah memiliki akun? Gunakan email dan password Anda untuk masuk.
-          </p>
-        </section>
-      </main>
-    )
 
   return (
     <main className="relative flex min-h-svh flex-col items-center justify-center px-5 py-8 max-sm:px-4">

@@ -54,11 +54,11 @@ styling atau modul terpisah. Prettier mengurutkan class pada JSX dan pemanggilan
 
    Legacy anon key juga diterima, melalui variabel tersebut atau `VITE_SUPABASE_ANON_KEY`. Secret key dan `service_role` tidak digunakan oleh aplikasi browser.
 
-4. Aktifkan provider Email/password dan pendaftaran pengguna. Atur panjang password minimum **8 karakter**. Aktifkan **Confirm email** bila ingin alur konfirmasi email.
+4. Aktifkan provider Email/password dan pendaftaran pengguna. Atur panjang password minimum **8 karakter**. Pada **Authentication → Sign In / Providers → Email**, **nonaktifkan Confirm email** lalu simpan. Pendaftaran menggunakan email/password tanpa tautan konfirmasi atau SMTP, dan langsung menghasilkan sesi login. Pengaturan ini harus diterapkan pada project cloud; mengedit `supabase/config.toml` saja tidak mengubah konfigurasi cloud.
 5. Pada konfigurasi URL Auth, isi Site URL `http://localhost:5173` dan tambahkan Redirect URL `http://localhost:5173/auth/callback`. Jika memakai `127.0.0.1`, tambahkan URL callback dengan host tersebut juga. Ketika deployment, tambahkan domain dan callback deployment yang sebenarnya.
 6. Restart `npm run dev` setelah mengubah variabel lingkungan.
 
-Gunakan akun dan identitas fiktif. Untuk pengujian email tanpa mengirim email sungguhan, gunakan Supabase lokal di bawah. Pada project cloud, sesuaikan pengiriman email uji dengan konfigurasi email project tersebut.
+Gunakan akun dan identitas fiktif untuk pengujian. Pendaftaran tidak mengirim email; SMTP tidak diperlukan untuk alur daftar dan login dengan password.
 
 ### Supabase lokal (opsional)
 
@@ -69,7 +69,7 @@ npx supabase start
 npx supabase status
 ```
 
-Migrasi diterapkan saat stack lokal diinisialisasi. Salin API URL dan anon/publishable key dari status ke `.env.local`. Konfigurasi lokal ada pada [`supabase/config.toml`](supabase/config.toml), dengan konfirmasi email aktif. Buka penangkap email lokal di `http://localhost:54324` untuk mengambil tautan konfirmasi akun dummy, misalnya `warga.satu@example.test`.
+Migrasi diterapkan saat stack lokal diinisialisasi. Salin API URL dan anon/publishable key dari status ke `.env.local`. Konfigurasi lokal ada pada [`supabase/config.toml`](supabase/config.toml), dengan `auth.email.enable_confirmations = false`. Jika stack sudah berjalan, jalankan `npx supabase stop` lalu `npx supabase start` agar konfigurasi terbaru digunakan.
 
 ## Alur yang tersedia
 
@@ -90,7 +90,7 @@ Migrasi diterapkan saat stack lokal diinisialisasi. Salin API URL dan anon/publi
 | `/warga/pengaduan`, `/warga/pengaduan/tambah`, `/warga/pengaduan/:id`                   | Pengajuan, daftar pribadi, detail, hasil penanganan dan riwayat.                              |
 | `/admin/pengaduan`, `/admin/pengaduan/:id`                                              | Rekap berfilter, detail, koreksi kategori serta pemrosesan pengaduan oleh pengelola.          |
 
-Registrasi membuat Auth user dan profil secara atomik melalui trigger. Profil baru selalu berperan `warga`, aktif, dan berstatus `menunggu_verifikasi`, termasuk jika request memalsukan metadata peran. Dengan konfirmasi email aktif, buka tautan pada browser yang dipakai mendaftar; tab baru didukung. Dengan konfirmasi email nonaktif, register dapat langsung menghasilkan sesi.
+Registrasi membuat Auth user dan profil secara atomik melalui trigger. Profil baru selalu berperan `warga`, aktif, dan berstatus `menunggu_verifikasi`, termasuk jika request memalsukan metadata peran. Konfirmasi email dinonaktifkan: setelah berhasil mendaftar, warga langsung masuk ke dashboard dan dapat login kembali menggunakan email/password tanpa SMTP. Verifikasi data warga oleh pengurus tetap berlaku dan terpisah dari konfirmasi email. Route `/auth/callback` tetap tersedia untuk kompatibilitas tautan lama.
 
 “Ingat saya” menyimpan sesi pada `localStorage`; tanpa centang, sesi disimpan pada `sessionStorage` tab. Verifier PKCE disimpan lintas tab agar konfirmasi email dapat dibuka dari email. Logout menghapus sesi browser dan mencabut sesi Supabase saat ini. RLS juga memeriksa keberadaan sesi Auth agar token dari sesi yang sudah dicabut tidak dapat membaca profil.
 
