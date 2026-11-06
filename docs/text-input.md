@@ -1,6 +1,6 @@
 # Text input
 
-Komponen `src/components/TextInput.tsx` mengikuti warna hijau ErTee, radius
+Komponen `src/components/TextInput.tsx` mengikuti warna hijau WargaKita, radius
 input 12px, dan skala spasi proyek. `FormField` mengekspor komponen yang sama
 agar login, registrasi, dan formulir warga memakai satu implementasi.
 

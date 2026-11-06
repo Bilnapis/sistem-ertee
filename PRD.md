@@ -1,13 +1,13 @@
 # Product Requirements Document (PRD)
 
-# Sistem ErTee — Sistem Informasi Pelayanan Administrasi Warga RT Berbasis Web
+# Sistem WargaKita — Sistem Informasi Pelayanan Administrasi Warga RT Berbasis Web
 
 | Atribut           | Keterangan                                                                                                         |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------ |
 | Versi             | 1.2                                                                                                                |
 | Tanggal           | 4 November 2026                                                                                                    |
 | Status            | Draf untuk ditinjau; belum merupakan laporan hasil implementasi atau pengujian                                     |
-| Nama kerja produk | Sistem ErTee                                                                                                       |
+| Nama kerja produk | Sistem WargaKita                                                                                                       |
 | Konteks           | Capstone Project STSI4440, Kelas 57, Kelompok A, Universitas Terbuka, tahun ajaran 2026/2027                       |
 | Sumber utama      | `Proposal_Capstone Project - STSI4440 (Kel. A).docx`                                                               |
 | Pembaca           | Tim pengembang, penguji, dosen pembimbing, Ketua RT, dan Pengurus RT                                               |

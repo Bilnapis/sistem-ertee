@@ -160,7 +160,7 @@ export default function LettersPage({ manage = false }: { manage?: boolean }) {
                 ? waiting
                   ? 'Daftar pengajuan surat warga yang belum mulai diproses.'
                   : 'Kelola permohonan surat dari warga'
-                : 'Ajukan kebutuhan administrasi Anda dengan mudah melalui ErTee.'
+                : 'Ajukan kebutuhan administrasi Anda dengan mudah melalui WargaKita.'
             }
           />
           {manage ? (

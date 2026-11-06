@@ -1,0 +1,448 @@
+<mxfile host="app.diagrams.net" agent="Codex">
+  <diagram id="wargakita-usecase" name="Use Case WargaKita">
+    <mxGraphModel dx="1251" dy="699" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1960" pageHeight="2500" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="system" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;strokeColor=#6c8ebf;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#dae8fc;" value="" vertex="1">
+          <mxGeometry height="2080" width="1110" x="285" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="module_auth" parent="1" style="rounded=1;arcSize=8;dashed=1;dashPattern=5 4;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;fillColor=#E8F1FD;" value="" vertex="1">
+          <mxGeometry height="260" width="1050" x="315" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="module_residents" parent="1" style="rounded=1;arcSize=8;dashed=1;dashPattern=5 4;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;fillColor=#E5F5EC;" value="" vertex="1">
+          <mxGeometry height="350" width="1050" x="315" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="module_letters" parent="1" style="rounded=1;arcSize=8;dashed=1;dashPattern=5 4;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;fillColor=#EEE8FA;" value="" vertex="1">
+          <mxGeometry height="300" width="1050" x="315" y="870" as="geometry" />
+        </mxCell>
+        <mxCell id="module_complaints" parent="1" style="rounded=1;arcSize=8;dashed=1;dashPattern=5 4;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;fillColor=#FCEBDF;" value="" vertex="1">
+          <mxGeometry height="280" width="1050" x="315" y="1190" as="geometry" />
+        </mxCell>
+        <mxCell id="module_dues" parent="1" style="rounded=1;arcSize=8;dashed=1;dashPattern=5 4;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;fillColor=#FFF5D6;" value="" vertex="1">
+          <mxGeometry height="380" width="1050" x="315" y="1490" as="geometry" />
+        </mxCell>
+        <mxCell id="module_announcements" parent="1" style="rounded=1;arcSize=8;dashed=1;dashPattern=5 4;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;fillColor=#FBE6EF;" value="" vertex="1">
+          <mxGeometry height="300" width="1050" x="315" y="1890" as="geometry" />
+        </mxCell>
+        <mxCell id="warga_register" edge="1" parent="1" source="warga" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=1.0;exitY=0.5;exitPerimeter=0;entryX=0.0;entryY=0.5;entryPerimeter=0;" target="register" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="1140" />
+              <mxPoint x="240" y="316" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="warga_own_profile" edge="1" parent="1" source="warga" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=1.0;exitY=0.5;exitPerimeter=0;entryX=0.0;entryY=0.5;entryPerimeter=0;" target="own_profile" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="1140" />
+              <mxPoint x="240" y="665" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="warga_submit_letter" edge="1" parent="1" source="warga" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=1.0;exitY=0.5;exitPerimeter=0;entryX=0.0;entryY=0.5;entryPerimeter=0;" target="submit_letter" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="1140" />
+              <mxPoint x="240" y="978" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="warga_own_letters" edge="1" parent="1" source="warga" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=1.0;exitY=0.5;exitPerimeter=0;entryX=0.0;entryY=0.5;entryPerimeter=0;" target="own_letters" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="1140" />
+              <mxPoint x="240" y="1098" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="warga_submit_complaint" edge="1" parent="1" source="warga" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=1.0;exitY=0.5;exitPerimeter=0;entryX=0.0;entryY=0.5;entryPerimeter=0;" target="submit_complaint" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="1140" />
+              <mxPoint x="240" y="1298" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="warga_own_complaints" edge="1" parent="1" source="warga" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=1.0;exitY=0.5;exitPerimeter=0;entryX=0.0;entryY=0.5;entryPerimeter=0;" target="own_complaints" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="1140" />
+              <mxPoint x="240" y="1410" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="warga_own_dues" edge="1" parent="1" source="warga" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=1.0;exitY=0.5;exitPerimeter=0;entryX=0.0;entryY=0.5;entryPerimeter=0;" target="own_dues" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="1140" />
+              <mxPoint x="240" y="1619" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="warga_confirm_payment" edge="1" parent="1" source="warga" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=1.0;exitY=0.5;exitPerimeter=0;entryX=0.0;entryY=0.5;entryPerimeter=0;" target="confirm_payment" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="1140" />
+              <mxPoint x="240" y="1770" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="warga_read_announcements" edge="1" parent="1" source="warga" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=1.0;exitY=0.5;exitPerimeter=0;entryX=0.0;entryY=0.5;entryPerimeter=0;" target="read_announcements" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="1140" />
+              <mxPoint x="240" y="2062" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="warga_login" edge="1" parent="1" source="warga" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=1.0;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" target="login" value="">
+          <mxGeometry relative="1" x="0.0007" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="1140" />
+              <mxPoint x="240" y="420" />
+              <mxPoint x="865" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="warga_logout" edge="1" parent="1" source="warga" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=1.0;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" target="logout" value="">
+          <mxGeometry relative="1" x="-0.0403" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="1140" />
+              <mxPoint x="240" y="440" />
+              <mxPoint x="1185" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pengurus_manage_residents" edge="1" parent="1" source="pengurus" style="edgeStyle=none;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.42105263157894735;entryPerimeter=0;" target="manage_residents" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="995" />
+              <mxPoint x="1420" y="590" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ketua_manage_residents" edge="1" parent="1" source="ketua" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.5789473684210527;entryPerimeter=0;" target="manage_residents" value="">
+          <mxGeometry relative="1" x="-0.0218" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="1275" />
+              <mxPoint x="1420" y="590" />
+              <mxPoint x="1330" y="590" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pengurus_verify_residents" edge="1" parent="1" source="pengurus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.42105263157894735;entryPerimeter=0;" target="verify_residents" value="">
+          <mxGeometry relative="1" x="0.002" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="995" />
+              <mxPoint x="1420" y="690" />
+              <mxPoint x="1330" y="690" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ketua_verify_residents" edge="1" parent="1" source="ketua" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.5789473684210527;entryPerimeter=0;" target="verify_residents" value="">
+          <mxGeometry relative="1" x="-0.016" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="1275" />
+              <mxPoint x="1420" y="690" />
+              <mxPoint x="1330" y="690" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pengurus_manage_access" edge="1" parent="1" source="pengurus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=0.996;entryY=0.422;entryPerimeter=0;entryDx=0;entryDy=0;" target="manage_access" value="">
+          <mxGeometry relative="1" x="-0.0001" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="995" />
+              <mxPoint x="1420" y="782.1" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ketua_manage_access" edge="1" parent="1" source="ketua" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=0.996;entryY=0.431;entryPerimeter=0;entryDx=0;entryDy=0;" target="manage_access" value="">
+          <mxGeometry relative="1" x="-0.0138" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="1275" />
+              <mxPoint x="1420" y="782.8" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pengurus_process_letters" edge="1" parent="1" source="pengurus" style="edgeStyle=none;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.44642857142857145;entryPerimeter=0;" target="process_letters" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="995" />
+              <mxPoint x="1420" y="1020" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ketua_process_letters" edge="1" parent="1" source="ketua" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.5535714285714286;entryPerimeter=0;" target="process_letters" value="">
+          <mxGeometry relative="1" x="-0.0357" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="1275" />
+              <mxPoint x="1420" y="1020" />
+              <mxPoint x="1330" y="1020" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pengurus_process_complaints" edge="1" parent="1" source="pengurus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.44642857142857145;entryPerimeter=0;" target="process_complaints" value="">
+          <mxGeometry relative="1" x="-0.0128" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="995" />
+              <mxPoint x="1420" y="1340" />
+              <mxPoint x="1330" y="1340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ketua_process_complaints" edge="1" parent="1" source="ketua" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.5535714285714286;entryPerimeter=0;" target="process_complaints" value="">
+          <mxGeometry relative="1" x="-0.0586" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="1200" />
+              <mxPoint x="1420" y="1340" />
+              <mxPoint x="1330" y="1340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pengurus_verify_payment" edge="1" parent="1" source="pengurus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.42857142857142855;entryPerimeter=0;" target="verify_payment" value="">
+          <mxGeometry relative="1" x="-0.0173" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="995" />
+              <mxPoint x="1420" y="1597" />
+              <mxPoint x="1330" y="1597" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ketua_verify_payment" edge="1" parent="1" source="ketua" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.5714285714285714;entryPerimeter=0;" target="verify_payment" value="">
+          <mxGeometry relative="1" x="0.0017" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="1200" />
+              <mxPoint x="1420" y="1597" />
+              <mxPoint x="1330" y="1597" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pengurus_dues_settings" edge="1" parent="1" source="pengurus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.42857142857142855;entryPerimeter=0;" target="dues_settings" value="">
+          <mxGeometry relative="1" x="-0.0154" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="995" />
+              <mxPoint x="1420" y="1700" />
+              <mxPoint x="1330" y="1700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ketua_dues_settings" edge="1" parent="1" source="ketua" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.5714285714285714;entryPerimeter=0;" target="dues_settings" value="">
+          <mxGeometry relative="1" x="0.0014" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="1200" />
+              <mxPoint x="1420" y="1700" />
+              <mxPoint x="1330" y="1700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pengurus_income_summary" edge="1" parent="1" source="pengurus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.42857142857142855;entryPerimeter=0;" target="income_summary" value="">
+          <mxGeometry relative="1" x="-0.0099" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="995" />
+              <mxPoint x="1420" y="1800" />
+              <mxPoint x="1330" y="1800" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ketua_income_summary" edge="1" parent="1" source="ketua" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.5714285714285714;entryPerimeter=0;" target="income_summary" value="">
+          <mxGeometry relative="1" x="0.0013" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="1200" />
+              <mxPoint x="1420" y="1801" />
+              <mxPoint x="1330" y="1801" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pengurus_manage_announcements" edge="1" parent="1" source="pengurus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.4318181818181818;entryPerimeter=0;" target="manage_announcements" value="">
+          <mxGeometry relative="1" x="0.0008" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="995" />
+              <mxPoint x="1420" y="1990" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ketua_manage_announcements" edge="1" parent="1" source="ketua" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=0.999;entryY=0.439;entryPerimeter=0;entryDx=0;entryDy=0;" target="manage_announcements" value="">
+          <mxGeometry relative="1" x="0.0093" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="1200" />
+              <mxPoint x="1420" y="1990.6" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pengurus_archive_announcements" edge="1" parent="1" source="pengurus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=0.998;entryY=0.455;entryPerimeter=0;entryDx=0;entryDy=0;" target="archive_announcements" value="">
+          <mxGeometry relative="1" x="-0.0027" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="995" />
+              <mxPoint x="1420" y="2110" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ketua_archive_announcements" edge="1" parent="1" source="ketua" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=0.997;entryY=0.469;entryPerimeter=0;entryDx=0;entryDy=0;" target="archive_announcements" value="">
+          <mxGeometry relative="1" x="0.0071" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="1200" />
+              <mxPoint x="1420" y="2110" />
+              <mxPoint x="1329.1" y="2110" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pengurus_login" edge="1" parent="1" source="pengurus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=0.45652173913043476;entryY=0.0;entryPerimeter=0;" target="login" value="">
+          <mxGeometry relative="1" x="-0.0423" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="995" />
+              <mxPoint x="1420" y="290" />
+              <mxPoint x="855" y="290" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pengurus_logout" edge="1" parent="1" source="pengurus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.5;entryPerimeter=0;" target="logout" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="995" />
+              <mxPoint x="1420" y="366" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ketua_login" edge="1" parent="1" source="ketua" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=0.5434782608695652;entryY=0.0;entryPerimeter=0;" target="login" value="">
+          <mxGeometry relative="1" x="-0.1087" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="1200" />
+              <mxPoint x="1420" y="310" />
+              <mxPoint x="875" y="310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ketua_logout" edge="1" parent="1" source="ketua" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;exitX=0.0;exitY=0.5;exitPerimeter=0;entryX=1.0;entryY=0.5;entryPerimeter=0;" target="logout" value="">
+          <mxGeometry relative="1" x="-0.1465" as="geometry">
+            <Array as="points">
+              <mxPoint x="1420" y="1200" />
+              <mxPoint x="1420" y="366" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="include_select_letter" edge="1" parent="1" source="submit_letter" style="edgeStyle=none;rounded=0;html=1;strokeColor=#333333;strokeWidth=1.5;endArrow=none;fontFamily=Arial;fontSize=16;labelBackgroundColor=#fafafa;dashed=1;dashPattern=7 5;endArrow=open;endSize=10;exitX=1.0;exitY=0.5;exitPerimeter=0;entryX=0.0;entryY=0.5;entryPerimeter=0;" target="select_letter" value="«include»">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="-16" as="offset" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="title" parent="1" style="text;strokeColor=none;fillColor=none;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=30;fontStyle=1;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;strokeColor=none;fillColor=none;" value="Use Case Diagram — WargaKita" vertex="1">
+          <mxGeometry height="42" width="1130" x="270" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" parent="1" style="text;strokeColor=none;fillColor=none;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=21;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;strokeColor=none;fillColor=none;" value="Sistem Informasi Pelayanan Administrasi Warga RT" vertex="1">
+          <mxGeometry height="28" width="1130" x="270" y="88" as="geometry" />
+        </mxCell>
+        <mxCell id="system_label" parent="1" style="text;strokeColor=none;fillColor=none;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontStyle=1;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;strokeColor=none;fillColor=none;" value="WargaKita · Batas sistem" vertex="1">
+          <mxGeometry height="36" width="840" x="420" y="157" as="geometry" />
+        </mxCell>
+        <mxCell id="heading_auth" parent="1" style="text;strokeColor=none;fillColor=none;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=21;fontStyle=1;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;strokeColor=none;fillColor=none;" value="01  Autentikasi" vertex="1">
+          <mxGeometry height="32" width="1010" x="335" y="232" as="geometry" />
+        </mxCell>
+        <mxCell id="heading_residents" parent="1" style="text;strokeColor=none;fillColor=none;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=21;fontStyle=1;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;strokeColor=none;fillColor=none;" value="02  Data warga dan akun" vertex="1">
+          <mxGeometry height="32" width="1010" x="335" y="512" as="geometry" />
+        </mxCell>
+        <mxCell id="heading_letters" parent="1" style="text;strokeColor=none;fillColor=none;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=21;fontStyle=1;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;strokeColor=none;fillColor=none;" value="03  Pengajuan surat pengantar" vertex="1">
+          <mxGeometry height="32" width="1010" x="335" y="882" as="geometry" />
+        </mxCell>
+        <mxCell id="heading_complaints" parent="1" style="text;strokeColor=none;fillColor=none;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=21;fontStyle=1;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;strokeColor=none;fillColor=none;" value="04  Pengaduan warga" vertex="1">
+          <mxGeometry height="32" width="1010" x="335" y="1202" as="geometry" />
+        </mxCell>
+        <mxCell id="heading_dues" parent="1" style="text;strokeColor=none;fillColor=none;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=21;fontStyle=1;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;strokeColor=none;fillColor=none;" value="05  Iuran warga bulanan dan rekap pemasukan" vertex="1">
+          <mxGeometry height="32" width="1010" x="335" y="1502" as="geometry" />
+        </mxCell>
+        <mxCell id="heading_announcements" parent="1" style="text;strokeColor=none;fillColor=none;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=21;fontStyle=1;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;strokeColor=none;fillColor=none;" value="06  Pengumuman terjadwal" vertex="1">
+          <mxGeometry height="32" width="1010" x="335" y="1902" as="geometry" />
+        </mxCell>
+        <mxCell id="warga" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=23;fontStyle=1;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;verticalAlign=top;" value="Warga" vertex="1">
+          <mxGeometry height="100" width="60" x="100" y="1090" as="geometry" />
+        </mxCell>
+        <mxCell id="pengurus" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontStyle=1;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;verticalAlign=top;" value="Pengurus RT" vertex="1">
+          <mxGeometry height="100" width="60" x="1530" y="945" as="geometry" />
+        </mxCell>
+        <mxCell id="ketua" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontStyle=1;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;verticalAlign=top;" value="Ketua RT" vertex="1">
+          <mxGeometry height="100" width="60" x="1520" y="1150" as="geometry" />
+        </mxCell>
+        <mxCell id="register" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Registrasi akun" vertex="1">
+          <mxGeometry height="72" width="270" x="350" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="login" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Login" vertex="1">
+          <mxGeometry height="72" width="230" x="750" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="logout" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Logout" vertex="1">
+          <mxGeometry height="72" width="290" x="1040" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="own_profile" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Lihat dan ubah&lt;br&gt;profil sendiri" vertex="1">
+          <mxGeometry height="100" width="270" x="350" y="615" as="geometry" />
+        </mxCell>
+        <mxCell id="manage_residents" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Kelola data dan akun warga&lt;br&gt;(tambah, lihat, ubah)" vertex="1">
+          <mxGeometry height="76" width="290" x="1040" y="558" as="geometry" />
+        </mxCell>
+        <mxCell id="verify_residents" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Verifikasi data warga&lt;br&gt;/ minta perbaikan" vertex="1">
+          <mxGeometry height="76" width="290" x="1040" y="654" as="geometry" />
+        </mxCell>
+        <mxCell id="manage_access" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Atur role/status akun&lt;br&gt;serta arsip/pulihkan warga" vertex="1">
+          <mxGeometry height="76" width="290" x="1040" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="submit_letter" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Ajukan surat pengantar" vertex="1">
+          <mxGeometry height="76" width="270" x="350" y="940" as="geometry" />
+        </mxCell>
+        <mxCell id="select_letter" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Pilih jenis surat" vertex="1">
+          <mxGeometry height="76" width="225" x="755" y="940" as="geometry" />
+        </mxCell>
+        <mxCell id="own_letters" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Lihat status, detail,&lt;br&gt;dan riwayat surat sendiri" vertex="1">
+          <mxGeometry height="76" width="270" x="350" y="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="process_letters" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Kelola seluruh pengajuan surat&lt;br&gt;(lihat, proses, selesaikan&lt;br&gt;dan periksa lampiran)" vertex="1">
+          <mxGeometry height="112" width="290" x="1040" y="970" as="geometry" />
+        </mxCell>
+        <mxCell id="submit_complaint" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Ajukan pengaduan" vertex="1">
+          <mxGeometry height="76" width="270" x="350" y="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="own_complaints" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Lihat status, hasil, dan&lt;br&gt;riwayat pengaduan sendiri" vertex="1">
+          <mxGeometry height="76" width="270" x="350" y="1372" as="geometry" />
+        </mxCell>
+        <mxCell id="process_complaints" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Kelola seluruh pengaduan&lt;br&gt;(proses, selesai/tolak,&lt;br&gt;koreksi kategori, tindak lanjut)" vertex="1">
+          <mxGeometry height="112" width="290" x="1040" y="1286" as="geometry" />
+        </mxCell>
+        <mxCell id="own_dues" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Lihat tagihan dan&lt;br&gt;riwayat iuran sendiri" vertex="1">
+          <mxGeometry height="88" width="270" x="350" y="1575" as="geometry" />
+        </mxCell>
+        <mxCell id="confirm_payment" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Konfirmasi pembayaran&lt;br&gt;iuran bulanan" vertex="1">
+          <mxGeometry height="88" width="270" x="350" y="1726" as="geometry" />
+        </mxCell>
+        <mxCell id="verify_payment" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Verifikasi pembayaran&lt;br&gt;(setujui, tolak, batalkan)" vertex="1">
+          <mxGeometry height="84" width="290" x="1040" y="1555" as="geometry" />
+        </mxCell>
+        <mxCell id="dues_settings" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Atur tarif iuran,&lt;br&gt;jatuh tempo, dan rekening" vertex="1">
+          <mxGeometry height="84" width="290" x="1040" y="1657" as="geometry" />
+        </mxCell>
+        <mxCell id="income_summary" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Lihat seluruh tagihan dan&lt;br&gt;rekap pemasukan iuran" vertex="1">
+          <mxGeometry height="84" width="290" x="1040" y="1759" as="geometry" />
+        </mxCell>
+        <mxCell id="read_announcements" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Baca daftar dan detail&lt;br&gt;pengumuman aktif" vertex="1">
+          <mxGeometry height="100" width="270" x="350" y="2012" as="geometry" />
+        </mxCell>
+        <mxCell id="manage_announcements" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Buat/ubah pengumuman&lt;br&gt;dan jadwal tayang (WIB)" vertex="1">
+          <mxGeometry height="88" width="290" x="1040" y="1952" as="geometry" />
+        </mxCell>
+        <mxCell id="archive_announcements" parent="1" style="ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.8;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Arsipkan / tayangkan ulang&lt;br&gt;pengumuman" vertex="1">
+          <mxGeometry height="88" width="290" x="1040" y="2070" as="geometry" />
+        </mxCell>
+        <mxCell id="role_caption" parent="1" style="text;strokeColor=none;fillColor=none;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=21;fontStyle=1;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;strokeColor=none;fillColor=none;" value="Ketua RT = Pengurus RT&lt;br&gt;Hak akses sepenuhnya sama" vertex="1">
+          <mxGeometry height="95" width="305" x="1620" y="728" as="geometry" />
+        </mxCell>
+        <mxCell id="role_note" parent="1" style="shape=note;size=18;align=center;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;fillColor=#ffffff;" value="Pengurus RT dan Ketua RT&lt;br&gt;terhubung langsung ke Login,&lt;br&gt;Logout, dan layanan pengelolaan.&lt;br&gt;&lt;br&gt;Keduanya juga mewarisi&lt;br&gt;layanan pribadi Warga.&lt;br&gt;Registrasi mandiri selalu&lt;br&gt;menghasilkan akun Warga." vertex="1">
+          <mxGeometry height="222" width="250" x="1680" y="1450" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" parent="1" style="text;strokeColor=none;fillColor=none;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;strokeColor=none;fillColor=none;" value="Garis utuh: asosiasi     ·     Garis putus-putus + panah: «include»     ·     Segitiga kosong: generalisasi aktor" vertex="1">
+          <mxGeometry height="38" width="1350" x="310" y="2330" as="geometry" />
+        </mxCell>
+        <mxCell id="scope" parent="1" style="text;strokeColor=none;fillColor=none;whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontStyle=0;fontColor=#111111;strokeColor=#333333;strokeWidth=1.2;align=center;verticalAlign=middle;spacing=6;strokeColor=none;fillColor=none;" value="Cakupan: fitur yang tersedia pada project WargaKita. Pemasukan berasal dari iuran yang disahkan.&lt;br&gt;Pembuatan/penyerahan surat dilakukan manual; cetak surat dan kas pengeluaran belum menjadi fitur aplikasi." vertex="1">
+          <mxGeometry height="62" width="1350" x="310" y="2380" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

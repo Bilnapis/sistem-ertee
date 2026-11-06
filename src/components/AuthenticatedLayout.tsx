@@ -92,7 +92,7 @@ export function AuthenticatedLayout() {
 
         <Outlet />
         <footer className="flex flex-wrap items-center justify-between gap-4 p-6 text-center text-xs text-muted">
-          <span>© ErTee • Layanan Digital Warga</span>
+          <span>© WargaKita • Layanan Digital Warga</span>
         </footer>
       </div>
       {drawerOpen ? (

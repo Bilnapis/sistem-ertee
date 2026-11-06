@@ -84,6 +84,8 @@ export function residentError(error: unknown) {
   if (code === 'REQUEST_CONFLICT') return 'Permintaan sudah digunakan. Periksa daftar warga sebelum mencoba lagi.'
   if (code === '42501' || code === 'ACCESS_DENIED') return 'Anda tidak memiliki akses untuk tindakan ini. Muat ulang halaman untuk memeriksa akun.'
   if (code === 'SESSION_REQUIRED') return 'Sesi telah berakhir. Silakan masuk kembali.'
+  if (code === 'RESIDENT_ARCHIVED') return 'Pulihkan arsip terlebih dahulu sebelum mengubah akun warga.'
+  if (code === 'PASSWORD_UPDATE_FAILED') return 'Password belum berhasil diperbarui. Silakan coba lagi.'
   if (code === 'NOT_FOUND' || code === 'P0002') return 'Data warga tidak ditemukan atau tidak dapat diakses.'
   if (code === '23514' || code === '22023' || code === 'INVALID_INPUT') return 'Periksa kembali kelengkapan dan format data pada formulir.'
   return 'Permintaan belum berhasil. Periksa koneksi dan coba lagi.'

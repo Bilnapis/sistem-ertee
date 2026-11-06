@@ -36,3 +36,7 @@ double_confirm_changes = true
 # Publishable keys are not JWTs; the handler validates the user's bearer token,
 # and the database rechecks the live session and role when creating the profile.
 verify_jwt = false
+
+[functions.update-resident-password]
+# The handler verifies the bearer token and live manager session/role itself.
+verify_jwt = false

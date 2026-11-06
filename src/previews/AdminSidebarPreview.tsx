@@ -24,7 +24,7 @@ export default function AdminSidebarPreview() {
         <p className="text-sm font-bold text-action!">Pratinjau komponen</p>
         <h1>{pageLabels[section] ?? 'Sidebar admin'}</h1>
         <p>
-          Sidebar admin ErTee sesuai desain. Pilih menu untuk melihat penanda
+          Sidebar admin WargaKita sesuai desain. Pilih menu untuk melihat penanda
           navigasi aktif.
         </p>
         <ButtonLink to="/login" variant="ghost" size="text" align="start">

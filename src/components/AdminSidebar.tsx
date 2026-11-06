@@ -8,6 +8,7 @@ import {
   Wallet,
 } from 'lucide-react'
 import { Link, NavLink } from 'react-router'
+import { Logo } from './Logo'
 
 export type AdminSidebarProps = {
   communityLabel: string
@@ -72,12 +73,12 @@ export function AdminSidebar({
       {!collapsed ? (
         <header className="flex min-w-0 flex-none flex-col gap-1 px-3 pe-[var(--sidebar-brand-padding-end,0.75rem)]">
           <Link
-            className="block text-[1.75rem] leading-tight font-extrabold tracking-[-0.02em] text-white"
+            className="block w-fit max-w-full"
             to={paths?.dashboard ?? rootPath}
             onClick={onNavigate}
-            aria-label="ErTee — dashboard admin"
+            aria-label="WargaKita — dashboard admin"
           >
-            ErTee
+            <Logo className="max-w-full" alt="" />
           </Link>
           <p className="text-xs leading-normal font-semibold tracking-wider wrap-anywhere text-slate-400">
             {communityLabel}
@@ -116,9 +117,7 @@ export function AdminSidebar({
           className="mt-auto flex min-w-0 flex-none flex-col gap-0.5 px-3 text-start wrap-anywhere select-none"
           aria-hidden="true"
         >
-          <span className="text-xl leading-[1.2] font-extrabold tracking-[-0.02em] text-brand">
-            ErTee
-          </span>
+          <Logo className="size-12" alt="" />
           <span className="text-xs leading-normal text-slate-400">
             Layanan Digital Warga
           </span>

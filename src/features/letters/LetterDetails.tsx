@@ -135,8 +135,8 @@ export default function LetterDetails({
                 {data.status === 'selesai'
                   ? 'Pemrosesan surat telah selesai. Hubungi pengurus RT untuk penyerahan surat.'
                   : data.status === 'diproses'
-                    ? 'Surat masih dalam proses pengerjaan secara manual di luar sistem ErTee.'
-                    : 'Surat diproses secara manual di luar sistem ErTee.'}
+                    ? 'Surat masih dalam proses pengerjaan secara manual di luar sistem WargaKita.'
+                    : 'Surat diproses secara manual di luar sistem WargaKita.'}
               </span>
             </p>
             <details className="rounded-summary border border-border px-4 py-3 text-sm leading-normal [&_li]:py-2 [&_li]:ps-1 [&_li_p]:text-muted [&_li_time]:text-muted [&_ol]:mb-0 [&_ol]:list-decimal [&_ol]:ps-5 [&_summary]:cursor-pointer [&_summary]:font-semibold [&>div]:mt-3 [&>p]:mt-3">

@@ -13,6 +13,7 @@ import {
 import { Link } from 'react-router'
 import { ButtonLink, Button } from '../components/Button'
 import { TextInput } from '../components/TextInput'
+import { Logo } from '../components/Logo'
 
 export default function TextInputPreview() {
   const [email, setEmail] = useState('')
@@ -40,15 +41,9 @@ export default function TextInputPreview() {
         <Link
           className="inline-flex flex-wrap items-center gap-3 text-xl font-bold text-ink"
           to="/login"
-          aria-label="ErTee, ke halaman masuk"
+          aria-label="WargaKita, ke halaman masuk"
         >
-          <span
-            className="grid size-10 place-items-center rounded-control bg-action text-white"
-            aria-hidden="true"
-          >
-            <TextCursorInput size={22} />
-          </span>
-          ErTee
+          <Logo className="size-12" alt="" />
           <span className="ms-1 border-s border-border ps-4 text-sm font-medium text-muted">
             Komponen
           </span>
@@ -243,7 +238,7 @@ export default function TextInputPreview() {
           </form>
         </section>
         <footer className="flex flex-wrap justify-between gap-3 py-7 text-xs text-muted">
-          <span>ErTee · Layanan Digital Warga</span>
+          <span>WargaKita · Layanan Digital Warga</span>
           <span>Text input / v1.0</span>
         </footer>
       </main>

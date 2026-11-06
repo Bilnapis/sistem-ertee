@@ -1,5 +1,5 @@
 ---
-name: ErTee Resident Management
+name: WargaKita Resident Management
 version: 1.0.0
 colors:
   primary: '#087e34'
@@ -72,7 +72,7 @@ components:
     textColor: '{colors.on-warning}'
 ---
 
-# ErTee — Manajemen Warga
+# WargaKita — Manajemen Warga
 
 Acuan adalah `design.fig`, frame daftar `0:4505`, detail `0:4584`, edit
 `0:4697`, dan tambah `0:4798`, seluruhnya 1648 × 1056 px. File desain
@@ -96,7 +96,7 @@ dan disabled mengikuti warna masing-masing.
 | Dialog              | Maksimal 1000 px, radius 22 px, form dua kolom dengan gap 16 px.                                                               |
 | Ponsel              | Form satu kolom di bawah 640 px; tabel digulir di dalam region sendiri.                                                        |
 | Role dan verifikasi | Badge role di bawah nama; ringkasan verifikasi di atas pencarian.                                                              |
-| Form akun           | Tambahan email, role, status, password dan konfirmasi pada alur tambah.                                                        |
+| Form akun           | Email, role, status, password dan konfirmasi pada alur tambah; pembaruan password dengan tombol sendiri pada edit pengelola.   |
 
 Penyesuaian halaman daftar setelah implementasi awal mengikuti permintaan
 perbaikan layout. Ringkasan menjadi dua kolom dengan angka di sisi akhir pada

@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { Link } from 'react-router'
 import { MailCheck } from 'lucide-react'
 import { ButtonLink, Button } from '../../components/Button'
+import { Logo } from '../../components/Logo'
 import { FormField } from '../../components/FormField'
 import { Feedback } from '../../components/Feedback'
 import { getSupabase, setSessionPersistence } from '../../lib/supabase'
@@ -106,8 +107,9 @@ export function RegisterPage() {
         aria-labelledby="register-title"
       >
         <header className="text-center [&>p]:mt-1 [&>p]:text-base [&>p]:leading-6 [&>p]:text-muted max-sm:[&>p]:text-sm">
+          <Logo className="mx-auto mb-4" />
           <h1 id="register-title">Buat Akun Warga</h1>
-          <p>Daftarkan akun Anda untuk mengakses layanan ErTee.</p>
+          <p>Daftarkan akun Anda untuk mengakses layanan WargaKita.</p>
         </header>
         <form noValidate onSubmit={submit} aria-busy={pending}>
           <div className="mt-4 grid grid-cols-2 gap-4 max-sm:mt-6 max-sm:grid-cols-1">
@@ -185,7 +187,7 @@ export function RegisterPage() {
             {pending ? 'Mendaftarkan akun…' : 'Daftar Akun'}
           </Button>
         </form>
-        <p className="flex min-h-6 flex-wrap items-center justify-center gap-2 text-sm leading-5 text-muted [&>a]:font-bold [&>a]:text-action [&>a:hover]:underline">
+        <p className="mt-4 flex min-h-6 flex-wrap items-center justify-center gap-2 text-sm leading-5 text-muted [&>a]:font-bold [&>a]:text-action [&>a:hover]:underline">
           Sudah punya akun? <Link to="/login">Masuk di sini</Link>
         </p>
       </section>

@@ -214,8 +214,16 @@ pengelola nyata belum diuji pada penerapan ini. Hosting frontend tidak diubah.
 Pada UI, perubahan identitas membatalkan verifikasi sebelumnya. Perubahan
 role/status saja tidak membatalkan verifikasi. Arsip mempertahankan profil,
 Auth user, dan riwayat; pemulihan membutuhkan aktivasi terpisah melalui edit.
-Email dibaca saja pada editor profil. Pergantian email/password dan
-penghapusan permanen bukan bagian fitur ini.
+Email dibaca saja pada editor profil. Pengurus RT dan Ketua RT dapat memperbarui
+password akun melalui bagian **Perbarui Password** pada dialog edit data warga.
+Bagian tersebut memiliki tombol simpan sendiri dan tidak menyimpan perubahan
+biodata yang belum dikirim. Pergantian email dan penghapusan permanen bukan
+bagian fitur ini. Kontrak endpoint dan penerapan ada di
+[`resident-password.md`](resident-password.md).
+
+Edge Function pembaruan password sudah diterapkan ke proyek cloud Sistem ErTee
+pada 6 November 2026; status aktif dan pemeriksaan HTTP tanpa sesi atau dengan
+token tidak valid tercatat pada panduan tersebut.
 
 ## Pengujian
 

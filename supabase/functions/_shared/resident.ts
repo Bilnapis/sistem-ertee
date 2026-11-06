@@ -70,9 +70,14 @@ export function validateAccount(
   const errors: FieldErrors = {}
   if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     errors.email = 'Masukkan alamat email yang valid.'
-  if (password.length < 8 || password.length > 128)
-    errors.password = 'Password harus berisi 8–128 karakter.'
+  Object.assign(errors, validatePassword(password))
   if (!roles.includes(role as ResidentRole))
     errors.role = 'Pilih role yang tersedia.'
   return errors
+}
+
+export function validatePassword(password: string): FieldErrors {
+  return password.length < 8 || password.length > 128
+    ? { password: 'Password harus berisi 8–128 karakter.' }
+    : {}
 }

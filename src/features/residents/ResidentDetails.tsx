@@ -1,6 +1,6 @@
 import { cn } from '../../lib/cn'
 
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useLocation } from 'react-router'
 import { Button, ButtonLink } from '../../components/Button'
@@ -11,7 +11,6 @@ import {
   archiveResident,
   formatDate,
   genderLabels,
-  initials,
   maritalLabels,
   maskIdentity,
   residentError,
@@ -170,7 +169,7 @@ export function ResidentDetails({
       onPending(false)
     }
   }
-  const details = [
+  const details: [string, ReactNode][] = [
     ['Nama Lengkap', profile.full_name],
     ['NIK', reveal ? profile.nik : maskIdentity(profile.nik)],
     [
@@ -193,39 +192,29 @@ export function ResidentDetails({
     ],
     ['Nomor HP', profile.phone],
     ['Alamat Lengkap', profile.address],
-    ['RT', '04'],
+    [
+      'Status Warga',
+      <span
+        className={cn(
+          'inline-flex w-fit max-w-full items-center rounded-full px-3 py-1 text-xs leading-normal font-semibold wrap-anywhere whitespace-normal forced-colors:border forced-colors:border-[CanvasText]',
+          profile.is_active
+            ? 'bg-success-soft text-success'
+            : 'bg-soft text-slate-600',
+        )}
+      >
+        {profile.archived_at
+          ? 'Diarsipkan'
+          : profile.is_active
+            ? 'Aktif'
+            : 'Tidak Aktif'}
+      </span>,
+    ],
     ['Email', profile.email],
     ['Role', roleLabels[profile.role]],
   ]
   return (
     <>
       <ModalBody>
-        <div className="flex items-center gap-4 rounded-summary bg-page p-4 max-sm:flex-wrap max-sm:gap-3 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:wrap-anywhere max-sm:[&_h3]:text-lg [&_p]:mt-1 [&_p]:text-sm [&_p]:leading-normal [&_p]:text-muted [&>div]:min-w-0 [&>div]:flex-1">
-          <span
-            className="grid size-16 shrink-0 place-items-center rounded-full bg-brand text-2xl font-extrabold text-white max-sm:size-12 max-sm:text-lg"
-            aria-hidden="true"
-          >
-            {initials(profile.full_name)}
-          </span>
-          <div>
-            <h3>{profile.full_name}</h3>
-            <p>RT 04</p>
-          </div>
-          <span
-            className={cn(
-              'inline-flex w-fit max-w-full items-center rounded-full px-3 py-1 text-xs leading-normal font-semibold wrap-anywhere whitespace-normal forced-colors:border forced-colors:border-[CanvasText]',
-              profile.is_active
-                ? 'bg-success-soft text-success'
-                : 'bg-soft text-slate-600',
-            )}
-          >
-            {profile.archived_at
-              ? 'Diarsipkan'
-              : profile.is_active
-                ? 'Aktif'
-                : 'Tidak Aktif'}
-          </span>
-        </div>
         <dl className="m-0 grid grid-cols-2 gap-x-4 gap-y-3 max-sm:grid-cols-1 [&_dd]:m-0 [&_dd]:text-sm [&_dd]:leading-relaxed [&_dd]:font-bold [&_dd]:wrap-anywhere [&_dt]:mb-3 [&_dt]:text-sm [&_dt]:font-semibold [&_dt]:text-slate-600 [&>div]:min-w-0 [&>div]:rounded-summary [&>div]:border [&>div]:border-border [&>div]:p-3">
           {details.map(([label, value]) => (
             <div key={label}>

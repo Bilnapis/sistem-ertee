@@ -1,10 +1,11 @@
-import { useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { Button } from '../../components/Button'
 import { FormField } from '../../components/FormField'
 import { Feedback } from '../../components/Feedback'
 import { ModalBody, ModalFooter, ModalForm } from '../../components/Modal'
 import { Select } from '../../components/Select'
+import { ResidentPasswordForm } from './ResidentPasswordForm'
 import { getSupabase } from '../../lib/supabase'
 import type {
   ResidentFields,
@@ -54,6 +55,8 @@ export function ResidentEditor({
   const [active, setActive] = useState(original?.is_active ?? true)
   const [errors, setErrors] = useState<FieldErrors>({})
   const [confirmDisable, setConfirmDisable] = useState(false)
+  const [passwordPending, setPasswordPending] = useState(false)
+  const formId = useId()
   const form = useRef<HTMLFormElement>(null)
   const request = useRef({ signature: '', id: '' })
   const refresh = useRefreshResidents()
@@ -98,7 +101,7 @@ export function ResidentEditor({
 
   async function submit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (mutation.isPending) return
+    if (mutation.isPending || passwordPending) return
     const normalized = normalizeResident(fields)
     const nextErrors = {
       ...validateResident(normalized),
@@ -191,116 +194,139 @@ export function ResidentEditor({
     </div>
   )
 
+  const statusField = (
+    <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
+      <label htmlFor="resident-active">Status Warga *</label>
+      <Select
+        id="resident-active"
+        value={String(active)}
+        onChange={(event) => {
+          setActive(event.target.value === 'true')
+          setConfirmDisable(false)
+        }}
+      >
+        <option value="true">Aktif</option>
+        <option value="false">Tidak Aktif</option>
+      </Select>
+    </div>
+  )
+
   return (
-    <ModalForm ref={form} onSubmit={submit} noValidate>
+    <>
       <ModalBody>
-        <fieldset
-          disabled={mutation.isPending}
-          className="m-0 grid min-w-0 grid-cols-2 gap-4 border-0 p-0 max-sm:grid-cols-1 [&_input[readonly]]:text-muted"
-        >
-          <legend className="sr-only">Identitas warga</legend>
-          {textField('full_name', 'Nama Lengkap *', 150)}
-          {textField('nik', 'NIK *', 16, 'numeric')}
-          {textField(
-            'family_card_number',
-            'Nomor Kartu Keluarga *',
-            16,
-            'numeric',
-          )}
-          {selection('gender', 'Jenis Kelamin *', genderLabels)}
-          {selection('marital_status', 'Status Pernikahan *', maritalLabels)}
-          {textField('phone', 'Nomor HP *', 25, 'tel')}
-          {textField('address', 'Alamat Lengkap *', 500)}
-          <FormField
-            id="resident-email"
-            label="Email *"
-            type="email"
-            required
-            value={email}
-            readOnly={Boolean(original)}
-            error={errors.email}
-            maxLength={254}
-            autoComplete="off"
-            onChange={(event) => setEmail(event.target.value)}
+        <div className="shrink-0">
+          <ModalForm ref={form} id={formId} onSubmit={submit} noValidate>
+            <fieldset
+              disabled={mutation.isPending || passwordPending}
+              className="m-0 grid min-w-0 grid-cols-2 gap-4 border-0 p-0 max-sm:grid-cols-1 [&_input[readonly]]:text-muted"
+            >
+              <legend className="sr-only">Identitas warga</legend>
+              {textField('full_name', 'Nama Lengkap *', 150)}
+              {textField('nik', 'NIK *', 16, 'numeric')}
+              {textField(
+                'family_card_number',
+                'Nomor Kartu Keluarga *',
+                16,
+                'numeric',
+              )}
+              {selection('gender', 'Jenis Kelamin *', genderLabels)}
+              {selection(
+                'marital_status',
+                'Status Pernikahan *',
+                maritalLabels,
+              )}
+              {textField('phone', 'Nomor HP *', 25, 'tel')}
+              {textField('address', 'Alamat Lengkap *', 500)}
+              {manageAccess && original ? statusField : null}
+              <FormField
+                id="resident-email"
+                label="Email *"
+                type="email"
+                required
+                value={email}
+                readOnly={Boolean(original)}
+                error={errors.email}
+                maxLength={254}
+                autoComplete="off"
+                onChange={(event) => setEmail(event.target.value)}
+              />
+              {manageAccess ? (
+                <>
+                  <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
+                    <label htmlFor="resident-role">Role *</label>
+                    <Select
+                      id="resident-role"
+                      value={role}
+                      onChange={(event) => {
+                        setRole(event.target.value as ResidentRole)
+                        setConfirmDisable(false)
+                      }}
+                    >
+                      {Object.entries(roleLabels).map(([value, label]) => (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+                  {!original ? statusField : null}
+                </>
+              ) : null}
+              {!original ? (
+                <>
+                  <FormField
+                    id="resident-password"
+                    label="Password *"
+                    type="password"
+                    required
+                    value={password}
+                    error={errors.password}
+                    autoComplete="new-password"
+                    maxLength={128}
+                    visible={visible}
+                    onToggleVisibility={() => setVisible((value) => !value)}
+                    onChange={(event) => setPassword(event.target.value)}
+                  />
+                  <FormField
+                    id="resident-confirmation"
+                    label="Konfirmasi Password *"
+                    required
+                    type={visible ? 'text' : 'password'}
+                    value={confirmation}
+                    error={errors.confirmation}
+                    autoComplete="new-password"
+                    maxLength={128}
+                    onChange={(event) => setConfirmation(event.target.value)}
+                  />
+                </>
+              ) : null}
+            </fieldset>
+            {mutation.isError ? (
+              <Feedback>{residentError(mutation.error)}</Feedback>
+            ) : null}
+            {confirmDisable ? (
+              <div
+                className="flex flex-col gap-3 rounded-control border border-amber-200 bg-amber-50 p-4 text-sm leading-relaxed [&_h3]:text-base [&_h3]:font-bold"
+                role="alert"
+              >
+                <strong>Nonaktifkan akun {original?.full_name}?</strong>
+                <p>
+                  Akun ini akan kehilangan akses layanan, termasuk sesi yang
+                  sedang digunakan.
+                </p>
+              </div>
+            ) : null}
+          </ModalForm>
+        </div>
+        {original && manageAccess ? (
+          <ResidentPasswordForm
+            residentId={original.id}
+            disabled={mutation.isPending}
+            onPending={(pending) => {
+              setPasswordPending(pending)
+              onPending(pending)
+            }}
           />
-          {manageAccess ? (
-            <>
-              <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-                <label htmlFor="resident-role">Role *</label>
-                <Select
-                  id="resident-role"
-                  value={role}
-                  onChange={(event) => {
-                    setRole(event.target.value as ResidentRole)
-                    setConfirmDisable(false)
-                  }}
-                >
-                  {Object.entries(roleLabels).map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </Select>
-              </div>
-              <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-                <label htmlFor="resident-active">Status Warga *</label>
-                <Select
-                  id="resident-active"
-                  value={String(active)}
-                  onChange={(event) => {
-                    setActive(event.target.value === 'true')
-                    setConfirmDisable(false)
-                  }}
-                >
-                  <option value="true">Aktif</option>
-                  <option value="false">Tidak Aktif</option>
-                </Select>
-              </div>
-            </>
-          ) : null}
-          {!original ? (
-            <>
-              <FormField
-                id="resident-password"
-                label="Password *"
-                type="password"
-                required
-                value={password}
-                error={errors.password}
-                autoComplete="new-password"
-                maxLength={128}
-                visible={visible}
-                onToggleVisibility={() => setVisible((value) => !value)}
-                onChange={(event) => setPassword(event.target.value)}
-              />
-              <FormField
-                id="resident-confirmation"
-                label="Konfirmasi Password *"
-                required
-                type={visible ? 'text' : 'password'}
-                value={confirmation}
-                error={errors.confirmation}
-                autoComplete="new-password"
-                maxLength={128}
-                onChange={(event) => setConfirmation(event.target.value)}
-              />
-            </>
-          ) : null}
-        </fieldset>
-        {mutation.isError ? (
-          <Feedback>{residentError(mutation.error)}</Feedback>
-        ) : null}
-        {confirmDisable ? (
-          <div
-            className="flex flex-col gap-3 rounded-control border border-amber-200 bg-amber-50 p-4 text-sm leading-relaxed [&_h3]:text-base [&_h3]:font-bold"
-            role="alert"
-          >
-            <strong>Nonaktifkan akun {original?.full_name}?</strong>
-            <p>
-              Akun ini akan kehilangan akses layanan, termasuk sesi yang sedang
-              digunakan.
-            </p>
-          </div>
         ) : null}
       </ModalBody>
       <ModalFooter>
@@ -308,12 +334,17 @@ export function ResidentEditor({
           <Button
             type="button"
             variant="outline"
-            disabled={mutation.isPending}
+            disabled={mutation.isPending || passwordPending}
             onClick={onCancel}
           >
             Batal
           </Button>
-          <Button type="submit" variant="solid" disabled={mutation.isPending}>
+          <Button
+            type="submit"
+            form={formId}
+            variant="solid"
+            disabled={mutation.isPending || passwordPending}
+          >
             {mutation.isPending
               ? 'Menyimpan…'
               : confirmDisable
@@ -324,6 +355,6 @@ export function ResidentEditor({
           </Button>
         </div>
       </ModalFooter>
-    </ModalForm>
+    </>
   )
 }

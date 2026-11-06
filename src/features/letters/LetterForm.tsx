@@ -297,7 +297,7 @@ export default function LetterForm() {
               <Info size={20} aria-hidden="true" />
               <span>
                 Pengajuan surat akan diproses secara manual oleh pengurus RT.
-                Status pengajuan dapat dipantau melalui ErTee.
+                Status pengajuan dapat dipantau melalui WargaKita.
               </span>
             </p>
             {submission.isError ? (

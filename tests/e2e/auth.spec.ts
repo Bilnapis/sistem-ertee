@@ -298,7 +298,7 @@ test('desktop sidebar toggles with the keyboard and keeps icon navigation access
       await expect(collapse).toHaveAttribute('aria-expanded', 'true')
       expect((await sidebar.boundingBox())!.width).toBe(264)
       await expect(
-        sidebar.getByRole('link', { name: 'ErTee — dashboard admin' }),
+        sidebar.getByRole('link', { name: 'WargaKita — dashboard admin' }),
       ).toBeVisible()
       expect(
         (await residentLink.locator('span').boundingBox())!.width,

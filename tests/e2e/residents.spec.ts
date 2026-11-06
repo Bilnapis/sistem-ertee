@@ -34,6 +34,7 @@ type Options = {
   createFailure?: boolean
   loseCreateResponse?: boolean
   updateFailure?: boolean
+  passwordFailure?: boolean
   directoryFailure?: boolean
 }
 async function mockResidents(page: Page, options: Options = {}) {
@@ -176,6 +177,16 @@ async function mockResidents(page: Page, options: Options = {}) {
           (p) => p.verification_status === 'perlu_perbaikan',
         ).length,
       })
+    }
+    if (path.endsWith('/update-resident-password')) {
+      if (!manager) return respond({ code: 'ACCESS_DENIED' }, 403)
+      if (options.passwordFailure)
+        return respond({ code: 'PASSWORD_UPDATE_FAILED' }, 503)
+      const profile = profiles.get(String(body.id))
+      if (!profile) return respond({ code: 'NOT_FOUND' }, 404)
+      if (profile.archived_at)
+        return respond({ code: 'RESIDENT_ARCHIVED' }, 409)
+      return respond({ id: profile.id })
     }
     if (path.endsWith('/create-resident')) {
       if (!manager) return respond({ code: 'ACCESS_DENIED' }, 403)
@@ -327,7 +338,7 @@ for (const role of ['ketua_rt', 'pengurus_rt'] as const)
       exact: true,
     })
     await expect(
-      dialog.getByRole('heading', { name: 'Warga Baru Dummy' }),
+      dialog.getByText('Warga Baru Dummy', { exact: true }),
     ).toBeVisible()
     await expect(dialog.getByText('Pengurus RT', { exact: true })).toBeVisible()
     await expect(
@@ -484,6 +495,9 @@ test('warga can update only their own profile and cannot open management routes'
   await page.getByRole('button', { name: 'Edit profil sendiri' }).click()
   const dialog = page.getByRole('dialog', { name: 'Edit Profil Saya' })
   await expect(dialog.getByLabel('Role *', { exact: true })).toHaveCount(0)
+  await expect(dialog.getByLabel('Password Baru', { exact: true })).toHaveCount(
+    0,
+  )
   await expect(dialog.getByLabel(/^(Nomor Rumah|RT|RW)$/)).toHaveCount(0)
   await dialog
     .getByLabel('Alamat Lengkap *', { exact: true })
@@ -539,6 +553,9 @@ for (const role of ['warga', 'ketua_rt', 'pengurus_rt'] as const)
       dialog.getByLabel('Nama Lengkap *', { exact: true }),
     ).toHaveValue(name)
     await expect(dialog.getByLabel('Role *', { exact: true })).toHaveCount(0)
+    await expect(
+      dialog.getByLabel('Password Baru', { exact: true }),
+    ).toHaveCount(0)
     await dialog.getByRole('button', { name: 'Batal', exact: true }).click()
     await expect(trigger).toBeFocused()
     await trigger.click()
@@ -691,6 +708,234 @@ test('responsive directory and dialogs support keyboard, Escape, focus return, a
     await page.keyboard.press('Escape')
     await expect(page.getByRole('dialog')).toHaveCount(0)
   }
+})
+
+for (const role of ['ketua_rt', 'pengurus_rt'] as const)
+  test(`${role} can update a resident password directly without saving profile edits`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({
+      width: role === 'ketua_rt' ? 1280 : 375,
+      height: 900,
+    })
+    const state = await mockResidents(page, { role })
+    const original = { ...state.profiles.get(uid(14))! }
+    await login(page, role)
+    await page.goto(`/admin/warga/${uid(14)}/edit`)
+    const dialog = page.getByRole('dialog', {
+      name: 'Edit Data Warga',
+      exact: true,
+    })
+    await dialog
+      .getByLabel('Nama Lengkap *', { exact: true })
+      .fill('Perubahan Biodata Belum Disimpan')
+    const password = dialog.getByLabel('Password Baru', { exact: true })
+    const confirmation = dialog.getByLabel('Konfirmasi Password Baru', {
+      exact: true,
+    })
+    await expect(password).toHaveAttribute('type', 'password')
+    await password.fill('NewDummyPassword123!')
+    await confirmation.fill('NewDummyPassword123!')
+    await dialog
+      .getByRole('button', { name: 'Tampilkan password baru', exact: true })
+      .click()
+    await expect(password).toHaveAttribute('type', 'text')
+    await expect(confirmation).toHaveAttribute('type', 'text')
+    await dialog
+      .getByRole('button', { name: 'Sembunyikan password baru', exact: true })
+      .click()
+    await dialog
+      .getByRole('button', { name: 'Perbarui Password', exact: true })
+      .scrollIntoViewIfNeeded()
+    await page.screenshot({
+      path: `test-results/resident-password-${role}.png`,
+      fullPage: true,
+    })
+    // Enter submits the password form rather than the biodata form.
+    await confirmation.press('Enter')
+    await expect(dialog.getByRole('status')).toHaveText(
+      'Password akun warga berhasil diperbarui.',
+    )
+    await expect(password).toHaveValue('')
+    await expect(confirmation).toHaveValue('')
+    await expect(password).toHaveAttribute('type', 'password')
+    const requests = state.requests.filter((request) =>
+      request.path.endsWith('/update-resident-password'),
+    )
+    expect(requests).toHaveLength(1)
+    expect(requests[0].body).toEqual({
+      id: uid(14),
+      password: 'NewDummyPassword123!',
+    })
+    expect(
+      state.requests.filter((request) =>
+        request.path.endsWith('/update_resident'),
+      ),
+    ).toHaveLength(0)
+    expect(state.profiles.get(uid(14))).toEqual(original)
+    await expect(
+      dialog.getByLabel('Nama Lengkap *', { exact: true }),
+    ).toHaveValue('Perubahan Biodata Belum Disimpan')
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth),
+    ).toBeLessThanOrEqual(role === 'ketua_rt' ? 1280 : 375)
+    await dialog
+      .getByRole('button', { name: 'Simpan Perubahan', exact: true })
+      .click()
+    await expect(
+      page.getByRole('dialog', { name: 'Detail Warga', exact: true }),
+    ).toBeVisible()
+    const update = state.requests.find((request) =>
+      request.path.endsWith('/update_resident'),
+    )!
+    expect(update.body.p_data).not.toHaveProperty('password')
+    expect(
+      state.requests.filter((request) =>
+        request.path.endsWith('/update-resident-password'),
+      ),
+    ).toHaveLength(1)
+  })
+
+test('password validation and server failures keep the editor available for correction and retry', async ({
+  page,
+}) => {
+  const options: Options = { passwordFailure: true }
+  const state = await mockResidents(page, options)
+  await login(page)
+  await page.goto(`/admin/warga/${uid(14)}/edit`)
+  const dialog = page.getByRole('dialog', {
+    name: 'Edit Data Warga',
+    exact: true,
+  })
+  const password = dialog.getByLabel('Password Baru', { exact: true })
+  const confirmation = dialog.getByLabel('Konfirmasi Password Baru', {
+    exact: true,
+  })
+  const submit = dialog.getByRole('button', {
+    name: 'Perbarui Password',
+    exact: true,
+  })
+  await submit.click()
+  await expect(password).toBeFocused()
+  await expect(
+    dialog.getByText('Password harus berisi 8–128 karakter.'),
+  ).toBeVisible()
+  await password.fill('NewDummyPassword123!')
+  await confirmation.fill('DifferentPassword123!')
+  await submit.click()
+  await expect(confirmation).toBeFocused()
+  await expect(
+    dialog.getByText('Konfirmasi password harus sama.'),
+  ).toBeVisible()
+  expect(
+    state.requests.filter((request) =>
+      request.path.endsWith('/update-resident-password'),
+    ),
+  ).toHaveLength(0)
+  await confirmation.fill('NewDummyPassword123!')
+  await submit.click()
+  await expect(dialog.getByRole('alert')).toContainText(
+    'Password belum berhasil diperbarui.',
+  )
+  await expect(password).toHaveValue('NewDummyPassword123!')
+  await expect(confirmation).toHaveValue('NewDummyPassword123!')
+  await expect(dialog.getByRole('status')).toHaveCount(0)
+  options.passwordFailure = false
+  await submit.click()
+  await expect(dialog.getByRole('status')).toHaveText(
+    'Password akun warga berhasil diperbarui.',
+  )
+  await expect(dialog.getByRole('alert')).toHaveCount(0)
+})
+
+test('saving biodata with an untouched password form does not change the password', async ({
+  page,
+}) => {
+  const state = await mockResidents(page)
+  await login(page)
+  await page.goto(`/admin/warga/${uid(14)}/edit`)
+  const dialog = page.getByRole('dialog', {
+    name: 'Edit Data Warga',
+    exact: true,
+  })
+  await dialog
+    .getByLabel('Nama Lengkap *', { exact: true })
+    .fill('Biodata Tanpa Password')
+  await dialog
+    .getByRole('button', { name: 'Simpan Perubahan', exact: true })
+    .click()
+  await expect(
+    page.getByRole('dialog', { name: 'Detail Warga', exact: true }),
+  ).toBeVisible()
+  expect(
+    state.requests.filter((request) =>
+      request.path.endsWith('/update-resident-password'),
+    ),
+  ).toHaveLength(0)
+})
+
+test('password requests disable conflicting controls and prevent repeated submissions', async ({
+  page,
+}) => {
+  const state = await mockResidents(page)
+  let release: () => void = () => {}
+  const pending = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  await page.route(
+    '**/functions/v1/update-resident-password',
+    async (route) => {
+      await pending
+      await route.fallback()
+    },
+  )
+  await login(page)
+  await page.goto(`/admin/warga/${uid(14)}/edit`)
+  const dialog = page.getByRole('dialog', {
+    name: 'Edit Data Warga',
+    exact: true,
+  })
+  await dialog
+    .getByLabel('Password Baru', { exact: true })
+    .fill('NewDummyPassword123!')
+  await dialog
+    .getByLabel('Konfirmasi Password Baru', { exact: true })
+    .fill('NewDummyPassword123!')
+  try {
+    await dialog
+      .getByRole('button', { name: 'Perbarui Password', exact: true })
+      .click()
+    await expect(
+      dialog.getByRole('button', {
+        name: 'Memperbarui Password…',
+        exact: true,
+      }),
+    ).toBeDisabled()
+    await expect(
+      dialog.getByRole('button', { name: 'Simpan Perubahan', exact: true }),
+    ).toBeDisabled()
+    await expect(
+      dialog.getByRole('button', { name: 'Batal', exact: true }),
+    ).toBeDisabled()
+    await expect(
+      dialog.getByRole('button', { name: 'Tutup dialog', exact: true }),
+    ).toBeDisabled()
+    await expect(
+      dialog.getByLabel('Nama Lengkap *', { exact: true }),
+    ).toBeDisabled()
+    await page.keyboard.press('Escape')
+    await expect(dialog).toBeVisible()
+  } finally {
+    release()
+  }
+  await expect(dialog.getByRole('status')).toHaveText(
+    'Password akun warga berhasil diperbarui.',
+  )
+  expect(
+    state.requests.filter((request) =>
+      request.path.endsWith('/update-resident-password'),
+    ),
+  ).toHaveLength(1)
 })
 
 test('logout clears directory data before another user logs in', async ({

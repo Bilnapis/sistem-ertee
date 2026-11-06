@@ -1,0 +1,20 @@
+@layer components {
+  /* Paint over the browser's autofill tint without changing saved-login behavior.
+     Focus borders and rings stay on the surrounding field. */
+  @media (forced-colors: none) {
+    .input-control:is(:autofill, :-webkit-autofill) {
+      box-shadow: inset 0 0 0 1000px var(--color-surface);
+      -webkit-text-fill-color: var(--color-ink);
+      caret-color: var(--color-ink);
+    }
+
+    .input-control:is(:autofill, :-webkit-autofill):read-only {
+      box-shadow: inset 0 0 0 1000px var(--color-page);
+    }
+
+    .input-control:is(:autofill, :-webkit-autofill):disabled {
+      box-shadow: inset 0 0 0 1000px var(--color-soft);
+      -webkit-text-fill-color: var(--color-muted);
+    }
+  }
+}

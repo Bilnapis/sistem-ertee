@@ -1,4 +1,10 @@
-# Sistem ErTee
+# Sistem WargaKita
+
+Nama produk sebelumnya adalah ErTee. Nama pada antarmuka dan metadata aplikasi
+menggunakan WargaKita. Kunci sesi `ertee.remember-session`, metadata internal
+`ertee_creation`, identitas proyek Supabase lokal, dan nama job cron tetap
+dipertahankan untuk kompatibilitas. Referensi proyek cloud, frame desain, dan
+artefak pengujian lama pada dokumentasi mencatat nama saat pekerjaan dilakukan.
 
 Aplikasi layanan RT menggunakan React, Vite, TypeScript, React Router v7, TanStack Query, Tailwind CSS, dan Supabase. Fitur tersedia mencakup **autentikasi, manajemen warga dan akun, verifikasi, arsip, pembaruan profil sendiri, pengajuan surat, iuran warga bulanan, serta pengaduan warga**.
 

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link } from 'react-router'
 import { Button } from '../../components/Button'
+import { Logo } from '../../components/Logo'
 import { FormField } from '../../components/FormField'
 import { Feedback } from '../../components/Feedback'
 import { Modal, ModalBody, ModalFooter } from '../../components/Modal'
@@ -11,6 +12,7 @@ import {
   setSessionPersistence,
 } from '../../lib/supabase'
 import { authErrorMessage } from './errors'
+import './LoginPage.css'
 
 export function LoginPage() {
   const [email, setEmail] = useState('')
@@ -43,21 +45,27 @@ export function LoginPage() {
   return (
     <main className="relative flex min-h-svh flex-col items-center justify-center px-5 py-8 max-sm:px-4">
       <section
-        className="flex w-full max-w-[560px] flex-col gap-6 rounded-card bg-surface px-10 py-5 shadow-card max-sm:px-6 max-sm:py-7"
+        className="login-card flex w-full max-w-[560px] flex-col gap-6 rounded-card bg-surface px-10 py-5 shadow-card max-sm:px-6 max-sm:py-7"
         aria-labelledby="login-title"
       >
-        <header className="text-center [&>p]:mt-1 [&>p]:text-base [&>p]:leading-6 [&>p]:text-muted max-sm:[&>p]:text-sm">
+        <header className="login-enter text-center [&>p]:mt-1 [&>p]:text-base [&>p]:leading-6 [&>p]:text-muted max-sm:[&>p]:text-sm">
+          <Logo className="mx-auto mb-4" />
           <h1 id="login-title">Selamat Datang!</h1>
-          <p>Masuk untuk mengakses layanan warga ErTee.</p>
+          <p>Masuk untuk mengakses layanan warga WargaKita.</p>
         </header>
-        <form onSubmit={submit} aria-busy={pending}>
+        <form
+          className="login-enter"
+          onSubmit={submit}
+          aria-busy={pending}
+          autoComplete="off"
+        >
           <div className="flex flex-col gap-4 [--text-input-gap:0.5rem]">
             <FormField
               id="email"
               label="Email"
               type="email"
               placeholder="Masukkan alamat email"
-              autoComplete="username"
+              autoComplete="off"
               required
               maxLength={254}
               value={email}
@@ -68,7 +76,7 @@ export function LoginPage() {
               label="Password"
               type="password"
               placeholder="Masukkan password"
-              autoComplete="current-password"
+              autoComplete="off"
               required
               maxLength={128}
               value={password}
@@ -109,15 +117,12 @@ export function LoginPage() {
             </Button>
           </div>
         </form>
-        <div className="flex flex-col gap-4">
+        <div className="login-enter flex flex-col gap-4">
           <p className="flex min-h-6 flex-wrap items-center justify-center gap-2 text-sm leading-5 text-muted [&>a]:font-bold [&>a]:text-action [&>a:hover]:underline">
             Belum punya akun? <Link to="/register">Daftar di sini</Link>
           </p>
         </div>
       </section>
-      <footer className="mt-8 text-center text-sm leading-5 text-slate-500 max-sm:text-xs">
-        © ErTee • Layanan Digital Warga
-      </footer>
       {!isSupabaseConfigured ? (
         <p className="mt-6 px-5 text-center text-xs text-muted" role="status">
           Mode persiapan · Koneksi Supabase belum dikonfigurasi.

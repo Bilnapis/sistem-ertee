@@ -4,7 +4,7 @@ Komponen [`AdminSidebar`](../src/components/AdminSidebar.tsx) diadaptasi dari ko
 
 Informasi akun telah dipindahkan ke [menu akun pada header](account-menu.md).
 Sidebar desktop maupun drawer mobile memuat identitas RT, navigasi, dan
-identitas produk **ErTee** di bagian bawah dengan gaya merek:
+identitas produk **WargaKita** di bagian bawah dengan gaya merek:
 nama hijau 20 px dan subjudul “Layanan Digital Warga” 12 px, tersusun vertikal
 dengan jarak 2 px dan rata awal. Warna subjudul mengikuti teks sekunder sidebar
 untuk latar gelap. Identitas produk mengikuti alur scroll pada layar pendek dan
@@ -27,7 +27,7 @@ Prop `collapsed` (default `false`) menampilkan hanya ikon menu dengan lebar
 nama setiap menu tetap tersedia bagi pembaca layar dan pada tooltip native.
 Penanda menu aktif dan tujuan tautan tetap mengikuti URL.
 
-Pada `AuthenticatedLayout`, tombol ikon di header menggantikan teks ErTee
+Pada `AuthenticatedLayout`, tombol ikon di header menggantikan teks WargaKita
 dan mengubah sidebar desktop dari `16.5rem` (264 px) menjadi `5rem` (80 px).
 Kolom konten ikut menyesuaikan lebarnya. Tombol mendukung Enter dan Space,
 mempertahankan fokus setelah toggle, serta memakai `aria-controls` dan
