@@ -66,13 +66,16 @@ export function TextInput({
           className="text-sm leading-5 font-semibold wrap-anywhere text-slate-700 group-has-disabled/field:text-muted"
           htmlFor={inputId}
         >
-          {label}
+          {label.replace(/\s*\*\s*$/, '')}
+          {label.trimEnd().endsWith('*') ? (
+            <span className="text-danger" aria-hidden="true">
+              {' '}
+              *
+            </span>
+          ) : null}
         </label>
         {required && !label.trimEnd().endsWith('*') ? (
-          <span
-            className="text-danger group-has-disabled/field:text-muted"
-            aria-hidden="true"
-          >
+          <span className="text-danger" aria-hidden="true">
             {' '}
             *
           </span>

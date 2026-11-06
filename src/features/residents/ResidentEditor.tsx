@@ -165,7 +165,12 @@ export function ResidentEditor({
     options: Record<string, string>,
   ) => (
     <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-      <label htmlFor={`resident-${key}`}>{label}</label>
+      <label htmlFor={`resident-${key}`}>
+        {label.replace(/\s*\*$/, '')}{' '}
+        <span aria-hidden="true" className="text-danger">
+          *
+        </span>
+      </label>
       <Select
         required
         id={`resident-${key}`}
@@ -196,7 +201,12 @@ export function ResidentEditor({
 
   const statusField = (
     <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-      <label htmlFor="resident-active">Status Warga *</label>
+      <label htmlFor="resident-active">
+        Status Warga{' '}
+        <span aria-hidden="true" className="text-danger">
+          *
+        </span>
+      </label>
       <Select
         id="resident-active"
         value={String(active)}
@@ -253,7 +263,12 @@ export function ResidentEditor({
               {manageAccess ? (
                 <>
                   <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-                    <label htmlFor="resident-role">Role *</label>
+                    <label htmlFor="resident-role">
+                      Role{' '}
+                      <span aria-hidden="true" className="text-danger">
+                        *
+                      </span>
+                    </label>
                     <Select
                       id="resident-role"
                       value={role}

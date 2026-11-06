@@ -153,7 +153,10 @@ export default function LetterForm() {
               />
               <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
                 <label id="letter-type-label" htmlFor="letter-type">
-                  Jenis Surat <span aria-hidden="true">*</span>
+                  Jenis Surat{' '}
+                  <span aria-hidden="true" className="text-danger">
+                    *
+                  </span>
                 </label>
                 <Button
                   id="letter-type"

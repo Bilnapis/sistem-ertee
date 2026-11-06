@@ -219,7 +219,10 @@ export default function DuesPaymentForm() {
                   <div className="flex flex-col items-center gap-2 rounded-summary border border-border bg-page p-5 text-center [&_input]:max-w-full [&_input]:text-sm [&_input]:file:me-2 [&_input]:file:cursor-pointer [&_input]:file:rounded-lg [&_input]:file:border [&_input]:file:border-border [&_input]:file:bg-surface [&_input]:file:p-2 [&_input]:file:font-semibold [&_input]:file:text-action [&_label]:text-sm [&_label]:font-bold [&_p]:text-xs [&_p]:text-muted">
                     <FileUp size={24} aria-hidden="true" />
                     <label htmlFor="dues-proof">
-                      Unggah Bukti Pembayaran <span aria-hidden="true">*</span>
+                      Unggah Bukti Pembayaran{' '}
+                      <span aria-hidden="true" className="text-danger">
+                        *
+                      </span>
                     </label>
                     <p id="dues-proof-help">JPG, PNG, PDF · Maksimal 5 MB</p>
                     <input

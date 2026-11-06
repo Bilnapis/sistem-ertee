@@ -240,3 +240,19 @@ padding desktop 28 px dan gap field 16 px. Field jadwal dua kolom di desktop dan
 satu kolom di bawah 640 px. Status Terjadwal/Sedang tayang/Selesai/Diarsipkan
 memakai token info/success/soft/warning beserta label. Semua tombol utama 48 px,
 navigasi ringkas 44 px. Lihat `docs/pengumuman.md` untuk pengujian dan pemasangan.
+
+## Dashboard admin
+
+Halaman `/admin` mengikuti susunan kartu dan panel putih pada referensi screenshot
+pengguna, dengan token WargaKita dan shell aplikasi yang tersedia. Ukuran referensi
+diestimasi pada lebar sekitar 1088 px. Tiga kartu SummaryCardView menampilkan
+penerimaan iuran bulan berjalan dari `dues_overview.summary.income`, serta total
+seluruh pengajuan surat dan pengaduan dari RPC daftar masing-masing. Seluruh data
+terhubung ke backend yang tersedia; tidak ada angka contoh pada halaman.
+
+Dua panel TablePagination disusun vertikal, masing-masing empat baris, urutan
+terbaru, pagination independen, badge status dan tautan detail maupun daftar
+lengkap. Tiga kartu menjadi satu kolom pada container di bawah 46rem; tabel
+bergulir dalam region sendiri. Warna, radius, sidebar dan header memakai komponen
+bersama. Akses tersedia bagi Ketua RT dan Pengurus RT melalui menu Dashboard.
+Pengujian browser berada di `tests/e2e/dashboard.spec.ts`.

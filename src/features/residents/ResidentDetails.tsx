@@ -305,7 +305,12 @@ export function ResidentDetails({
             </h3>
             {action === 'repair' ? (
               <div className="flex min-w-0 flex-col gap-1.5 [&>label]:text-sm [&>label]:leading-5 [&>label]:font-semibold [&>label]:text-slate-700">
-                <label htmlFor="review-note">Alasan perbaikan *</label>
+                <label htmlFor="review-note">
+                  Alasan perbaikan{' '}
+                  <span aria-hidden="true" className="text-danger">
+                    *
+                  </span>
+                </label>
                 <textarea
                   id="review-note"
                   className="min-h-25 w-full min-w-0 resize-y rounded-control border border-control-border bg-surface px-3 py-2.5 text-start font-sans text-base leading-6 text-ink placeholder:text-muted hover:border-slate-600 focus-visible:border-action focus-visible:outline-action disabled:cursor-not-allowed disabled:border-border disabled:bg-soft disabled:text-muted disabled:opacity-100 aria-invalid:border-danger aria-invalid:focus-visible:outline-danger [&[readonly]]:bg-page"

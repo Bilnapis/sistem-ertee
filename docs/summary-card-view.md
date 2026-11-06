@@ -23,7 +23,10 @@ menggunakan token `ink` dari komponen.
   Label menerima teks atau elemen tautan. Nilai berupa angka diformat
   menggunakan locale `id-ID`; nilai teks dapat berisi mata uang, status,
   atau placeholder saat memuat/gagal.
-- `columns`: `4` secara default; `2` untuk ringkasan iuran pribadi.
+- `icon` dan `description` pada setiap item bersifat opsional. Dashboard memakai
+  ikon dekoratif di sebelah label dan keterangan di bawah nilai.
+- `columns`: `4` secara default; `2` untuk ringkasan iuran pribadi; `3` untuk
+  dashboard admin. Susunan tiga kolom menjadi satu kolom di bawah 46rem.
 - `aria-label` dan `aria-busy`: nama daftar ringkasan dan status pemuatan.
 
 Komponen menggunakan `dl`, `dt`, dan `dd`. Grid mengikuti container halaman

@@ -11,6 +11,7 @@ import { Feedback, LoadingScreen } from './components/Feedback'
 import { isManager, ResidentQueryProvider } from './features/residents/data'
 
 const ResidentsPage = lazy(() => import('./features/residents/ResidentsPage'))
+const AdminDashboard = lazy(() => import('./features/dashboard/AdminDashboard'))
 const AnnouncementsPage = lazy(
   () => import('./features/announcements/AnnouncementsPage'),
 )
@@ -179,7 +180,7 @@ export function App() {
                   </Route>
                   <Route
                     path="/admin"
-                    element={<Navigate to="/admin/warga" replace />}
+                    element={<AdminDashboard />}
                   />
                   <Route path="/admin/warga" element={<ResidentsPage />}>
                     <Route
