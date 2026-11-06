@@ -167,7 +167,9 @@ test('login, reload, logout, browser back, and direct access enforce session bou
   const calls = await mockSupabase(page)
   await login(page)
   await expect(page).toHaveURL(/\/warga$/)
-  await expect(page.getByText(profile.nik, { exact: true })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Dashboard', exact: true }),
+  ).toBeVisible()
   const sidebar = page.getByRole('complementary', { name: 'Sidebar admin' })
   await expect(sidebar).toBeVisible()
   await expect(sidebar.locator('a[aria-current="page"]')).toHaveText(
@@ -194,7 +196,7 @@ test('login, reload, logout, browser back, and direct access enforce session bou
   await sidebar.getByRole('link', { name: 'Dashboard', exact: true }).click()
   await page.reload()
   await expect(
-    page.getByRole('heading', { name: 'Profil warga', exact: true }),
+    page.getByRole('heading', { name: 'Dashboard', exact: true }),
   ).toBeVisible()
   await page.getByRole('button', { name: /^Menu akun / }).click()
   await page.getByRole('button', { name: 'Keluar', exact: true }).click()
@@ -441,7 +443,7 @@ test('account actions support keyboard navigation, dismissal, and sign-out', asy
   await page.keyboard.press('Tab')
   await expect(actions).not.toBeVisible()
   await trigger.click()
-  await page.getByRole('heading', { name: 'Profil warga', exact: true }).click()
+  await page.getByRole('heading', { name: 'Dashboard', exact: true }).click()
   await expect(actions).not.toBeVisible()
   await trigger.click()
   await actions.getByRole('button', { name: 'Keluar', exact: true }).click()
@@ -585,7 +587,7 @@ test('a failed profile read can be retried without exposing private data', async
   options.profileFailure = false
   await page.getByRole('button', { name: 'Coba lagi', exact: true }).click()
   await expect(
-    page.getByRole('heading', { name: 'Profil warga', exact: true }),
+    page.getByRole('heading', { name: 'Dashboard', exact: true }),
   ).toBeVisible()
 })
 
@@ -666,7 +668,8 @@ test('existing email confirmation links still exchange PKCE code and open protec
   await expect(page).toHaveURL(/\/warga$/)
   await expect(
     page.getByRole('heading', {
-      name: `Selamat datang, ${profile.full_name}!`,
+      name: 'Dashboard',
+      exact: true,
     }),
   ).toBeVisible()
   expect(

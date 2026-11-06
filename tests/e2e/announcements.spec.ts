@@ -268,29 +268,19 @@ async function fillForm(page: Page, title = 'Kerja bakti akhir pekan') {
 }
 
 for (const role of ['warga', 'ketua_rt', 'pengurus_rt'] as const) {
-  test(`${role} sees three latest active announcements above profile and can read all`, async ({
+  test(`${role} opens announcements from the dashboard and can read all`, async ({
     page,
   }) => {
     await mockAnnouncements(page, { role })
     await page.goto('/warga')
-    const section = page.getByRole('region', {
-      name: 'Pengumuman',
-      exact: true,
-    })
-    await expect(section.locator('article')).toHaveCount(3)
-    await expect(section.locator('article h3')).toHaveText([
-      'Kegiatan RT 1',
-      'Kegiatan RT 2',
-      'Kegiatan RT 3',
-    ])
     await expect(
-      page.getByRole('heading', { name: 'Profil warga' }),
+      page.getByRole('heading', { name: 'Dashboard', exact: true }),
     ).toBeVisible()
     await expect(
-      page.getByText('Pengumuman mendatang', { exact: true }),
+      page.getByRole('heading', { name: 'Profil warga' }),
     ).toHaveCount(0)
-    await section
-      .getByRole('link', { name: 'Lihat semua', exact: true })
+    await page
+      .getByRole('link', { name: 'Lihat Pengumuman', exact: true })
       .click()
     await expect(page).toHaveURL('/warga/pengumuman')
     await expect(page.locator('article')).toHaveCount(4)
@@ -522,22 +512,16 @@ test('background detail failures preserve the editor and its original version', 
   ).toBeVisible()
 })
 
-test('home survives failed announcements and recovers via retry; empty feed is explicit', async ({
+test('announcements recover via retry and show an empty feed', async ({
   page,
 }) => {
   const state = await mockAnnouncements(page, { listFailure: true })
-  await page.goto('/warga')
-  await expect(
-    page
-      .getByRole('region', { name: 'Pengumuman', exact: true })
-      .getByRole('alert'),
-  ).toBeVisible()
-  await expect(
-    page.getByRole('heading', { name: 'Profil warga' }),
-  ).toBeVisible()
+  await page.goto('/warga/pengumuman')
+  await expect(page.getByRole('alert')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Pengumuman' })).toBeVisible()
   state.options.listFailure = false
   await page.getByRole('button', { name: 'Coba lagi', exact: true }).click()
-  await expect(page.locator('article')).toHaveCount(3)
+  await expect(page.locator('article')).toHaveCount(4)
   state.announcements.splice(0)
   await page.goto('/warga/pengumuman')
   await expect(
@@ -547,7 +531,7 @@ test('home survives failed announcements and recovers via retry; empty feed is e
   ).toBeVisible()
 })
 
-test('schedule boundaries update home without reload and hide expired detail during a failed refresh', async ({
+test('schedule boundaries update announcements without reload and hide expired detail during a failed refresh', async ({
   page,
 }) => {
   await page.clock.install({ time: new Date() })
@@ -558,7 +542,7 @@ test('schedule boundaries update home without reload and hide expired detail dur
     starts_at: new Date(now + 5000).toISOString(),
     ends_at: new Date(now + 15000).toISOString(),
   })
-  await page.goto('/warga')
+  await page.goto('/warga/pengumuman')
   await expect(page.locator('article')).toHaveCount(0)
   await page.clock.fastForward(6000)
   await expect(page.locator('article')).toHaveCount(1)
@@ -627,7 +611,7 @@ test('server time overrides an inaccurate browser wall clock', async ({
     created_at: new Date(now).toISOString(),
     updated_at: new Date(now).toISOString(),
   })
-  await page.goto('/warga')
+  await page.goto('/warga/pengumuman')
   await expect(page.locator('article')).toHaveCount(1)
   await page.clock.fastForward(11000)
   await expect(page.locator('article')).toHaveCount(0)

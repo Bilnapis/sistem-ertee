@@ -222,3 +222,57 @@ test('residents cannot access the admin dashboard', async ({ page }) => {
     page.getByRole('region', { name: 'Ringkasan dashboard' }),
   ).toHaveCount(0)
 })
+
+test('resident dashboard shows only four service shortcuts at desktop and mobile widths', async ({
+  page,
+}, testInfo) => {
+  const state = await mockDashboard(page, 'warga')
+  for (const width of [375, 768, 1648]) {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto('/warga')
+    await expect(
+      page.getByRole('heading', { name: 'Dashboard', exact: true }),
+    ).toBeVisible()
+    const services = page.getByRole('region', { name: 'Layanan warga' })
+    await expect(services.locator('article')).toHaveCount(4)
+    await expect(services.getByRole('heading')).toHaveText([
+      'Pengajuan Surat',
+      'Iuran Warga',
+      'Pengaduan',
+      'Pengumuman',
+    ])
+    await expect(page.getByRole('main').getByRole('link')).toHaveCount(4)
+    for (const [name, href] of [
+      ['Ajukan Surat', '/warga/pengajuan-surat/tambah'],
+      ['Lihat Iuran', '/warga/iuran-warga'],
+      ['Buat Pengaduan', '/warga/pengaduan/tambah'],
+      ['Lihat Pengumuman', '/warga/pengumuman'],
+    ]) {
+      await expect(
+        services.getByRole('link', { name, exact: true }),
+      ).toHaveAttribute('href', href)
+    }
+    await expect(page.getByRole('table')).toHaveCount(0)
+    await expect(
+      page.getByRole('heading', { name: 'Profil warga' }),
+    ).toHaveCount(0)
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: testInfo.outputPath(`resident-dashboard-${width}.png`),
+      fullPage: true,
+    })
+  }
+  expect(
+    state.requests.filter((request) => request.path.includes('/rpc/')),
+  ).toHaveLength(0)
+  await page.setViewportSize({ width: 375, height: 900 })
+  await page.getByRole('button', { name: 'Buka menu navigasi' }).click()
+  const menu = page.getByRole('dialog', { name: 'Menu navigasi', exact: true })
+  await menu.getByRole('link', { name: 'Dashboard', exact: true }).click()
+  await expect(menu).not.toBeVisible()
+  await expect(page).toHaveURL('/warga')
+})

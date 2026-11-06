@@ -230,8 +230,8 @@ melengkapi kebutuhan PRD. Screenshot responsif dan batas pengujian dijelaskan di
 
 Halaman pengumuman mengikuti pola komponen dan token aplikasi yang sudah ada.
 Pengelolaan memakai PageIntro, TablePagination dan TextInput; pembaca memakai
-kartu putih beradius 20 px. Beranda memuat tiga kartu di atas profil dan tautan
-Lihat semua; halaman profil tetap berfokus pada profil. Kartu memuat judul,
+kartu putih beradius 20 px. Pengumuman diakses melalui shortcut pada dashboard
+warga; halaman profil tetap berfokus pada profil. Kartu memuat judul,
 cuplikan maksimal tiga baris, jadwal WIB dan tautan detail. Teks lengkap pada
 detail mempertahankan baris baru tanpa menafsirkan HTML.
 
@@ -256,3 +256,15 @@ lengkap. Tiga kartu menjadi satu kolom pada container di bawah 46rem; tabel
 bergulir dalam region sendiri. Warna, radius, sidebar dan header memakai komponen
 bersama. Akses tersedia bagi Ketua RT dan Pengurus RT melalui menu Dashboard.
 Pengujian browser berada di `tests/e2e/dashboard.spec.ts`.
+
+## Dashboard warga
+
+Halaman `/warga` memakai shell, PageIntro, gutter dan batas lebar yang sama dengan
+dashboard admin. Konten hanya berisi empat shortcut sesuai screenshot pengguna:
+Pengajuan Surat, Iuran Warga, Pengaduan dan Pengumuman. Proporsi screenshot
+diestimasi pada lebar 741 px; ukuran disesuaikan ke token aplikasi: kartu putih
+beradius 20 px, padding 20 px, gap 16 px dan ikon 20 px pada latar hijau lembut.
+Tautan menggunakan ButtonLink bersama, termasuk ukuran teks dan warna aksi
+aksesibel aplikasi. Grid empat kolom menjadi dua kolom di bawah container 60rem
+dan satu kolom di bawah 33rem. Profil tetap tersedia pada `/warga/profil`.
+Tidak ada permintaan data ringkasan admin atau feed pengumuman pada dashboard ini.

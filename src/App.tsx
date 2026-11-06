@@ -12,6 +12,9 @@ import { isManager, ResidentQueryProvider } from './features/residents/data'
 
 const ResidentsPage = lazy(() => import('./features/residents/ResidentsPage'))
 const AdminDashboard = lazy(() => import('./features/dashboard/AdminDashboard'))
+const ResidentDashboard = lazy(
+  () => import('./features/dashboard/ResidentDashboard'),
+)
 const AnnouncementsPage = lazy(
   () => import('./features/announcements/AnnouncementsPage'),
 )
@@ -178,10 +181,7 @@ export function App() {
                     <Route path="pengaturan" element={<DuesSettings />} />
                     <Route path=":id" element={<DuesDetails manage />} />
                   </Route>
-                  <Route
-                    path="/admin"
-                    element={<AdminDashboard />}
-                  />
+                  <Route path="/admin" element={<AdminDashboard />} />
                   <Route path="/admin/warga" element={<ResidentsPage />}>
                     <Route
                       path="tambah"
@@ -203,10 +203,7 @@ export function App() {
                     <Route path=":id" element={<LetterDetails manage />} />
                   </Route>
                 </Route>
-                <Route
-                  path="/warga"
-                  element={<ResidentHome showAnnouncements />}
-                />
+                <Route path="/warga" element={<ResidentDashboard />} />
                 <Route path="/warga/pengumuman" element={<AnnouncementsPage />}>
                   <Route path=":id" element={<AnnouncementDetails />} />
                 </Route>
