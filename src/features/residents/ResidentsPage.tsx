@@ -74,7 +74,7 @@ export default function ResidentsPage() {
           <PageIntro
             id="resident-page-title"
             title="Data Warga"
-            description="Kelola data warga RT 04"
+            description="Kelola data warga RT 01"
           />
           <ButtonLink
             to={linkTo('tambah')}

@@ -16,7 +16,7 @@ export function AuthenticatedLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   if (!profile) return null
   const sidebarProps = {
-    communityLabel: `${profile.role === 'warga' ? 'WARGA' : 'ADMIN'} RT 04`,
+    communityLabel: `${profile.role === 'warga' ? 'WARGA' : 'ADMIN'} RT 01`,
     basePath: '/warga',
     paths: {
       dashboard: isManager(profile.role) ? '/admin' : '/warga',

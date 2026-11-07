@@ -148,7 +148,7 @@ export default function TextInputPreview() {
               </div>
               <TextInput
                 label="Wilayah tempat tinggal"
-                defaultValue="RT 04"
+                defaultValue="RT 01"
                 helperText="Wilayah ditentukan oleh pengurus RT."
                 leadingIcon={<LockKeyhole />}
                 disabled

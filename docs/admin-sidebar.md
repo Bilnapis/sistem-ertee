@@ -17,7 +17,7 @@ Render di dalam React Router yang sudah digunakan aplikasi. Identitas RT diberik
 ```tsx
 import { AdminSidebar } from './components/AdminSidebar'
 
-;<AdminSidebar communityLabel="ADMIN RT 04" basePath="/admin" />
+;<AdminSidebar communityLabel="ADMIN RT 01" basePath="/admin" />
 ```
 
 `className` dapat digunakan untuk menyesuaikan penempatan oleh layout induk. `paths` dapat menyesuaikan URL setiap menu dan `onNavigate` dipanggil saat link dipilih. Tinggi default mengikuti viewport (`100dvh`); sidebar dapat digulir pada viewport pendek agar seluruh menu tetap terjangkau.

@@ -80,7 +80,10 @@ function CurrentBill({ invoice }: { invoice: DuesInvoice }) {
           pembayaran Anda.
         </p>
       ) : null}
-      <div className="flex flex-wrap items-center gap-4">
+      <div className="flex flex-wrap items-center justify-end gap-4">
+        <ButtonLink to={destination()} variant="outline">
+          Lihat detail
+        </ButtonLink>
         {invoice.status === 'belum_bayar' ? (
           <ButtonLink
             to={destination('/bayar')}
@@ -90,15 +93,6 @@ function CurrentBill({ invoice }: { invoice: DuesInvoice }) {
             Bayar Iuran
           </ButtonLink>
         ) : null}
-        <ButtonLink
-          to={destination()}
-          variant="ghost"
-          trailingIcon={<ArrowRight size={16} aria-hidden="true" />}
-          size="text"
-          align="start"
-        >
-          Lihat detail
-        </ButtonLink>
       </div>
     </section>
   )
@@ -299,24 +293,6 @@ export default function DuesPage({ manage = false }: { manage?: boolean }) {
                 />
               ) : (
                 <>
-                  <SummaryCardView
-                    aria-label="Ringkasan iuran bulan ini"
-                    columns={2}
-                    items={[
-                      {
-                        id: 'amount',
-                        label: 'Iuran Bulan Ini',
-                        value: data.current ? rupiah(data.current.amount) : '—',
-                      },
-                      {
-                        id: 'status',
-                        label: 'Status Pembayaran',
-                        value: data.current
-                          ? duesStatuses[data.current.status]
-                          : 'Belum ada tagihan',
-                      },
-                    ]}
-                  />
                   {data.current ? (
                     <CurrentBill invoice={data.current} />
                   ) : (

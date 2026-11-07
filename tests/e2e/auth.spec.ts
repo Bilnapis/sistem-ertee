@@ -46,6 +46,7 @@ async function mockSupabase(
     signupFailure?: boolean
     profileFailure?: boolean
     fullName?: string
+    role?: 'ketua_rt' | 'pengurus_rt' | 'warga'
   } = {},
 ) {
   const calls: { signup?: Record<string, unknown>; logout?: boolean } = {}
@@ -115,7 +116,13 @@ async function mockSupabase(
         headers,
         json: options.disabled
           ? []
-          : [{ ...profile, full_name: options.fullName ?? profile.full_name }],
+          : [
+              {
+                ...profile,
+                full_name: options.fullName ?? profile.full_name,
+                role: options.role ?? profile.role,
+              },
+            ],
       })
     }
     return route.fulfill({ status: 404, headers, json: {} })
@@ -128,6 +135,37 @@ async function login(page: Page) {
   await page.getByLabel('Email', { exact: true }).fill(user.email)
   await page.getByLabel('Password', { exact: true }).fill('PasswordUji123!')
   await page.getByRole('button', { name: 'Masuk', exact: true }).click()
+}
+
+for (const role of ['ketua_rt', 'pengurus_rt', 'warga'] as const) {
+  test(`${role} lands on its dashboard after login and auth entry routes`, async ({
+    page,
+  }) => {
+    await mockSupabase(page, { role })
+    await login(page)
+    const dashboard = role === 'warga' ? '/warga' : '/admin'
+    await expect(page).toHaveURL(dashboard)
+    await expect(
+      page.getByRole('heading', { name: 'Dashboard', exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('link', { name: 'Dashboard', exact: true }),
+    ).toHaveAttribute('aria-current', 'page')
+
+    for (const path of [
+      '/login',
+      '/register',
+      '/auth/callback',
+      '/',
+      '/unknown',
+    ]) {
+      await page.goto(path)
+      await expect(page).toHaveURL(dashboard)
+      await expect(
+        page.getByRole('heading', { name: 'Dashboard', exact: true }),
+      ).toBeVisible()
+    }
+  })
 }
 
 async function fillRegistration(page: Page) {

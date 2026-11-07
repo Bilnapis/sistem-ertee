@@ -50,10 +50,19 @@ const ButtonPreview = import.meta.env.DEV
   ? lazy(() => import('./previews/ButtonPreview'))
   : null
 
+function DashboardRedirect() {
+  const { session, profile, loading } = useAuth()
+  if (loading) return <LoadingScreen />
+  if (!session) return <Navigate to="/login" replace />
+  return (
+    <Navigate to={isManager(profile?.role) ? '/admin' : '/warga'} replace />
+  )
+}
+
 function GuestLayout() {
   const { session, loading } = useAuth()
   if (loading) return <LoadingScreen />
-  return session ? <Navigate to="/warga" replace /> : <Outlet />
+  return session ? <DashboardRedirect /> : <Outlet />
 }
 
 function ProtectedLayout() {
@@ -81,7 +90,7 @@ function ProtectedLayout() {
 function AuthCallback() {
   const { loading, session } = useAuth()
   if (loading) return <LoadingScreen />
-  if (session) return <Navigate to="/warga" replace />
+  if (session) return <DashboardRedirect />
   return (
     <main className="grid min-h-svh place-items-center p-6">
       <section className="flex w-full max-w-[560px] flex-col gap-6 rounded-card bg-surface p-10 text-center shadow-card max-sm:px-6 max-sm:py-7 [&>p]:text-sm [&>p]:leading-6 [&>p]:text-muted">
@@ -221,7 +230,7 @@ export function App() {
                   <Route path=":id" element={<ComplaintDetails />} />
                 </Route>
               </Route>
-              <Route path="*" element={<Navigate to="/warga" replace />} />
+              <Route path="*" element={<DashboardRedirect />} />
             </Routes>
           </Suspense>
         </ResidentQueryProvider>
